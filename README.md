@@ -1,4 +1,4 @@
-WE# (WeSharp) - Version 1.0
+WE# (WeSharp) - Version 0.01
 WE# is a modular, general-purpose programming language developed on the C# infrastructure. It serves as the core engine for the we(x) ecosystem, designed with a focus on structured logic and an interactive command-line interface.
 
 Technical Specifications
