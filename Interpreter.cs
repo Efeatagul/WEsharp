@@ -12,16 +12,21 @@ namespace WSharp
 
         public void ExecuteStatements(List<Statement> statements)
         {
+            if (statements == null) return;
             foreach (var stmt in statements)
             {
                 switch (stmt.Type)
                 {
-                    case "Out": HandleOut(stmt); break; 
+                    case "Out": HandleOut(stmt); break;
                     case "Assignment": HandleAssignment(stmt); break;
-                    case "TaskDecl": _functions[stmt.Tokens[1].Value] = stmt.Body; break; 
-                    case "Check": HandleCheck(stmt); break; 
-                    case "Loop": HandleLoop(stmt); break; 
-                    case "EmanFail": HandleEmanFail(stmt); break; 
+                    case "FunctionCall": HandleFunctionCall(stmt); break; // YENİ: win_open vb. için
+                    case "TaskDecl":
+                        if (stmt.Tokens.Count > 1)
+                            _functions[stmt.Tokens[1].Value.ToLower()] = stmt.Body;
+                        break;
+                    case "Check": HandleCheck(stmt); break;
+                    case "Loop": HandleLoop(stmt); break;
+                    case "EmanFail": HandleEmanFail(stmt); break;
                     default:
                         if (stmt.Tokens.Count > 0)
                         {
@@ -33,10 +38,21 @@ namespace WSharp
             }
         }
 
+        // YENİ: Doğrudan çağrılan fonksiyonları (win_open, win_clear vb.) yönetir
+        private void HandleFunctionCall(Statement stmt)
+        {
+            int pos = 0;
+            EvaluateExpression(ref pos, stmt.Tokens);
+        }
+
         private void HandleOut(Statement stmt)
         {
-            int p = 1; 
-            if (stmt.Tokens.Count > 1 && stmt.Tokens[p].Value == "(") p++;
+            int p = 0;
+            // 'out' keyword'ünü atla
+            if (stmt.Tokens.Count > 0 && stmt.Tokens[0].Value == "out") p++;
+            // Parantez varsa atla
+            if (stmt.Tokens.Count > p && stmt.Tokens[p].Value == "(") p++;
+
             var val = EvaluateExpression(ref p, stmt.Tokens);
 
             if (val is List<object> list)
@@ -48,14 +64,20 @@ namespace WSharp
         private void HandleAssignment(Statement stmt)
         {
             if (stmt.Tokens.Count < 3) return;
-            string name = stmt.Tokens[0].Value;
-            int p = 2; 
-            _variables[name] = EvaluateExpression(ref p, stmt.Tokens);
+            int nameIndex = (stmt.Tokens[0].Value == "var") ? 1 : 0;
+            string name = stmt.Tokens[nameIndex].Value;
+
+            int p = Array.FindIndex(stmt.Tokens.ToArray(), t => t.Value == "=") + 1;
+            if (p > 0 && p < stmt.Tokens.Count)
+            {
+                _variables[name] = EvaluateExpression(ref p, stmt.Tokens);
+            }
         }
 
         private void HandleCheck(Statement stmt)
         {
-            int p = 1; 
+            int p = 0;
+            if (stmt.Tokens[0].Value == "check") p++;
             var res = EvaluateExpression(ref p, stmt.Tokens);
             if (res is bool b && b || res is int i && i > 0) ExecuteStatements(stmt.Body);
         }
@@ -64,7 +86,8 @@ namespace WSharp
         {
             while (true)
             {
-                int p = 1;
+                int p = 0;
+                if (stmt.Tokens[0].Value == "loop") p++;
                 var res = EvaluateExpression(ref p, stmt.Tokens);
                 if (!(res is bool b && b || res is int i && i > 0)) break;
                 ExecuteStatements(stmt.Body);
@@ -74,112 +97,72 @@ namespace WSharp
         private void HandleEmanFail(Statement stmt)
         {
             try { ExecuteStatements(stmt.Body); }
-            catch (Exception ex)
-            {
-                _variables["last_error"] = ex.Message;
-                ExecuteStatements(stmt.CatchBody);
-            }
+            catch (Exception ex) { _variables["last_error"] = ex.Message; ExecuteStatements(stmt.CatchBody); }
         }
 
-        private object EvaluateExpression(ref int pos, List<Token> tokens)
+        public object EvaluateExpression(ref int pos, List<Token> tokens)
         {
             if (pos >= tokens.Count) return null;
             Token current = tokens[pos];
 
-           
+            // --- FONKSİYON ÇAĞIRMA BLOĞU ---
             if (current.Type == TokenType.Identifier && pos + 1 < tokens.Count && tokens[pos + 1].Value == "(")
             {
-                string funcName = current.Value;
-                pos += 2;
+                string funcName = current.Value.ToLower();
+                pos += 2; // isim ve '(' karakterini geç
                 List<object> args = new List<object>();
+
                 while (pos < tokens.Count && tokens[pos].Value != ")")
                 {
                     args.Add(EvaluateExpression(ref pos, tokens));
                     if (pos < tokens.Count && tokens[pos].Value == ",") pos++;
                 }
-                if (pos < tokens.Count) pos++;
+                if (pos < tokens.Count) pos++; // ')' karakterini geç
 
-                if (StandardLibrary.Exists(funcName)) return StandardLibrary.Call(funcName, args);
-                if (_functions.ContainsKey(funcName)) { ExecuteStatements(_functions[funcName]); return null; }
-                throw new Exception($"Unknown command: {funcName}");
-            }
-
-          
-            if (current.Type == TokenType.Identifier && pos + 1 < tokens.Count && tokens[pos + 1].Value == ".")
-            {
-                string listName = current.Value;
-                pos += 2;
-                string method = tokens[pos].Value;
-                pos++;
-                object arg = null;
-                if (pos < tokens.Count && tokens[pos].Value == "(")
+                // 1. Standart Kütüphane Kontrolü
+                if (StandardLibrary.Exists(funcName))
                 {
-                    pos++;
-                    if (tokens[pos].Value != ")") arg = EvaluateExpression(ref pos, tokens);
-                    pos++;
+                    return StandardLibrary.Call(funcName, args);
                 }
-                return HandleListFunction(listName, method, arg);
+
+                // 2. Kullanıcı Tanımlı Fonksiyon Kontrolü
+                if (_functions.ContainsKey(funcName))
+                {
+                    ExecuteStatements(_functions[funcName]);
+                    return null;
+                }
+                throw new Exception($"Komut bulunamadi: {funcName}");
             }
 
-           
             if (current.Type == TokenType.Number)
             {
-                int val = int.Parse(tokens[pos++].Value);
+                // int.Parse yerine double.Parse kullanarak ondalık desteği sağladık
+                double val = double.Parse(tokens[pos++].Value, System.Globalization.CultureInfo.InvariantCulture);
                 return CheckForOperator(ref pos, tokens, val);
             }
 
             if (current.Type == TokenType.String) return tokens[pos++].Value;
 
-            if (current.Value == "[")
-            {
-                pos++;
-                var list = new List<object>();
-                while (pos < tokens.Count && tokens[pos].Value != "]")
-                {
-                    list.Add(EvaluateExpression(ref pos, tokens));
-                    if (pos < tokens.Count && tokens[pos].Value == ",") pos++;
-                }
-                pos++;
-                return list;
-            }
-
-            
             if (current.Type == TokenType.Identifier)
             {
                 string name = tokens[pos++].Value;
-                if (pos < tokens.Count && tokens[pos].Value == "[")
-                {
-                    pos++;
-                    int idx = Convert.ToInt32(EvaluateExpression(ref pos, tokens));
-                    pos++;
-                    var list = _variables[name] as List<object>;
-                    return CheckForOperator(ref pos, tokens, list[idx]);
-                }
-
                 if (_variables.ContainsKey(name))
                 {
                     var val = _variables[name];
-                    return (val is int i) ? CheckForOperator(ref pos, tokens, i) : val;
+                    return (val is double d) ? CheckForOperator(ref pos, tokens, d) : val;
                 }
                 return name;
             }
 
-            return null;
-        }
-
-        private object HandleListFunction(string listName, string funcName, object arg)
-        {
-            if (!_variables.ContainsKey(listName) || !(_variables[listName] is List<object> list))
-                throw new Exception($"Collection not found: {listName}");
-
-            
-            switch (funcName)
+            if (current.Value == "(") // Gruplandırma parantezleri için
             {
-                case "add": list.Add(arg); return null; 
-                case "take": var v = list.Last(); list.RemoveAt(list.Count - 1); return v; 
-                case "size": return list.Count; 
-                default: throw new Exception($"Unknown method: {funcName}");
+                pos++;
+                var val = EvaluateExpression(ref pos, tokens);
+                if (pos < tokens.Count && tokens[pos].Value == ")") pos++;
+                return val;
             }
+
+            return null;
         }
 
         private object CheckForOperator(ref int pos, List<Token> tokens, object left)
@@ -188,7 +171,9 @@ namespace WSharp
             {
                 string op = tokens[pos++].Value;
                 var right = EvaluateExpression(ref pos, tokens);
-                if (left is int l && right is int r)
+
+                // Sayısal işlemler için double desteği
+                if (left is double l && right is double r)
                 {
                     return op switch
                     {
@@ -199,12 +184,14 @@ namespace WSharp
                         "==" => l == r,
                         ">" => l > r,
                         "<" => l < r,
+                        "!=" => l != r,
                         _ => l
                     };
                 }
-                if (left is bool bl && right is bool br)
+                // String birleştirme desteği
+                if (op == "+" && (left is string || right is string))
                 {
-                    return op switch { "and" => bl && br, "or" => bl || br, _ => bl };
+                    return left.ToString() + right.ToString();
                 }
             }
             return left;
