@@ -1,4 +1,4 @@
-﻿#nullable disable
+#nullable disable
 using System;
 using System.Collections.Generic;
 
@@ -6,13 +6,13 @@ namespace WSharp
 {
     public enum TokenType
     {
-        Keyword,    
-        Identifier, 
-        Number,     
-        Operator,   
+        Keyword,
+        Identifier,
+        Number,
+        Operator,
         Punctuation,
-        String,    
-        EOF        
+        String,
+        EOF
     }
 
     public class Token
@@ -40,7 +40,7 @@ namespace WSharp
             {
                 char current = _input[_pos];
 
-             
+                
                 if (char.IsWhiteSpace(current))
                 {
                     if (current == '\n') _line++;
@@ -48,10 +48,9 @@ namespace WSharp
                     continue;
                 }
 
-        
+              
                 if (current == '#')
                 {
-                   
                     while (_pos < _input.Length && _input[_pos] != '\n')
                     {
                         _pos++;
@@ -59,11 +58,11 @@ namespace WSharp
                     continue;
                 }
 
-             
+               
                 if (char.IsDigit(current))
                 {
                     string value = "";
-                    while (_pos < _input.Length && char.IsDigit(_input[_pos]))
+                    while (_pos < _input.Length && (char.IsDigit(_input[_pos]) || _input[_pos] == '.'))
                     {
                         value += _input[_pos++];
                     }
@@ -71,21 +70,21 @@ namespace WSharp
                     continue;
                 }
 
-           
-                if (char.IsLetter(current))
+                
+                if (char.IsLetter(current) || current == '_')
                 {
                     string value = "";
+                   
                     while (_pos < _input.Length && (char.IsLetterOrDigit(_input[_pos]) || _input[_pos] == '_'))
                     {
                         value += _input[_pos++];
                     }
 
-                
                     var keywords = new List<string> {
-                        "task", "out", "check", "loop", "eman", "fail", "and", "or"
+                        "task", "out", "check", "loop", "eman", "fail", "and", "or", "var"
                     };
 
-                    TokenType type = keywords.Contains(value) ? TokenType.Keyword : TokenType.Identifier;
+                    TokenType type = keywords.Contains(value.ToLower()) ? TokenType.Keyword : TokenType.Identifier;
                     tokens.Add(new Token { Type = type, Value = value, Line = _line });
                     continue;
                 }
@@ -97,18 +96,20 @@ namespace WSharp
                     string value = "";
                     while (_pos < _input.Length && _input[_pos] != '"')
                     {
+                        
                         value += _input[_pos++];
                     }
-                    if (_pos < _input.Length) _pos++;
+                    if (_pos < _input.Length) _pos++; 
                     tokens.Add(new Token { Type = TokenType.String, Value = value, Line = _line });
                     continue;
                 }
 
+           
                 if ("+-*/%=(){},;><![].".Contains(current))
                 {
                     string value = current.ToString();
 
-                    
+                
                     if (_pos + 1 < _input.Length)
                     {
                         string next = value + _input[_pos + 1];
@@ -119,16 +120,20 @@ namespace WSharp
                         }
                     }
 
-                    TokenType type = (value == "=" || "+-*/%".Contains(value) || value == "==")
-                                     ? TokenType.Operator
-                                     : TokenType.Punctuation;
+                
+                    bool isOperator = (value == "=" || "+-*/%".Contains(value) || value == "==" || value == ">" || value == "<" || value == "!=");
 
-                    tokens.Add(new Token { Type = type, Value = value, Line = _line });
+                    tokens.Add(new Token
+                    {
+                        Type = isOperator ? TokenType.Operator : TokenType.Punctuation,
+                        Value = value,
+                        Line = _line
+                    });
                     _pos++;
                     continue;
                 }
 
-                throw new Exception($"WE# Lexer Hatasi: Beklenmeyen karakter '{current}' Satir: {_line}");
+                throw new Exception($"WE# Lexer Hatası: Beklenmeyen karakter '{current}' Satır: {_line}");
             }
 
             tokens.Add(new Token { Type = TokenType.EOF, Value = "EOF", Line = _line });
