@@ -19,7 +19,7 @@ namespace WSharp
                 {
                     case "Out": HandleOut(stmt); break;
                     case "Assignment": HandleAssignment(stmt); break;
-                    case "FunctionCall": HandleFunctionCall(stmt); break; // YENİ: win_open vb. için
+                    case "FunctionCall": HandleFunctionCall(stmt); break; 
                     case "TaskDecl":
                         if (stmt.Tokens.Count > 1)
                             _functions[stmt.Tokens[1].Value.ToLower()] = stmt.Body;
@@ -38,7 +38,7 @@ namespace WSharp
             }
         }
 
-        // YENİ: Doğrudan çağrılan fonksiyonları (win_open, win_clear vb.) yönetir
+        
         private void HandleFunctionCall(Statement stmt)
         {
             int pos = 0;
@@ -48,9 +48,9 @@ namespace WSharp
         private void HandleOut(Statement stmt)
         {
             int p = 0;
-            // 'out' keyword'ünü atla
+            
             if (stmt.Tokens.Count > 0 && stmt.Tokens[0].Value == "out") p++;
-            // Parantez varsa atla
+           
             if (stmt.Tokens.Count > p && stmt.Tokens[p].Value == "(") p++;
 
             var val = EvaluateExpression(ref p, stmt.Tokens);
@@ -105,11 +105,11 @@ namespace WSharp
             if (pos >= tokens.Count) return null;
             Token current = tokens[pos];
 
-            // --- FONKSİYON ÇAĞIRMA BLOĞU ---
+            
             if (current.Type == TokenType.Identifier && pos + 1 < tokens.Count && tokens[pos + 1].Value == "(")
             {
                 string funcName = current.Value.ToLower();
-                pos += 2; // isim ve '(' karakterini geç
+                pos += 2; 
                 List<object> args = new List<object>();
 
                 while (pos < tokens.Count && tokens[pos].Value != ")")
@@ -117,15 +117,15 @@ namespace WSharp
                     args.Add(EvaluateExpression(ref pos, tokens));
                     if (pos < tokens.Count && tokens[pos].Value == ",") pos++;
                 }
-                if (pos < tokens.Count) pos++; // ')' karakterini geç
+                if (pos < tokens.Count) pos++; 
 
-                // 1. Standart Kütüphane Kontrolü
+          
                 if (StandardLibrary.Exists(funcName))
                 {
                     return StandardLibrary.Call(funcName, args);
                 }
 
-                // 2. Kullanıcı Tanımlı Fonksiyon Kontrolü
+               
                 if (_functions.ContainsKey(funcName))
                 {
                     ExecuteStatements(_functions[funcName]);
@@ -136,7 +136,7 @@ namespace WSharp
 
             if (current.Type == TokenType.Number)
             {
-                // int.Parse yerine double.Parse kullanarak ondalık desteği sağladık
+                
                 double val = double.Parse(tokens[pos++].Value, System.Globalization.CultureInfo.InvariantCulture);
                 return CheckForOperator(ref pos, tokens, val);
             }
@@ -154,7 +154,7 @@ namespace WSharp
                 return name;
             }
 
-            if (current.Value == "(") // Gruplandırma parantezleri için
+            if (current.Value == "(") 
             {
                 pos++;
                 var val = EvaluateExpression(ref pos, tokens);
@@ -172,7 +172,7 @@ namespace WSharp
                 string op = tokens[pos++].Value;
                 var right = EvaluateExpression(ref pos, tokens);
 
-                // Sayısal işlemler için double desteği
+        
                 if (left is double l && right is double r)
                 {
                     return op switch
@@ -188,7 +188,7 @@ namespace WSharp
                         _ => l
                     };
                 }
-                // String birleştirme desteği
+           
                 if (op == "+" && (left is string || right is string))
                 {
                     return left.ToString() + right.ToString();
