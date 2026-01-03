@@ -1,42 +1,60 @@
-﻿#nullable disable
+#nullable disable
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
+using System.Linq;
 
 namespace WSharp
 {
     class Program
     {
+    
+        [STAThread]
         static void Main(string[] args)
         {
+           
+            var libraries = new List<ILibrary>
+            {
+                new AdvancedLibrary(),
+                new DrawLib()
+            };
+
+  
+            foreach (var lib in libraries)
+            {
+                var funcs = lib.GetFunctions();
+                foreach (var func in funcs)
+                {
+                    if (!StandardLibrary.Functions.ContainsKey(func.Key))
+                    {
+                        StandardLibrary.Functions.Add(func.Key, func.Value);
+                    }
+                }
+            }
 
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine(@"
     *************************************************
     * *
-    * WE# (WeSharp) PROGRAMMING language          *
+    * WE# (WeSharp) SMART ENGINE v1.4          *
+    * 'GRAFIK MOTORU VE WEB DESTEGI'           *
     * *
-    * we# by Efeatagul                            *
-    * VERSION: 1.0 (Live Shell)                   *
-    * *
-    *************************************************
-            ");
-            Console.WriteLine("\n      WE# Engine is initializing by Efeatagul...");
-            Thread.Sleep(2000);
+    *************************************************");
+            Thread.Sleep(800);
             Console.Clear();
-
 
             var interpreter = new Interpreter();
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("============================================================");
-            Console.WriteLine("          WE# BY EFEATAGUL - INTERACTIVE TERMINAL v1.0      ");
-            Console.WriteLine("      (Cikmak icin 'exit()' yazin veya CTRL+C yapin)      ");
+            Console.WriteLine("          WE# BY EFEATAGUL - SMART TERMINAL v1.4            ");
+            Console.WriteLine("      'help()' | 'exit()' | 'run dosya.we' | 'we_core()'    ");
             Console.WriteLine("============================================================");
             Console.ResetColor();
-            Console.WriteLine();
 
+          
             while (true)
             {
                 string fullCode = "";
@@ -58,51 +76,92 @@ namespace WSharp
                         else continue;
                     }
 
-                    if (line.Trim() == "exit()") return;
+                    string trimLine = line.Trim().ToLower();
+
+                    if (trimLine == "exit()") return;
+
+                    if (trimLine == "help()")
+                    {
+                        ShowHelpMenu();
+                        fullCode = "";
+                        break;
+                    }
+
+                    if (trimLine.StartsWith("run "))
+                    {
+                        string fileName = line.Trim().Substring(4).Replace("\"", "");
+                        RunFromFile(fileName, interpreter);
+                        fullCode = "";
+                        break;
+                    }
 
                     fullCode += line + Environment.NewLine;
 
-                    if (line.Contains("{") || line.Contains("["))
-                    {
-                        bracketCount++;
-                        isMultiLine = true;
-                    }
-
+                  
+                    if (line.Contains("{") || line.Contains("[")) { bracketCount++; isMultiLine = true; }
                     if (line.Contains("}") || line.Contains("]"))
                     {
                         bracketCount--;
-                        if (bracketCount <= 0)
-                        {
-                            bracketCount = 0;
-                            isMultiLine = false;
-                        }
+                        if (bracketCount <= 0) { bracketCount = 0; isMultiLine = false; }
                     }
+
+                    if (!isMultiLine) break;
                 }
+
+                if (string.IsNullOrEmpty(fullCode)) continue;
 
                 try
                 {
                     var lexer = new Lexer(fullCode);
-                    List<Token> tokens = lexer.Tokenize();
+                    var tokens = lexer.Tokenize();
                     var parser = new Parser(tokens);
-                    List<Statement> programStructure = parser.Parse();
+                    var programStructure = parser.Parse();
 
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("reply: ");
-                    Console.ResetColor();
+                    if (programStructure == null || programStructure.Count == 0) continue;
 
+              
                     interpreter.ExecuteStatements(programStructure);
-
-                    Console.WriteLine();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("reply: Yanlis!\n");
+                    Console.WriteLine("Hata: " + ex.Message);
                     Console.ResetColor();
                 }
-
-                fullCode = "";
             }
+        }
+
+        static void RunFromFile(string fileName, Interpreter interpreter)
+        {
+            try
+            {
+                if (!File.Exists(fileName) && File.Exists(fileName + ".we")) fileName += ".we";
+
+                if (!File.Exists(fileName))
+                {
+                    Console.WriteLine($"[!] Hata: {fileName} bulunamadi.");
+                    return;
+                }
+
+                string code = File.ReadAllText(fileName);
+                var lexer = new Lexer(code);
+                var tokens = lexer.Tokenize();
+                var parser = new Parser(tokens);
+                var statements = parser.Parse();
+
+                interpreter.ExecuteStatements(statements);
+            }
+            catch (Exception ex) { Console.WriteLine("Dosya yürütme hatası: " + ex.Message); }
+        }
+
+        static void ShowHelpMenu()
+        {
+            Console.WriteLine("\n--- WE# YARDIM MENUSU ---");
+            Console.WriteLine("win_open(500, 500, \"Baslik\") -> Pencere acar");
+            Console.WriteLine("win_clear(\"Red\")            -> Arkaplani boyar");
+            Console.WriteLine("draw_text(10, 10, \"Selam\", 20, \"White\") -> Yazi yazar");
+            Console.WriteLine("draw_circle(100, 100, 50, \"Blue\") -> Daire cizer");
+            Console.WriteLine("--------------------------\n");
         }
     }
 }
