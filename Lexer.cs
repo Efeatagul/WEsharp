@@ -1,18 +1,20 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace WSharp
 {
+    
     public enum TokenType
     {
-        Keyword,
-        Identifier,
-        Number,
-        Operator,
-        Punctuation,
-        String,
-        EOF
+        wea_sign_keyword,   
+        wea_sign_name,      
+        wea_sign_val,       
+        wea_sign_action,    
+        wea_sign_mark,      
+        wea_sign_text,      
+        wea_sign_halt       
     }
 
     public class Token
@@ -20,8 +22,7 @@ namespace WSharp
         public TokenType Type { get; set; }
         public string Value { get; set; }
         public int Line { get; set; }
-
-        public override string ToString() => $"[{Type}: {Value}]";
+        public override string ToString() => $"[WEA_TOKEN -> {Type}: {Value}]";
     }
 
     public class Lexer
@@ -30,11 +31,18 @@ namespace WSharp
         private int _pos = 0;
         private int _line = 1;
 
-        public Lexer(string input) => _input = input;
+        
+        private static readonly HashSet<string> Keywords = new HashSet<string> {
+            "wea_flow", "wea_emit", "wea_verify", "wea_cycle",
+            "wea_eman", "wea_fail", "wea_join", "wea_split", "wea_unit"
+        };
+
+        public Lexer(string input) => _input = input ?? "";
 
         public List<Token> Tokenize()
         {
             var tokens = new List<Token>();
+            var sb = new StringBuilder();
 
             while (_pos < _input.Length)
             {
@@ -48,96 +56,87 @@ namespace WSharp
                     continue;
                 }
 
-              
+                
                 if (current == '#')
                 {
-                    while (_pos < _input.Length && _input[_pos] != '\n')
-                    {
-                        _pos++;
-                    }
+                    while (_pos < _input.Length && _input[_pos] != '\n') _pos++;
                     continue;
                 }
 
-               
+                
                 if (char.IsDigit(current))
                 {
-                    string value = "";
+                    sb.Clear();
                     while (_pos < _input.Length && (char.IsDigit(_input[_pos]) || _input[_pos] == '.'))
                     {
-                        value += _input[_pos++];
+                        sb.Append(_input[_pos++]);
                     }
-                    tokens.Add(new Token { Type = TokenType.Number, Value = value, Line = _line });
+                    tokens.Add(CreateToken(TokenType.wea_sign_val, sb.ToString()));
                     continue;
                 }
 
                 
                 if (char.IsLetter(current) || current == '_')
                 {
-                    string value = "";
-                   
+                    sb.Clear();
                     while (_pos < _input.Length && (char.IsLetterOrDigit(_input[_pos]) || _input[_pos] == '_'))
                     {
-                        value += _input[_pos++];
+                        sb.Append(_input[_pos++]);
                     }
 
-                    var keywords = new List<string> {
-                        "task", "out", "check", "loop", "eman", "fail", "and", "or", "var"
-                    };
+                    string val = sb.ToString();
+                    TokenType type = Keywords.Contains(val.ToLower()) ? TokenType.wea_sign_keyword : TokenType.wea_sign_name;
+                    tokens.Add(CreateToken(type, val));
+                    continue;
+                }
 
-                    TokenType type = keywords.Contains(value.ToLower()) ? TokenType.Keyword : TokenType.Identifier;
-                    tokens.Add(new Token { Type = type, Value = value, Line = _line });
+                
+                if (current == '"')
+                {
+                    _pos++; 
+                    sb.Clear();
+                    while (_pos < _input.Length && _input[_pos] != '"')
+                    {
+                        sb.Append(_input[_pos++]);
+                    }
+                    if (_pos < _input.Length) _pos++; 
+                    tokens.Add(CreateToken(TokenType.wea_sign_text, sb.ToString()));
                     continue;
                 }
 
              
-                if (current == '"')
-                {
-                    _pos++;
-                    string value = "";
-                    while (_pos < _input.Length && _input[_pos] != '"')
-                    {
-                        
-                        value += _input[_pos++];
-                    }
-                    if (_pos < _input.Length) _pos++; 
-                    tokens.Add(new Token { Type = TokenType.String, Value = value, Line = _line });
-                    continue;
-                }
-
-           
                 if ("+-*/%=(){},;><![].".Contains(current))
                 {
-                    string value = current.ToString();
+                    string op = current.ToString();
+                    _pos++;
 
-                
-                    if (_pos + 1 < _input.Length)
+                  
+                    if (_pos < _input.Length)
                     {
-                        string next = value + _input[_pos + 1];
-                        if (next == "==" || next == "<=" || next == ">=" || next == "!=")
+                        string nextPair = op + _input[_pos];
+                        if (nextPair == "==" || nextPair == "!=" || nextPair == "<=" || nextPair == ">=")
                         {
-                            value = next;
+                            op = nextPair;
                             _pos++;
                         }
                     }
 
-                
-                    bool isOperator = (value == "=" || "+-*/%".Contains(value) || value == "==" || value == ">" || value == "<" || value == "!=");
+                 
+                    bool isAction = (op == "=" || "+-*/%".Contains(op) || op == "==" || op == "!=" ||
+                                     op == ">" || op == "<" || op == ">=" || op == "<=");
 
-                    tokens.Add(new Token
-                    {
-                        Type = isOperator ? TokenType.Operator : TokenType.Punctuation,
-                        Value = value,
-                        Line = _line
-                    });
-                    _pos++;
+                    tokens.Add(CreateToken(isAction ? TokenType.wea_sign_action : TokenType.wea_sign_mark, op));
                     continue;
                 }
 
-                throw new Exception($"WE# Lexer Hatası: Beklenmeyen karakter '{current}' Satır: {_line}");
+                
+                throw new Exception($"[WEA_SCANNER_ERROR]: Unexpected character '{current}' at line {_line}");
             }
 
-            tokens.Add(new Token { Type = TokenType.EOF, Value = "EOF", Line = _line });
+            tokens.Add(CreateToken(TokenType.wea_sign_halt, "HALT"));
             return tokens;
         }
+
+        private Token CreateToken(TokenType type, string value) => new Token { Type = type, Value = value, Line = _line };
     }
 }
