@@ -1,41 +1,70 @@
-WE# (WeSharp) - Evolution Log
- Day 1: The Foundation (v0.01 - Beta)
-Focus: Core Architecture & Syntax Establishment
+WEA-Sharp (WSharp) Engine
+Master-Build 2.0 | Sunday Optimization Edition
 
-Core Development: Built the fundamental Lexer, Parser, and Interpreter skeleton.
+WEA-Sharp is a high-performance scripting language engine built on the C# infrastructure, featuring a unique syntax and a modular library architecture.
 
-Logic Systems: Implemented check (if) structures and support for curly brace { } code blocks.
+Core Features
+Unique Syntax: Intuitive command set optimized with the wea_ prefix.
 
-Interface: Created a specialized interactive CLI shell using user > for inputs and reply: for system responses.
+Modular Architecture: Easily extendable via the ILibrary interface—add new capabilities in seconds.
 
-Basic Syntax: Enabled basic variable assignments and terminal output functions (out).
+Advanced Error Handling: Robust flow control using custom wea_eman and wea_fail blocks.
 
- Day 2: Graphics & Logic Expansion (v0.02 - Current)
-Focus: Visual Output, Hardware Interaction & Modular Libraries
+Built-in Cores:
 
-Graphics Engine: Integrated drawlib.cs for full window management. Added capabilities for drawing shapes (draw_circle, draw_rect) and rendering text.
+Logic (Math): Geometric and probabilistic calculations with degree-to-radian support.
 
-Hardware Interaction: Added real-time keyboard tracking (is_key) and instant mouse coordinates (mouse_x, mouse_y) for interactive applications.
+Chrono (Time): High-precision time tracking and flow control.
 
-Advanced Library Suite:
+Audio: Frequency-based sound synthesizer for musical notes and system alerts.
 
-String Manipulation: Added Regex-based str_slug, str_replace, and advanced text cleaning tools.
+Interface (UI): Dynamic terminal theming (Ghost, Void, Neon, Magma modes).
 
-System Utilities: Introduced file system operations (file_read, file_write) and JSON processing support.
+ Code Example
+A simple loop and UI styling in WSharp:
 
-Interpreter Optimization:
+Kod snippet'i
 
-Functional Growth: Enabled nested function calls and the ability to capture and use function return values.
+wea_ui_style("wea_neon") # Set terminal to neon mode
+wea_unit counter = 0
 
-Rendering Stability: Solved graphical flickering issues by implementing a Reflection-based DoubleBuffered fix.
+wea_cycle (counter < 5) {
+    wea_emit "Step Index: " + counter
+    wea_audio_tone("C#", 200) # Play a musical note at each step
+    counter = counter + 1
+}
 
- Technical Specifications
-Base Framework: Built using .NET and C#.
+wea_audio_alert("wea_info")
+wea_emit "Operation Completed Successfully!"
+ Project Structure
+The engine is built on four primary pillars:
 
-Architecture: Modular Multi-Library System (Standard, Advanced, and Drawing libraries).
+Lexer (The Scanner): Breaks source code into atomic tokens.
 
-Execution Model: Real-time Interpretation with Dynamic Function Mapping.
+Parser (The Brain): Converts tokens into a hierarchical Abstract Syntax Tree (AST).
 
-Developer: Efeatagul
+Interpreter (The Heart): Executes logic and manages memory/variables.
 
-License: MIT License
+Libraries (The Tools): Modular extensions for Math, Audio, and UI.
+
+ Getting Started
+Open the project solution (.sln) in Visual Studio.
+
+Press Ctrl + Shift + B to build the engine.
+
+Run your .wea scripts through the generated executable.
+
+ Sunday Routine Logs
+This project follows a strict Sunday Routine for maintenance:
+
+Weekly bug fixes and stability audits.
+
+Performance optimization of the Core Brain.
+
+Non-copyrighted name changes and terminology alignment.
+
+Developed by: [Efe Ata Gül]
+
+Version: 2.0.0-Master
+
+License: MIT
