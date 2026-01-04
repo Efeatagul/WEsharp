@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace WSharp
 {
+   
     public class Statement
     {
         public string Type { get; set; }
@@ -18,16 +19,30 @@ namespace WSharp
         private readonly List<Token> _tokens;
         private int _pos = 0;
 
+        
+        private static readonly HashSet<string> ReservedKeywords = new HashSet<string>
+        {
+            "wea_flow", "wea_verify", "wea_emit", "wea_eman", "wea_cycle", "wea_fail", "wea_unit"
+        };
+
         public Parser(List<Token> tokens) => _tokens = tokens;
 
-        private Token Current => _pos < _tokens.Count ? _tokens[_pos] : new Token { Type = TokenType.EOF, Value = "" };
-        private Token Peek(int distance) => (_pos + distance < _tokens.Count) ? _tokens[_pos + distance] : new Token { Type = TokenType.EOF, Value = "" };
+        private Token Current => _pos < _tokens.Count ? _tokens[_pos] : new Token { Type = TokenType.wea_sign_halt, Value = "" };
+        private Token Peek(int distance) => (_pos + distance < _tokens.Count) ? _tokens[_pos + distance] : new Token { Type = TokenType.wea_sign_halt, Value = "" };
 
         public List<Statement> Parse()
         {
             var statements = new List<Statement>();
-            while (_pos < _tokens.Count && Current.Type != TokenType.EOF)
+            if (_tokens == null) return statements;
+
+            while (Current.Type != TokenType.wea_sign_halt)
             {
+                
+                if (Current.Value == "\n" || Current.Value == ";" || string.IsNullOrWhiteSpace(Current.Value))
+                {
+                    _pos++;
+                    continue;
+                }
                 statements.Add(ParseStatement());
             }
             return statements;
@@ -37,14 +52,14 @@ namespace WSharp
         {
             var stmt = new Statement();
 
-          
-            if (Current.Value == "eman")
+        
+            if (Current.Value == "wea_eman")
             {
                 stmt.Type = "EmanFail";
                 _pos++;
                 stmt.Body = ParseBlock();
 
-                if (_pos < _tokens.Count && Current.Value == "fail")
+                if (Current.Value == "wea_fail")
                 {
                     _pos++;
                     stmt.CatchBody = ParseBlock();
@@ -52,63 +67,83 @@ namespace WSharp
                 return stmt;
             }
 
-            if (Current.Value == "task")
+            
+            if (Current.Value == "wea_flow")
             {
                 stmt.Type = "TaskDecl";
-                while (_pos < _tokens.Count && Current.Value != "{")
+                _pos++; 
+                while (Current.Type != TokenType.wea_sign_halt && Current.Value != "{")
                 {
                     stmt.Tokens.Add(Current);
                     _pos++;
                 }
                 stmt.Body = ParseBlock();
-                return stmt;
-            }
-
-      
-            if (Current.Value == "check" || Current.Value == "loop")
-            {
-                stmt.Type = Current.Value == "check" ? "Check" : "Loop";
-                while (_pos < _tokens.Count && Current.Value != "{")
-                {
-                    stmt.Tokens.Add(Current);
-                    _pos++;
-                }
-                stmt.Body = ParseBlock();
-                return stmt;
-            }
-
-           
-            if (Current.Type == TokenType.Identifier && Peek(1).Value == "(")
-            {
-                stmt.Type = "FunctionCall";
-                while (_pos < _tokens.Count && Current.Value != "\n" && Current.Type != TokenType.EOF)
-                {
-                    stmt.Tokens.Add(Current);
-                    _pos++;
-                    if (stmt.Tokens.Last().Value == ")") break; 
-                }
                 return stmt;
             }
 
          
-            if (Current.Value == "out")
+            if (Current.Value == "wea_verify" || Current.Value == "wea_cycle")
             {
-                stmt.Type = "Out";
-                while (_pos < _tokens.Count && Current.Value != "\n" && Current.Type != TokenType.EOF)
+                stmt.Type = Current.Value == "wea_verify" ? "Check" : "Loop";
+                _pos++;
+                while (Current.Type != TokenType.wea_sign_halt && Current.Value != "{")
                 {
                     stmt.Tokens.Add(Current);
                     _pos++;
-                   
+                }
+                stmt.Body = ParseBlock();
+                return stmt;
+            }
+
+         
+            if (Current.Value == "wea_emit")
+            {
+                stmt.Type = "Out";
+               
+                while (Current.Type != TokenType.wea_sign_halt && Current.Value != "\n")
+                {
+                    stmt.Tokens.Add(Current);
+                    _pos++;
                 }
                 return stmt;
             }
 
-          
-            stmt.Type = "Assignment";
-            while (_pos < _tokens.Count && Current.Value != "\n" && Current.Value != "}" && Current.Type != TokenType.EOF)
+            
+            if (Current.Value == "wea_unit")
             {
+                stmt.Type = "Assignment";
+                while (Current.Type != TokenType.wea_sign_halt && Current.Value != "\n")
+                {
+                    stmt.Tokens.Add(Current);
+                    _pos++;
+                }
+                return stmt;
+            }
 
-                if (new[] { "task", "check", "out", "eman", "loop" }.Contains(Current.Value) && stmt.Tokens.Count > 0) break;
+            
+            if (Current.Type == TokenType.wea_sign_name && Peek(1).Value == "(")
+            {
+                stmt.Type = "FunctionCall";
+                int parenCount = 0;
+                while (Current.Type != TokenType.wea_sign_halt && Current.Value != "\n")
+                {
+                    if (Current.Value == "(") parenCount++;
+                    if (Current.Value == ")") parenCount--;
+
+                    stmt.Tokens.Add(Current);
+                    _pos++;
+
+                    if (parenCount == 0) break;
+                }
+                return stmt;
+            }
+
+           
+            stmt.Type = "Assignment";
+            while (Current.Type != TokenType.wea_sign_halt && Current.Value != "\n" && Current.Value != "}")
+            {
+             
+                if (ReservedKeywords.Contains(Current.Value) && stmt.Tokens.Count > 0) break;
 
                 stmt.Tokens.Add(Current);
                 _pos++;
@@ -122,12 +157,17 @@ namespace WSharp
             var block = new List<Statement>();
             if (Current.Value == "{") _pos++;
 
-            while (_pos < _tokens.Count && Current.Value != "}")
+            while (Current.Type != TokenType.wea_sign_halt && Current.Value != "}")
             {
+                if (Current.Value == "\n" || string.IsNullOrWhiteSpace(Current.Value))
+                {
+                    _pos++;
+                    continue;
+                }
                 block.Add(ParseStatement());
             }
 
-            if (_pos < _tokens.Count && Current.Value == "}") _pos++;
+            if (Current.Value == "}") _pos++;
             return block;
         }
     }
