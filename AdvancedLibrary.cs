@@ -5,108 +5,112 @@ using System.IO;
 using System.Net.Http;
 using System.Linq;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text;
 
 namespace WSharp
 {
     
-    public interface ILibrary
-    {
-        Dictionary<string, Func<List<object>, object>> GetFunctions();
-    }
-
     public class AdvancedLibrary : ILibrary
     {
         private static readonly HttpClient _client = new HttpClient();
 
-     
         static AdvancedLibrary()
         {
-            _client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) WE-Sharp/1.4");
+            
+            _client.Timeout = TimeSpan.FromSeconds(15);
+            _client.DefaultRequestHeaders.Add("User-Agent", "WEA-Prime-Engine/2.0 (Master-Build)");
         }
 
         public Dictionary<string, Func<List<object>, object>> GetFunctions()
         {
             return new Dictionary<string, Func<List<object>, object>>
             {
-                
-                { "file_write", args => { File.WriteAllText(args[0].ToString(), args[1].ToString()); return true; }},
-                { "file_read", args => File.ReadAllText(args[0].ToString()) },
-                { "file_append", args => { File.AppendAllText(args[0].ToString(), args[1].ToString()); return true; }},
-                { "file_exists", args => File.Exists(args[0].ToString()) },
-                { "file_del", args => { if(File.Exists(args[0].ToString())) File.Delete(args[0].ToString()); return true; }},
-                { "file_copy", args => { File.Copy(args[0].ToString(), args[1].ToString(), true); return true; }},
-                { "file_move", args => { File.Move(args[0].ToString(), args[1].ToString()); return true; }},
-
-                
-                { "dir_create", args => { Directory.CreateDirectory(args[0].ToString()); return true; }},
-                { "dir_del", args => { if(Directory.Exists(args[0].ToString())) Directory.Delete(args[0].ToString(), true); return true; }},
-                { "dir_exists", args => Directory.Exists(args[0].ToString()) },
-                { "dir_files", args => Directory.GetFiles(args[0].ToString()).Cast<object>().ToList() },
-                { "dir_dirs", args => Directory.GetDirectories(args[0].ToString()).Cast<object>().ToList() },
-                { "path_ext", args => Path.GetExtension(args[0].ToString()) },
-                { "path_name", args => Path.GetFileName(args[0].ToString()) },
-                { "get_cd", args => Directory.GetCurrentDirectory() },
-
-                
-                { "http_get", args => {
-                    try {
-                        return _client.GetStringAsync(args[0].ToString()).GetAwaiter().GetResult();
-                    } catch (Exception ex) {
-                        return "HTTP_ERROR: " + ex.Message;
-                    }
+               
+                { "wea_file_write", args => {
+                    try { File.WriteAllText(args[0].ToString(), args[1].ToString()); return true; } catch { return false; }
                 }},
-
-             
-                { "str_between", args => {
-                    string text = args[0].ToString();
-                    string start = args[1].ToString();
-                    string end = args[2].ToString();
-                    int p1 = text.IndexOf(start);
-                    if (p1 == -1) return "";
-                    p1 += start.Length;
-                    int p2 = text.IndexOf(end, p1);
-                    if (p2 == -1) return "";
-                    return text.Substring(p1, p2 - p1);
+                { "wea_file_read", args => {
+                    string p = args[0].ToString();
+                    return File.Exists(p) ? File.ReadAllText(p) : "wea_fail: null_target";
                 }},
-
-                { "str_split", args => args[0].ToString().Split(new[] { args[1].ToString() }, StringSplitOptions.None).Cast<object>().ToList() },
-                { "str_has", args => args[0].ToString().Contains(args[1].ToString()) },
-                { "str_replace", args => args[0].ToString().Replace(args[1].ToString(), args[2].ToString()) },
-                { "str_upper", args => args[0].ToString().ToUpper() },
-                { "str_lower", args => args[0].ToString().ToLower() },
-                { "str_trim", args => args[0].ToString().Trim() },
-                { "str_len", args => args[0].ToString().Length },
-                { "str_sub", args => {
-                    int start = Convert.ToInt32(args[1]);
-                    int len = Convert.ToInt32(args[2]);
-                    return args[0].ToString().Substring(start, len);
+                { "wea_file_push", args => {
+                    try { File.AppendAllText(args[0].ToString(), args[1].ToString()); return true; } catch { return false; }
                 }},
+                { "wea_file_check", args => File.Exists(args[0].ToString()) },
+                { "wea_file_delete", args => {
+                    try { if(File.Exists(args[0].ToString())) File.Delete(args[0].ToString()); return true; } catch { return false; }
+                }},
+                { "wea_file_path", args => Directory.GetCurrentDirectory() },
 
                
-                { "sys_exec", args => {
+                { "wea_vault_store", args => {
                     try {
-                        ProcessStartInfo startInfo = new ProcessStartInfo {
+                        string path = args[0].ToString();
+                        string entry = $"{args[1]}|{args[2]}{Environment.NewLine}";
+                        File.AppendAllText(path, entry);
+                        return true;
+                    } catch { return false; }
+                }},
+                { "wea_vault_fetch", args => {
+                    try {
+                        string path = args[0].ToString();
+                        string key = args[1].ToString();
+                        if (!File.Exists(path)) return "wea_fail";
+                        
+                        var lines = File.ReadLines(path).Reverse();
+                        foreach (var line in lines) {
+                            var parts = line.Split('|');
+                            if (parts.Length >= 2 && parts[0] == key) return parts[1];
+                        }
+                        return "wea_fail";
+                    } catch { return "wea_error"; }
+                }},
+
+            
+                { "wea_net_get", args => {
+                    try { return _client.GetStringAsync(args[0].ToString()).GetAwaiter().GetResult(); }
+                    catch (Exception ex) { return "wea_net_fail: " + ex.Message; }
+                }},
+                { "wea_net_post", args => {
+                    try {
+                        var content = new StringContent(args[1].ToString(), Encoding.UTF8, "application/json");
+                        var response = _client.PostAsync(args[0].ToString(), content).GetAwaiter().GetResult();
+                        return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    } catch (Exception ex) { return "wea_net_fail: " + ex.Message; }
+                }},
+                { "wea_net_json", args => {
+                    try {
+                        using var doc = JsonDocument.Parse(args[0].ToString());
+                        return doc.RootElement.GetProperty(args[1].ToString()).ToString();
+                    } catch { return "wea_json_fail"; }
+                }},
+
+                
+                { "wea_sys_run", args => {
+                    try {
+                        Process.Start(new ProcessStartInfo {
                             FileName = args[0].ToString(),
                             Arguments = args.Count > 1 ? args[1].ToString() : "",
                             UseShellExecute = true
-                        };
-                        Process.Start(startInfo);
+                        });
                         return true;
                     } catch { return false; }
                 }},
-
-                { "get_env", args => Environment.GetEnvironmentVariable(args[0].ToString()) },
-
-                { "sys_print", args => {
+                { "wea_sys_env", args => Environment.GetEnvironmentVariable(args[0].ToString()) ?? "wea_null" },
+                
+            
+                { "wea_str_slice", args => {
                     try {
-                        ProcessStartInfo info = new ProcessStartInfo(args[0].ToString()) {
-                            Verb = "print",
-                            CreateNoWindow = true,
-                            WindowStyle = ProcessWindowStyle.Hidden
-                        };
-                        Process.Start(info);
-                        return true;
-                    } catch { return false; }
+                        string text = args[0].ToString();
+                        string s = args[1].ToString();
+                        string e = args[2].ToString();
+                        int p1 = text.IndexOf(s);
+                        if (p1 == -1) return "wea_null";
+                        p1 += s.Length;
+                        int p2 = text.IndexOf(e, p1);
+                        return (p2 == -1) ? "wea_null" : text.Substring(p1, p2 - p1);
+                    } catch { return "wea_error"; }
                 }}
             };
         }
