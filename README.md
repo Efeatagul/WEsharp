@@ -1,7 +1,7 @@
-WEA-Sharp (WSharp) Engine
+WE-Sharp (WSharp) Engine
 Master-Build 2.0 | Sunday Optimization Edition
 
-WEA-Sharp is a high-performance scripting language engine built on the C# infrastructure, featuring a unique syntax and a modular library architecture.
+WE-Sharp is a high-performance scripting language engine built on the C# infrastructure, featuring a unique syntax and a modular library architecture.
 
 Core Features
 Unique Syntax: Intuitive command set optimized with the wea_ prefix.
