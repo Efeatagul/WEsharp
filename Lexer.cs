@@ -1,142 +1,123 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace WSharp
 {
-    
     public enum TokenType
     {
-        wea_sign_keyword,   
-        wea_sign_name,      
-        wea_sign_val,       
-        wea_sign_action,    
-        wea_sign_mark,      
-        wea_sign_text,      
-        wea_sign_halt       
+        wea_sign_keyword,
+        wea_sign_name,
+        wea_sign_val,
+        wea_sign_text,
+        wea_sign_mark,
+        wea_sign_halt
     }
 
     public class Token
     {
-        public TokenType Type { get; set; }
-        public string Value { get; set; }
-        public int Line { get; set; }
-        public override string ToString() => $"[WEA_TOKEN -> {Type}: {Value}]";
+        public TokenType Type;
+        public string Value;
+        public int Line;
+
+        public Token(TokenType type, string value, int line)
+        {
+            Type = type;
+            Value = value;
+            Line = line;
+        }
     }
 
     public class Lexer
     {
-        private readonly string _input;
-        private int _pos = 0;
+        private readonly string _source;
+        private readonly List<Token> _tokens = new List<Token>();
+        private int _start = 0;
+        private int _current = 0;
         private int _line = 1;
 
-        
-        private static readonly HashSet<string> Keywords = new HashSet<string> {
-            "wea_flow", "wea_emit", "wea_verify", "wea_cycle",
-            "wea_eman", "wea_fail", "wea_join", "wea_split", "wea_unit"
-        };
-
-        public Lexer(string input) => _input = input ?? "";
+        public Lexer(string source) => _source = source;
 
         public List<Token> Tokenize()
         {
-            var tokens = new List<Token>();
-            var sb = new StringBuilder();
-
-            while (_pos < _input.Length)
-            {
-                char current = _input[_pos];
-
-                
-                if (char.IsWhiteSpace(current))
-                {
-                    if (current == '\n') _line++;
-                    _pos++;
-                    continue;
-                }
-
-                
-                if (current == '#')
-                {
-                    while (_pos < _input.Length && _input[_pos] != '\n') _pos++;
-                    continue;
-                }
-
-                
-                if (char.IsDigit(current))
-                {
-                    sb.Clear();
-                    while (_pos < _input.Length && (char.IsDigit(_input[_pos]) || _input[_pos] == '.'))
-                    {
-                        sb.Append(_input[_pos++]);
-                    }
-                    tokens.Add(CreateToken(TokenType.wea_sign_val, sb.ToString()));
-                    continue;
-                }
-
-                
-                if (char.IsLetter(current) || current == '_')
-                {
-                    sb.Clear();
-                    while (_pos < _input.Length && (char.IsLetterOrDigit(_input[_pos]) || _input[_pos] == '_'))
-                    {
-                        sb.Append(_input[_pos++]);
-                    }
-
-                    string val = sb.ToString();
-                    TokenType type = Keywords.Contains(val.ToLower()) ? TokenType.wea_sign_keyword : TokenType.wea_sign_name;
-                    tokens.Add(CreateToken(type, val));
-                    continue;
-                }
-
-                
-                if (current == '"')
-                {
-                    _pos++; 
-                    sb.Clear();
-                    while (_pos < _input.Length && _input[_pos] != '"')
-                    {
-                        sb.Append(_input[_pos++]);
-                    }
-                    if (_pos < _input.Length) _pos++; 
-                    tokens.Add(CreateToken(TokenType.wea_sign_text, sb.ToString()));
-                    continue;
-                }
-
-             
-                if ("+-*/%=(){},;><![].".Contains(current))
-                {
-                    string op = current.ToString();
-                    _pos++;
-
-                  
-                    if (_pos < _input.Length)
-                    {
-                        string nextPair = op + _input[_pos];
-                        if (nextPair == "==" || nextPair == "!=" || nextPair == "<=" || nextPair == ">=")
-                        {
-                            op = nextPair;
-                            _pos++;
-                        }
-                    }
-
-                 
-                    bool isAction = (op == "=" || "+-*/%".Contains(op) || op == "==" || op == "!=" ||
-                                     op == ">" || op == "<" || op == ">=" || op == "<=");
-
-                    tokens.Add(CreateToken(isAction ? TokenType.wea_sign_action : TokenType.wea_sign_mark, op));
-                    continue;
-                }
-
-                
-                throw new Exception($"[WEA_SCANNER_ERROR]: Unexpected character '{current}' at line {_line}");
-            }
-
-            tokens.Add(CreateToken(TokenType.wea_sign_halt, "HALT"));
-            return tokens;
+            while (!IsAtEnd()) { _start = _current; ScanToken(); }
+            _tokens.Add(new Token(TokenType.wea_sign_halt, "", _line));
+            return _tokens;
         }
 
-        private Token CreateToken(TokenType type, string value) => new Token { Type = type, Value = value, Line = _line };
+        private void ScanToken()
+        {
+            char c = Advance();
+            switch (c)
+            {
+                case '(': AddToken(TokenType.wea_sign_mark); break;
+                case ')': AddToken(TokenType.wea_sign_mark); break;
+                case '{': AddToken(TokenType.wea_sign_mark); break;
+                case '}': AddToken(TokenType.wea_sign_mark); break;
+                case ',': AddToken(TokenType.wea_sign_mark); break;
+                case '-': AddToken(TokenType.wea_sign_mark); break;
+                case '+': AddToken(TokenType.wea_sign_mark); break;
+                case '*': AddToken(TokenType.wea_sign_mark); break;
+                case ';': break;
+                case '/': if (Match('/')) while (Peek() != '\n' && !IsAtEnd()) Advance(); else AddToken(TokenType.wea_sign_mark); break;
+                case '!': AddToken(TokenType.wea_sign_mark, Match('=') ? "!=" : "!"); break;
+                case '=': AddToken(TokenType.wea_sign_mark, Match('=') ? "==" : "="); break;
+                case '<': AddToken(TokenType.wea_sign_mark, Match('=') ? "<=" : "<"); break;
+                case '>': AddToken(TokenType.wea_sign_mark, Match('=') ? ">=" : ">"); break;
+                case ' ': case '\r': case '\t': break;
+                case '\n': _line++; break;
+                case '"': String(); break;
+                default:
+                    if (IsDigit(c)) Number();
+                    else if (IsAlpha(c)) Identifier();
+                    break;
+            }
+        }
+
+        private void String()
+        {
+            while (Peek() != '"' && !IsAtEnd()) { if (Peek() == '\n') _line++; Advance(); }
+            if (IsAtEnd()) return;
+            Advance();
+            _tokens.Add(new Token(TokenType.wea_sign_text, _source.Substring(_start + 1, _current - _start - 2), _line));
+        }
+
+        private void Number()
+        {
+            while (IsDigit(Peek())) Advance();
+            if (Peek() == '.' && IsDigit(PeekNext())) { Advance(); while (IsDigit(Peek())) Advance(); }
+            AddToken(TokenType.wea_sign_val);
+        }
+
+        private void Identifier()
+        {
+            while (IsAlphaNumeric(Peek())) Advance();
+            string text = _source.Substring(_start, _current - _start);
+            TokenType type = TokenType.wea_sign_name;
+            switch (text)
+            {
+                case "wea_emit":
+                case "wea_unit":
+                case "wea_flow":
+                case "wea_verify":
+                case "wea_cycle":
+                case "wea_eman":
+                case "wea_fail":
+                case "wea_read":
+                case "is_key": type = TokenType.wea_sign_keyword; break;
+            }
+            _tokens.Add(new Token(type, text, _line));
+        }
+
+        private void AddToken(TokenType type) => AddToken(type, _source.Substring(_start, _current - _start));
+        private void AddToken(TokenType type, string literal) => _tokens.Add(new Token(type, literal, _line));
+        private bool Match(char expected) { if (IsAtEnd() || _source[_current] != expected) return false; _current++; return true; }
+        private char Peek() => IsAtEnd() ? '\0' : _source[_current];
+        private char PeekNext() => (_current + 1 >= _source.Length) ? '\0' : _source[_current + 1];
+        private bool IsAlpha(char c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+        private bool IsAlphaNumeric(char c) => IsAlpha(c) || IsDigit(c);
+        private bool IsDigit(char c) => c >= '0' && c <= '9';
+        private bool IsAtEnd() => _current >= _source.Length;
+        private char Advance() => _source[_current++];
     }
 }
