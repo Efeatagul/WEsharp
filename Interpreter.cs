@@ -13,7 +13,7 @@ namespace WSharp
 
         public Interpreter()
         {
-            // --- 1. TEMEL SİSTEM KÜTÜPHANELERİ ---
+      
             LoadLibrary(StandardLibrary.Functions);
             LoadLibrary(new MathLib().GetFunctions());
             LoadLibrary(new DrawLib().GetFunctions());
@@ -23,15 +23,15 @@ namespace WSharp
             LoadLibrary(new TimeLib().GetFunctions());
             LoadLibrary(new ConsoleLib().GetFunctions());
 
-            // --- 2. DOĞA BİLİMLERİ (Fen Paketi) ---
-            LoadLibrary(new PhysicsLib().GetFunctions());    // Fizik
-            LoadLibrary(new ChemistryLib().GetFunctions());  // Kimya
-            LoadLibrary(new BiologyLib().GetFunctions());    // Biyoloji
 
-            // --- 3. İLERİ HESAPLAMALI BİLİM (Advanced Science) ---
-            LoadLibrary(new NeurologyLib().GetFunctions());  // Hesaplamalı Nöroloji (Hardcore)
-            LoadLibrary(new NuclearLib().GetFunctions());    // Nükleer Fizik
-            LoadLibrary(new QuantumLib().GetFunctions());    // Kuantum Mekaniği
+            LoadLibrary(new PhysicsLib().GetFunctions());    
+            LoadLibrary(new ChemistryLib().GetFunctions()); 
+            LoadLibrary(new BiologyLib().GetFunctions());   
+
+        
+            LoadLibrary(new NeurologyLib().GetFunctions());  
+            LoadLibrary(new NuclearLib().GetFunctions());   
+            LoadLibrary(new QuantumLib().GetFunctions());    
         }
 
         private void LoadLibrary(Dictionary<string, Func<List<WValue>, WValue>> lib)
@@ -62,7 +62,7 @@ namespace WSharp
         private void Execute(Stmt stmt) => stmt.Accept(this);
         private WValue Evaluate(Expr expr) => expr.Accept(this);
 
-        // --- KOMUTLAR (Statements) ---
+ 
 
         public object Visit(EmitStmt stmt)
         {
@@ -144,7 +144,7 @@ namespace WSharp
             return null;
         }
 
-        // --- İFADELER (Expressions) ---
+     
 
         public WValue Visit(LiteralExpr expr) => expr.Value;
 
