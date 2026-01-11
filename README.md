@@ -11,7 +11,7 @@
 
 ---
 
-## Why WSharp?
+##  Why WSharp?
 
 Standard languages require heavy libraries and complex setups to perform scientific calculations. **WSharp comes with the laws of the universe built-in.**
 
@@ -42,10 +42,10 @@ WSharp includes specialized libraries that make scientific coding accessible:
 
 ---
 
-## Code Examples
+##  Code Examples
 
 ### 1. Simulating a Neuron (Izhikevich Model)
-```we#
+```javascript
 // Simulating a spiking neuron
 wea_unit v = -65
 wea_unit u = -13
@@ -55,7 +55,11 @@ wea_cycle (v < 30) {
     // Calculate next voltage step using built-in Neuro physics
     v = wea_neuro_izhi_v(v, u, 10, 1)
     u = wea_neuro_izhi_u(v, u, 0.02, 0.2, 1)
-
+    
+    wea_emit("Membrane Potential: " + v + " mV")
+    wea_wait(50)
+}
+wea_emit("NEURON FIRED! ")
 Update History (Changelog)
 v00.1 - The Scientific Edition (Current)
 Major Overhaul aimed at scientific computing.
@@ -85,23 +89,18 @@ v00.0 Alpha - The Foundation
 [CORE] Basic variable declaration (wea_unit) and printing (wea_emit).
 
 [CORE] Basic arithmetic operations (+, -, *, /).
-    
-    wea_emit("Membrane Potential: " + v + " mV")
-    wea_wait(50)
-}
-wea_emit("NEURON FIRED!")
 
 Installation & Build
 Clone the Repository:
 
 Bash
 
-git clone [https://github.com/YourUsername/WSharp.git](https://github.com/YourUsername/WSharp.git)
+git clone [https://github.com/Efeatagul/WEsharp.git](https://github.com/Efeatagul/WEsharp.git)
 Open in Visual Studio: Open we# 00.1 beta.csproj in Visual Studio 2022.
 
-Build: Press Ctrl + Shift + B. Ensure you have the .NET Desktop Runtime installed.
+Build: Ensure you have .NET SDK installed. Press Ctrl + Shift + B to build the solution.
 
-Run: Start WSharp.exe to enter the interactive shell or drag-and-drop a .we file.
+Run: Start WSharp.exe to enter the interactive shell.
 
  Roadmap
 [ ] Multi-Language Syntax: Native keywords for Turkish (TR), Spanish (ES), and German (DE).
@@ -110,5 +109,5 @@ Run: Start WSharp.exe to enter the interactive shell or drag-and-drop a .we file
 
 [ ] Neural Network API: High-level functions to create simple AI perceptrons.
 
-License
+ License
 This project is licensed under the MIT License - see the LICENSE file for details.
