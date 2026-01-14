@@ -1,19 +1,26 @@
-# WSharp (we#) | Scientific Neurology & AI Simulation Platform
+<div align="center">
 
-![Version](https://img.shields.io/badge/version-00.1_Beta-blue)
-![Platform](https://img.shields.io/badge/platform-.NET_10-purple)
-![Architecture](https://img.shields.io/badge/architecture-Headless_Hybrid-success)
-![Focus](https://img.shields.io/badge/focus-Neurology_&_AI-red)
+#  WSharp (we#)
+### Scientific Neurology & AI Simulation Platform
 
-> **"Simulating the complexity of biological brain development and decision-making processes."**
+![Version](https://img.shields.io/badge/version-00.1_Beta-blue?style=for-the-badge)
+![Platform](https://img.shields.io/badge/platform-.NET_10-purple?style=for-the-badge)
+![Architecture](https://img.shields.io/badge/architecture-Headless_Hybrid-success?style=for-the-badge)
+![Focus](https://img.shields.io/badge/focus-Neurology_&_AI-red?style=for-the-badge)
 
-**WSharp (we#)** is a high-performance, domain-specific programming language designed to bridge the gap between **biological computation (C#)** and **artificial intelligence agents (Python/Wneura)**. It allows developers to run complex scientific simulations while managing external AI processes seamlessly.
+**"Simulating the complexity of biological brain development and decision-making processes."**
+
+**WSharp**, biyolojik hesaplama (C#) ile yapay zeka ajanları (Python/Wneura) arasındaki boşluğu dolduran, **Headless Architecture** yapısına sahip yüksek performanslı bir bilimsel simülasyon dilidir.
+
+[Mimari](#-system-architecture) • [Özellikler](#-key-features) • [Kurulum](#-installation) • [Kullanım](#-usage-examples)
+
+</div>
 
 ---
 
-## 🧠 System Architecture (The Hybrid Core)
+## System Architecture (The Hybrid Core)
 
-WSharp uses a **Headless Architecture** to integrate the speed of C# with the flexibility of Python's ecosystem.
+WSharp, C#'ın hızını Python ekosisteminin esnekliğiyle birleştiren hibrit bir yapı kullanır.
 
 ```mermaid
 graph LR
@@ -24,20 +31,46 @@ graph LR
     B -->|Returns Data| A
     style A fill:#6a0dad,stroke:#333,stroke-width:2px,color:#fff
     style C fill:#3572A5,stroke:#333,stroke-width:2px,color:#fff
-🚀 Key FeaturesFeatureDescriptionStatus🧠 NeurologyLibBuilt-in functions for Nernst, GHK, and Hodgkin-Huxley equations.✅ Active🐍 PythonBridge"Headless" execution of external Python scripts (Wneura) from within WSharp.🚀 New🛠️ AIFixerAutomated syntax error detection and self-healing code suggestions.⚡ Beta⚛️ QuantumLibBasic quantum superposition and entanglement simulations.🧪 Experimental🧪 Bio/Chem LibsSimulation of chemical reactions and biological decay.✅ Active💻 Installation & SetupPrerequisitesOS: Windows 10/11Runtime: .NET 10.0 (Preview/RC)Python: Python 3.9+ (Required for Wneura integration)Configuration (Connecting Python)To use the wea_wneura_run commands, you must configure the bridge:Open WSharp/PythonBridge.cs.Locate the PythonPath variable.Paste your local Python executable path (or leave it to auto-detect python command).C#// Example configuration in PythonBridge.cs
-// You can use "python" or a specific path like @"C:\Python39\python.exe"
+
+Özellik,Açıklama,Durum
+ NeurologyLib,"Nernst, GHK ve Hodgkin-Huxley denklemleri için yerleşik fonksiyonlar.", Aktif
+ PythonBridge,"WSharp içinden harici Python (Wneura) scriptlerini ""Headless"" çalıştırma.", Yeni
+ AIFixer,Otomatik sözdizimi hatası tespiti ve kendi kendini onaran kod önerileri., Beta
+ QuantumLib,Temel kuantum süperpozisyon ve dolanıklık simülasyonları., Deneysel
+ Bio/Chem Libs,Kimyasal reaksiyonlar ve biyolojik bozunma simülasyonları., Aktif
+
+ Installation & Setup
+Gereksinimler (Prerequisites)
+OS: Windows 10/11
+
+Runtime: .NET 10.0 (Preview/RC)
+
+Python: Python 3.9+ (Wneura entegrasyonu için şart)
+
+Yapılandırma (Python Bağlantısı)
+wea_wneura_run komutlarını kullanmak için köprüyü yapılandırmalısınız:
+
+WSharp/PythonBridge.cs dosyasını açın.
+
+PythonPath değişkenini bulun.
+
+Python yolunuzu yapıştırın (veya otomatik algılama için dokunmayın).
+
+// PythonBridge.cs içindeki örnek ayar
 private static string PythonPath = @"PASTE_YOUR_PYTHON_PATH_HERE";
-📝 Usage Examples1. Running a Wneura Agent (Python Integration)WSharp can trigger a Python AI agent, wait for it to learn, and retrieve the data.JavaScript// Initialize the simulation
+
+// Simülasyonu Başlat
 wea_emit("Initializing Neural Link...")
 
-// Execute the Python Agent located in the 'Wneura' folder
-// Arguments: script_name, parameters
+// Wneura klasöründeki ajanı çalıştır
+// Argümanlar: script_yolu, parametreler
 wea_unit brain_data = wea_wneura_run("Wneura/agent.py", "--epochs 100")
 
-// Display the JSON result from the Python brain
+// Python beyninden gelen JSON sonucunu ekrana bas
 wea_emit("Training Complete. Results:")
 wea_emit(brain_data)
-2. Biological Calculation (NeurologyLib)Calculating the membrane potential using the Goldman-Hodgkin-Katz (GHK) equation directly in WSharp.JavaScript// Parameters: Permeability and Concentrations (K, Na, Cl)
+
+// Parametreler: Geçirgenlik ve Konsantrasyonlar (K, Na, Cl)
 wea_unit vm = wea_neuro_ghk_voltage(
     1.0, 0.04, 0.45,  // Permeability (Pk, Pna, Pcl)
     4.0, 140.0,       // K (out, in)
@@ -47,4 +80,25 @@ wea_unit vm = wea_neuro_ghk_voltage(
 
 wea_emit("Membrane Potential (mV):")
 wea_emit(vm)
-🗺️ Roadmap & Development RoutineI follow a strict development cycle to ensure stability and innovation.Routine: Every Sunday, I perform weekly bug fixes, optimizations, and code reviews.Next Steps:[ ] Real-time graphing of Python data in Scientific Plotter.[ ] Advanced AIFixer with ML-based error prediction.[ ] Expansion of NuclearLib for decay simulations.🤝 ContributingThis is a personal project driven by a passion for Neuro-Symbolic AI. However, suggestions are welcome!Fork the repository.Create your feature branch (git checkout -b feature/AmazingFeature).Commit your changes (git commit -m 'Add some AmazingFeature').Push to the branch (git push origin feature/AmazingFeature).Open a Pull Request.🛡️ LicenseDistributed under the MIT License. See LICENSE for more information.Developer Note: "Complexity is the playground of intelligence." - @weagw
+
+ Roadmap & Development Routine
+Geliştirme süreci katı bir disiplinle ilerler.
+
+Rutin: Her Pazar, haftalık hata düzeltmeleri, optimizasyon ve kod incelemeleri yapılır.
+
+Sonraki Adımlar:
+
+[ ] Scientific Plotter ile Python verilerinin canlı çizimi.
+
+[ ] ML tabanlı hata tahmini sunan gelişmiş AIFixer.
+
+[ ] Bozunma simülasyonları için NuclearLib genişletmesi.
+
+ Contributing & License
+Bu proje Neuro-Symbolic AI tutkusuyla geliştirilen kişisel bir projedir. Katkılarınızı bekliyoruz!
+
+MIT License altında dağıtılmaktadır.
+
+<i>Developed with  by <b>Efeatagul</b> (weagw)</i>
+
+</div>
