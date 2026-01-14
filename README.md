@@ -1,6 +1,6 @@
 <div align="center">
 
-#  WSharp (we#)
+# 🧬 WSharp (we#)
 ### Scientific Neurology & AI Simulation Platform
 
 ![Version](https://img.shields.io/badge/version-00.1_Beta-blue?style=for-the-badge)
@@ -18,7 +18,7 @@
 
 ---
 
-## System Architecture (The Hybrid Core)
+## 🧠 System Architecture (The Hybrid Core)
 
 WSharp, C#'ın hızını Python ekosisteminin esnekliğiyle birleştiren hibrit bir yapı kullanır.
 
@@ -39,25 +39,23 @@ graph LR
  QuantumLib,Temel kuantum süperpozisyon ve dolanıklık simülasyonları., Deneysel
  Bio/Chem Libs,Kimyasal reaksiyonlar ve biyolojik bozunma simülasyonları., Aktif
 
+
  Installation & Setup
+
 Gereksinimler (Prerequisites)
 OS: Windows 10/11
-
 Runtime: .NET 10.0 (Preview/RC)
-
 Python: Python 3.9+ (Wneura entegrasyonu için şart)
 
 Yapılandırma (Python Bağlantısı)
 wea_wneura_run komutlarını kullanmak için köprüyü yapılandırmalısınız:
-
-WSharp/PythonBridge.cs dosyasını açın.
-
-PythonPath değişkenini bulun.
-
-Python yolunuzu yapıştırın (veya otomatik algılama için dokunmayın).
-
-// PythonBridge.cs içindeki örnek ayar
+1 WSharp/PythonBridge.cs dosyasını açın.
+2 PythonPath değişkenini bulun.
+3 Python yolunuzu yapıştırın (veya otomatik algılama için dokunmayın).
 private static string PythonPath = @"PASTE_YOUR_PYTHON_PATH_HERE";
+
+1. Wneura Ajanı Çalıştırma (Python Entegrasyonu)
+WSharp, bir Python AI ajanını tetikler, eğitilmesini bekler ve veriyi geri alır.
 
 // Simülasyonu Başlat
 wea_emit("Initializing Neural Link...")
@@ -70,6 +68,9 @@ wea_unit brain_data = wea_wneura_run("Wneura/agent.py", "--epochs 100")
 wea_emit("Training Complete. Results:")
 wea_emit(brain_data)
 
+2. Biyolojik Hesaplama (NeurologyLib)
+Goldman-Hodgkin-Katz (GHK) denklemi ile membran potansiyeli hesaplama.
+
 // Parametreler: Geçirgenlik ve Konsantrasyonlar (K, Na, Cl)
 wea_unit vm = wea_neuro_ghk_voltage(
     1.0, 0.04, 0.45,  // Permeability (Pk, Pna, Pcl)
@@ -81,24 +82,15 @@ wea_unit vm = wea_neuro_ghk_voltage(
 wea_emit("Membrane Potential (mV):")
 wea_emit(vm)
 
- Roadmap & Development Routine
+Roadmap & Development Routine
 Geliştirme süreci katı bir disiplinle ilerler.
 
 Rutin: Her Pazar, haftalık hata düzeltmeleri, optimizasyon ve kod incelemeleri yapılır.
 
 Sonraki Adımlar:
-
 [ ] Scientific Plotter ile Python verilerinin canlı çizimi.
-
 [ ] ML tabanlı hata tahmini sunan gelişmiş AIFixer.
-
 [ ] Bozunma simülasyonları için NuclearLib genişletmesi.
 
- Contributing & License
-Bu proje Neuro-Symbolic AI tutkusuyla geliştirilen kişisel bir projedir. Katkılarınızı bekliyoruz!
-
-MIT License altında dağıtılmaktadır.
-
-<i>Developed with  by <b>Efeatagul</b> (weagw)</i>
-
-</div>
+Contributing & License: MIT License
+Developed with  by <Efeatagul/(weagw)
