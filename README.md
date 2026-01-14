@@ -1,115 +1,49 @@
+ WSharp (we#) | Scientific Neurology & AI Simulation Platform
 
-<div align="center">
+![Version](https://img.shields.io/badge/version-00.1_Beta-blue)
+![Platform](https://img.shields.io/badge/platform-.NET_10-purple)
+![Architecture](https://img.shields.io/badge/architecture-Headless_Hybrid-success)
+![Focus](https://img.shields.io/badge/focus-Neurology_&_AI-red)
 
-#  WSharp Studio: Scientific Programming Environment
+> **"Simulating the complexity of biological brain development and decision-making processes."**
 
-![Version](https://img.shields.io/badge/version-0.1_Alpha-blue?style=for-the-badge&logo=visual-studio)
-![Build](https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge)
-![Focus](https://img.shields.io/badge/focus-Neuroscience_%26_Physics-purple?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-orange?style=for-the-badge)
-
-<br>
-
-**WSharp**, bilimsel simülasyonlar, nörolojik modelleme ve fizik hesaplamaları için geliştirilmiş, **kendi IDE'sine sahip** yüksek seviyeli bir programlama dilidir. Sadece kod yazmak için değil; veriyi görselleştirmek ve canlı simüle etmek için tasarlanmıştır.
-
-[Kurulum](#-kurulum-ve-çalıştırma) • [Belgeler](#-kütüphane-ve-modüller) • [Özellikler](#-yeni-özellikler-v01-update)
-
-</div>
+**WSharp (we#)** is a high-performance, domain-specific programming language designed to bridge the gap between **biological computation (C#)** and **artificial intelligence agents (Python/Wneura)**. It allows developers to run complex scientific simulations while managing external AI processes seamlessly.
 
 ---
 
-##  Yeni Özellikler (v0.1 Update)
+##  System Architecture (The Hybrid Core)
 
-WSharp artık sadece bir konsol uygulaması değil, tam teşekküllü bir **Geliştirme Ortamı (IDE)**.
+WSharp uses a **Headless Architecture** to integrate the speed of C# with the flexibility of Python's ecosystem.
 
-| Özellik | Açıklama |
-| :--- | :--- |
-| ** 6-Panel Grid UI** | Dosya Gezgini, Kod Editörü, Terminal, Grafik Paneli, Değişken İzleyici ve AI Chat tek ekranda. |
-| ** Scientific Plotter** | `wea_plot(x)` komutu ile verileri anlık olarak grafikleştirme (Sinüs dalgaları, Spike trenleri vb.). |
-| ** Neurology Engine** | Hodgkin-Huxley, Nernst ve GHK denklemlerini içeren gelişmiş nöro-biyoloji motoru. |
-| ** IntelliSense** | Kod yazarken otomatik tamamlama ve sözdizimi renklendirme (Syntax Highlighting). |
-| ** Variable Watcher** | Hafızadaki değişkenleri (Voltaj, Zaman, İyon Konsantrasyonu) canlı izleme paneli. |
-| ** Local AI Chat** | İnternetsiz çalışan, dilin dokümantasyonunu bilen yerel asistan. |
+```mermaid
+graph LR
+    A[WSharp IDE] -- wea_wneura_run --> B(PythonBridge.cs)
+    B -- Spawns Process --> C{Wneura Agents}
+    C -- PyTorch/CUDA --> D[Brain Training]
+    D -- JSON Response --> B
+    B -- Returns Data --> A
+    style A fill:#6a0dad,stroke:#333,stroke-width:2px,color:#fff
+    style C fill:#3572A5,stroke:#333,stroke-width:2px,color:#fff
+ Key FeaturesFeatureDescriptionStatus NeurologyLibBuilt-in functions for Nernst, GHK, and Hodgkin-Huxley equations. Active PythonBridge"Headless" execution of external Python scripts (Wneura) from within WSharp. New AIFixerAutomated syntax error detection and self-healing code suggestions.Beta QuantumLibBasic quantum superposition and entanglement simulations. Experimental Bio/Chem LibsSimulation of chemical reactions and biological decay. Active Installation & SetupPrerequisitesOS: Windows 10/11Runtime: .NET 10.0 (Preview/RC)Python: Python 3.9+ (Required for Wneura integration)Configuration (Connecting Python)To use the wea_wneura_run commands, you must configure the bridge:Open WSharp/PythonBridge.cs.Locate the PythonPath variable.Paste your local Python executable path (or leave it to auto-detect python command).C#// Example configuration in PythonBridge.cs
+private static string PythonPath = @"C:\Users\YourName\AppData\Local\Programs\Python\Python312\python.exe";
+ Usage Examples1. Running a Wneura Agent (Python Integration)WSharp can trigger a Python AI agent, wait for it to learn, and retrieve the data.JavaScript// Initialize the simulation
+wea_emit("Initializing Neural Link...")
 
----
+// Execute the Python Agent located in the 'Wneura' folder
+// Arguments: script_name, parameters
+wea_unit brain_data = wea_wneura_run("Wneura/agent.py", "--epochs 100")
 
-## 🧪 Kütüphane ve Modüller
+// Display the JSON result from the Python brain
+wea_emit("Training Complete. Results:")
+wea_emit(brain_data)
+2. Biological Calculation (NeurologyLib)Calculating the membrane potential using the Goldman-Hodgkin-Katz (GHK) equation directly in WSharp.JavaScript// Parameters: Permeability and Concentrations (K, Na, Cl)
+wea_unit vm = wea_neuro_ghk_voltage(
+    1.0, 0.04, 0.45,  // Permeability (Pk, Pna, Pcl)
+    4.0, 140.0,       // K (out, in)
+    145.0, 15.0,      // Na (out, in)
+    110.0, 5.0        // Cl (out, in)
+)
 
-WSharp, bilimsel hesaplamalar için özelleşmiş **10+ yerleşik kütüphane** ile gelir.
-
-| Kütüphane | Fonksiyon Öneki | Açıklama ve Örnek Fonksiyonlar |
-| :--- | :--- | :--- |
-| **Neurology** | `wea_neuro_` | **(YENİ)** `hh_alpha_m`, `ghk_voltage`, `nernst`, `syn_nmda` |
-| **Plotting** | `wea_plot` | **(YENİ)** Veri görselleştirme ve osiloskop benzeri çizim. |
-| **Math** | `wea_math_` | `sin`, `cos`, `sqrt`, `pow`, `abs`, `round` |
-| **Physics** | `wea_phys_` | `force`, `kinetic_energy`, `gravitational_force` |
-| **Quantum** | `wea_quant_` | `superposition`, `entanglement_check` |
-| **Biology** | `wea_bio_` | `dna_transcription`, `enzyme_rate` |
-| **Nuclear** | `wea_nuc_` | `decay_rate`, `binding_energy` |
-| **Chemistry** | `wea_chem_` | `molar_mass`, `ph_calc`, `ideal_gas` |
-| **Standard** | `wea_` | `emit` (yazdır), `read` (oku), `wait` (bekle), `time` |
-
----
-
-##  Kod Örnekleri
-
-### 1. Nörolojik Simülasyon (Hodgkin-Huxley Gate)
-Bir nöronun sodyum kanalının voltaja bağlı açılma olasılığını hesaplar ve grafik çizer.
-
-```javascript
-// Membran Dinlenim Voltajı
-wea_unit V = -65 
-
-wea_emit("Simülasyon Başlıyor...")
-
-// Voltajı -65mV'den +20mV'ye kadar artır
-wea_cycle (V < 20) {
-    
-    // Sodyum kapısının açılma hızı (Alpha M)
-    wea_unit alpha = wea_neuro_hh_alpha_m(V)
-    
-    // Sodyum kapısının kapanma hızı (Beta M)
-    wea_unit beta = wea_neuro_hh_beta_m(V)
-    
-    // Denge durumu (Açıklık Oranı)
-    wea_unit open_prob = alpha / (alpha + beta)
-    
-    wea_emit("Voltaj: " + V + "mV -> Açıklık: %" + (open_prob * 100))
-    
-    // Grafiğe Çiz (Scientific Plotter Sekmesinde Görünür)
-    wea_plot(V, open_prob * 100)
-    
-    V = V + 5
-    wea_wait(50)
-}
-2. Kuantum Süperpozisyon Testi
-JavaScript
-
-wea_unit state = wea_quant_superposition(0.707, 0.707) // |0> ve |1> durumu
-wea_emit("Quantum State Probability: " + state)
-
-wea_if (state > 0.5) {
-    wea_emit("Collapse: State |1>")
-}
- Kurulum ve Çalıştırma
-Repoyu klonlayın:
-
-Bash
-
-git clone [https://github.com/KULLANICIADIN/WSharp.git](https://github.com/KULLANICIADIN/WSharp.git)
-WSharp.sln dosyasını Visual Studio 2022 ile açın.
-
-Start (F5) tuşuna basın.
-
-Açılan WSharp Studio penceresinde sol üstten File -> New diyerek kodlamaya başlayın!
-
-Kodu çalıştırmak için sağ üstteki yeşil RUN butonuna basın.
-
-Roadmap (Gelecek Planları)
-[ ] Wneura Entegrasyonu: Yapay Sinir Ağlarını (ANN) WSharp içinde eğitmek.
-
-[ ] 3D Protein Katlama: BiologyLib için görsel 3D modelleme.
-
-[ ] Export to Python: WSharp kodunu Python scriptine çevirme.
-
-<div align="center"> <i>Developed with  by <b>Efeatagul</b> for Science & Code.</i> </div>
+wea_emit("Membrane Potential (mV):")
+wea_emit(vm)
+ Roadmap & Development RoutineI follow a strict development cycle to ensure stability and innovation.Routine: Every Sunday, I perform weekly bug fixes, optimizations, and code reviews.Next Steps:[ ] Real-time graphing of Python data in Scientific Plotter.[ ] Advanced AIFixer with ML-based error prediction.[ ] Expansion of NuclearLib for decay simulations. ContributingThis is a personal project driven by a passion for Neuro-Symbolic AI. However, suggestions are welcome!Fork the repository.Create your feature branch (git checkout -b feature/AmazingFeature).Commit your changes (git commit -m 'Add some AmazingFeature').Push to the branch (git push origin feature/AmazingFeature).Open a Pull Request.🛡️ LicenseDistributed under the MIT License. See LICENSE for more information.Developer Note: "Complexity is the playground of intelligence." - @weagw
