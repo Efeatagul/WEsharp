@@ -32,36 +32,44 @@ graph LR
     style A fill:#6a0dad,stroke:#333,stroke-width:2px,color:#fff
     style C fill:#3572A5,stroke:#333,stroke-width:2px,color:#fff
 ```
+## 🚀 Key Features
 
-Özellik            Açıklama                                                                       Durum
- NeurologyLib,     Nernst, GHK ve Hodgkin-Huxley denklemleri için yerleşik fonksiyonlar           Aktif
- PythonBridge,     WSharp içinden harici Python (Wneura) scriptlerini ""Headless"" çalıştırma.    Yeni
- AIFixer           Otomatik sözdizimi hatası tespiti ve kendi kendini onaran kod önerileri        Beta
- QuantumLib,       Temel kuantum süperpozisyon ve dolanıklık simülasyonları.,                     Deneysel
- Bio/Chem Libs     Kimyasal reaksiyonlar ve biyolojik bozunma simülasyonları.,                    Aktif
+| Özellik | Açıklama | Durum |
+| :--- | :--- | :--- |
+| **NeurologyLib** | Nernst, GHK ve Hodgkin-Huxley denklemleri için yerleşik fonksiyonlar | ✅ Aktif |
+| **PythonBridge** | WSharp içinden harici Python (Wneura) scriptlerini "Headless" çalıştırma | 🚀 Yeni |
+| **AIFixer** | Otomatik sözdizimi hatası tespiti ve kendi kendini onaran kod önerileri | ⚡ Beta |
+| **QuantumLib** | Temel kuantum süperpozisyon ve dolanıklık simülasyonları | 🧪 Deneysel |
+| **Bio/Chem Libs** | Kimyasal reaksiyonlar ve biyolojik bozunma simülasyonları | ✅ Aktif |
 
-Installation & Setup
-Gereksinimler (Prerequisites)
-OS: Windows 10/11
+---
 
-Runtime: .NET 10.0 (Preview/RC)
-Python: Python 3.9+ (Wneura entegrasyonu için şart)
-Yapılandırma (Python Bağlantısı)
-wea_wneura_run komutlarını kullanmak için köprüyü yapılandırmalısınız:
-WSharp/PythonBridge.cs dosyasını açın.
-PythonPath değişkenini bulun.
-Python yolunuzu yapıştırın (veya otomatik algılama için dokunmayın).
+## 💻 Installation & Setup
 
+### Gereksinimler (Prerequisites)
+* **OS:** Windows 10/11
+* **Runtime:** .NET 10.0 (Preview/RC)
+* **Python:** Python 3.9+ (Wneura entegrasyonu için şart)
+
+### Yapılandırma (Python Bağlantısı)
+`wea_wneura_run` komutlarını kullanmak için köprüyü yapılandırmalısınız:
+
+1. `WSharp/PythonBridge.cs` dosyasını açın.
+2. `PythonPath` değişkenini bulun.
+3. Python yolunuzu yapıştırın (veya otomatik algılama için dokunmayın).
+
+```csharp
 private static string PythonPath = @"PASTE_YOUR_PYTHON_PATH_HERE";
-
+```
 Usage Examples
 1. Wneura Ajanı Çalıştırma (Python Entegrasyonu)
 WSharp, bir Python AI ajanını tetikler, eğitilmesini bekler ve veriyi geri alır.
 
-// Simülasyonu Başlat
+// Simülasyonu Başlatmak için 
 wea_emit("Initializing Neural Link...")
 
 // Wneura klasöründeki ajanı çalıştır
+
 // Argümanlar: script_yolu, parametreler
 wea_unit brain_data = wea_wneura_run("Wneura/agent.py", "--epochs 100")
 
@@ -69,7 +77,7 @@ wea_unit brain_data = wea_wneura_run("Wneura/agent.py", "--epochs 100")
 wea_emit("Training Complete. Results:")
 wea_emit(brain_data)
 
-2. Biyolojik Hesaplama (NeurologyLib)
+Biyolojik Hesaplama (NeurologyLib)
 Goldman-Hodgkin-Katz (GHK) denklemi ile membran potansiyeli hesaplama.
 
 // Parametreler: Geçirgenlik ve Konsantrasyonlar (K, Na, Cl)
@@ -95,4 +103,3 @@ Sonraki Adımlar:
 [ ] Bozunma simülasyonları için NuclearLib genişletmesi.
 
 <div align="center"> MIT License by <b>Efeatagul/weagw</b> </div>
-
