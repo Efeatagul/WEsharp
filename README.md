@@ -6,7 +6,7 @@
 ![Version](https://img.shields.io/badge/version-00.1_Beta-blue?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/platform-.NET_10-purple?style=for-the-badge)
 ![Architecture](https://img.shields.io/badge/architecture-Headless_Hybrid-success?style=for-the-badge)
-![Focus](https://img.shields.io/badge/focus-Neurology_&_AI-red?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-orange?style=for-the-badge)
 
 **"Simulating the complexity of biological brain development and decision-making processes."**
 
@@ -20,7 +20,7 @@
 
 ## 🧠 System Architecture (The Hybrid Core)
 
-WSharp, C#'ın hızını Python ekosisteminin esnekliğiyle birleştiren hibrit bir yapı kullanır.
+WSharp, C#'ın hızını Python ekosisteminin esnekliğiyle birleştiren hibrit bir yapı kullanır. Aşağıdaki şema sistemin nasıl konuştuğunu gösterir:
 
 ```mermaid
 graph LR
@@ -31,29 +31,30 @@ graph LR
     B -->|Returns Data| A
     style A fill:#6a0dad,stroke:#333,stroke-width:2px,color:#fff
     style C fill:#3572A5,stroke:#333,stroke-width:2px,color:#fff
+```
 
-Özellik,Açıklama,Durum
- NeurologyLib,"Nernst, GHK ve Hodgkin-Huxley denklemleri için yerleşik fonksiyonlar.", Aktif
- PythonBridge,"WSharp içinden harici Python (Wneura) scriptlerini ""Headless"" çalıştırma.", Yeni
- AIFixer,Otomatik sözdizimi hatası tespiti ve kendi kendini onaran kod önerileri., Beta
- QuantumLib,Temel kuantum süperpozisyon ve dolanıklık simülasyonları., Deneysel
- Bio/Chem Libs,Kimyasal reaksiyonlar ve biyolojik bozunma simülasyonları., Aktif
+Özellik            Açıklama                                                                       Durum
+ NeurologyLib,     Nernst, GHK ve Hodgkin-Huxley denklemleri için yerleşik fonksiyonlar           Aktif
+ PythonBridge,     WSharp içinden harici Python (Wneura) scriptlerini ""Headless"" çalıştırma.    Yeni
+ AIFixer           Otomatik sözdizimi hatası tespiti ve kendi kendini onaran kod önerileri        Beta
+ QuantumLib,       Temel kuantum süperpozisyon ve dolanıklık simülasyonları.,                     Deneysel
+ Bio/Chem Libs     Kimyasal reaksiyonlar ve biyolojik bozunma simülasyonları.,                    Aktif
 
-
- Installation & Setup
-
+Installation & Setup
 Gereksinimler (Prerequisites)
 OS: Windows 10/11
+
 Runtime: .NET 10.0 (Preview/RC)
 Python: Python 3.9+ (Wneura entegrasyonu için şart)
-
 Yapılandırma (Python Bağlantısı)
 wea_wneura_run komutlarını kullanmak için köprüyü yapılandırmalısınız:
-1 WSharp/PythonBridge.cs dosyasını açın.
-2 PythonPath değişkenini bulun.
-3 Python yolunuzu yapıştırın (veya otomatik algılama için dokunmayın).
+WSharp/PythonBridge.cs dosyasını açın.
+PythonPath değişkenini bulun.
+Python yolunuzu yapıştırın (veya otomatik algılama için dokunmayın).
+
 private static string PythonPath = @"PASTE_YOUR_PYTHON_PATH_HERE";
 
+Usage Examples
 1. Wneura Ajanı Çalıştırma (Python Entegrasyonu)
 WSharp, bir Python AI ajanını tetikler, eğitilmesini bekler ve veriyi geri alır.
 
@@ -88,9 +89,10 @@ Geliştirme süreci katı bir disiplinle ilerler.
 Rutin: Her Pazar, haftalık hata düzeltmeleri, optimizasyon ve kod incelemeleri yapılır.
 
 Sonraki Adımlar:
+
 [ ] Scientific Plotter ile Python verilerinin canlı çizimi.
 [ ] ML tabanlı hata tahmini sunan gelişmiş AIFixer.
 [ ] Bozunma simülasyonları için NuclearLib genişletmesi.
 
-Contributing & License: MIT License
-Developed with  by <Efeatagul/(weagw)
+<div align="center"> MIT License by <b>Efeatagul/weagw</b> </div>
+
