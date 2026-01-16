@@ -102,4 +102,6 @@ Sonraki Adımlar:
 [ ] ML tabanlı hata tahmini sunan gelişmiş AIFixer.
 [ ] Bozunma simülasyonları için NuclearLib genişletmesi.
 
+| IDE Shortcuts | Ctrl + N (New File), Ctrl + S (Save), F5 (Run & Plot) | ✅ Active |
+
 <div align="center"> MIT License by <b>Efeatagul/weagw</b> </div>
