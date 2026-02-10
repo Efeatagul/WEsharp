@@ -73,6 +73,10 @@ namespace WSharp
             if (MatchKeyword("wea_read")) return ReadStatement();
             if (MatchKeyword("wea_cycle")) return WhileStatement();
             if (MatchKeyword("wea_eman")) return TryStatement();
+            if (MatchKeyword("foreach")) return ForeachStatement();
+            if (MatchKeyword("break")) return BreakStatement();
+            if (MatchKeyword("continue")) return ContinueStatement();
+            if (MatchKeyword("wea_return")) return ReturnStatement();
             if (MatchTokenValue("{")) return new BlockStmt(Block());
 
             return ExpressionStatement();
@@ -91,7 +95,24 @@ namespace WSharp
         {
             Expr condition = Expression();
             ConsumeTokenValue("{", "IF blogu acilmadi '{'");
-            return new IfStmt(condition, new BlockStmt(Block()), null);
+            Stmt thenBranch = new BlockStmt(Block());
+            Stmt elseBranch = null;
+
+            if (MatchKeyword("wea_else"))
+            {
+                if (MatchKeyword("wea_verify"))
+                {
+                    
+                    elseBranch = IfStatement();
+                }
+                else
+                {
+                    ConsumeTokenValue("{", "ELSE blogu acilmadi '{'");
+                    elseBranch = new BlockStmt(Block());
+                }
+            }
+
+            return new IfStmt(condition, thenBranch, elseBranch);
         }
 
         private Stmt PrintStatement() => new EmitStmt(Expression());
@@ -101,6 +122,43 @@ namespace WSharp
             Expr condition = Expression();
             ConsumeTokenValue("{", "Dongu (Cycle) blogu acilmadi '{'");
             return new WhileStmt(condition, new BlockStmt(Block()));
+        }
+
+        private Stmt ForeachStatement()
+        {
+            ConsumeTokenValue("(", "'foreach'tan sonra '(' bekleniyor.");
+            Token name = Consume(TokenType.wea_sign_name, "Döngü değişkeni adı bekleniyor.");
+            
+            if (!MatchKeyword("in")) throw new Exception("'in' anahtar kelimesi bekleniyor.");
+            
+            Expr iterable = Expression();
+            ConsumeTokenValue(")", "Foreach ')' ile kapanmadi.");
+            
+            ConsumeTokenValue("{", "Foreach blogu acilmadi '{'");
+            return new ForeachStmt(name, iterable, new BlockStmt(Block()));
+        }
+
+        private Stmt BreakStatement()
+        {
+            ConsumeTokenValue(";", "Break komutundan sonra ';' bekleniyor.");
+            return new BreakStmt();
+        }
+
+        private Stmt ContinueStatement()
+        {
+            ConsumeTokenValue(";", "Continue komutundan sonra ';' bekleniyor.");
+            return new ContinueStmt();
+        }
+
+        private Stmt ReturnStatement()
+        {
+            Expr value = null;
+            
+            if (!CheckTokenValue("}") && !IsAtEnd())
+            {
+                value = Expression();
+            }
+            return new ReturnStmt(value);
         }
 
         private Stmt TryStatement()
@@ -130,16 +188,118 @@ namespace WSharp
 
         private Stmt ExpressionStatement() => new ExpressionStmt(Expression());
 
-        private Expr Expression() => Assignment();
+        private Expr Expression() 
+        {
+            if (Check(TokenType.wea_sign_name) && NextTokenIsArrow())
+            {
+               return Lambda();
+            }
+            if (CheckTokenValue("(") && IsLikelyLambda())
+            {
+                return Lambda();
+            }
+            return Assignment();
+        }
+
+        private bool NextTokenIsArrow()
+        {
+            if (_current + 1 >= _tokens.Count) return false;
+            return _tokens[_current + 1].Value == "=>";
+        }
+
+        private bool IsLikelyLambda()
+        {
+           
+             int i = _current;
+             while (i < _tokens.Count && _tokens[i].Value != ")") i++;
+             if (i >= _tokens.Count - 1) return false; 
+             return _tokens[i + 1].Value == "=>";
+        }
+
+        private Expr Lambda()
+        {
+            List<Token> parameters = new List<Token>();
+            if (MatchTokenValue("("))
+            {
+                if (!CheckTokenValue(")"))
+                {
+                    do { parameters.Add(Consume(TokenType.wea_sign_name, "Parametre adi bekleniyor.")); }
+                    while (MatchTokenValue(","));
+                }
+                ConsumeTokenValue(")", "Lambda parametreleri kapanmadi.");
+            }
+            else
+            {
+                parameters.Add(Consume(TokenType.wea_sign_name, "Parametre adi bekleniyor."));
+            }
+
+            ConsumeTokenValue("=>", "Lambda oku '=>' bekleniyor."); 
+
+            Stmt body;
+            if (MatchTokenValue("{"))
+            {
+                 body = new BlockStmt(Block());
+            }
+            else
+            {
+                 
+                 body = new ExpressionStmt(Expression()); 
+            }
+            return new LambdaExpr(parameters, body);
+        }
 
         private Expr Assignment()
         {
-            Expr expr = Equality();
+            Expr expr = Pipeline();
             if (MatchTokenValue("="))
             {
                 Expr value = Assignment();
                 if (expr is VariableExpr v) return new AssignExpr(v.Name, value);
+                if (expr is GetExpr get) return new SetExpr(get.Object, get.Name, value);
                 throw new Exception("Gecersiz atama hedefi.");
+            }
+            return expr;
+        }
+
+        private Expr Pipeline()
+        {
+            Expr expr = LogicalOr();
+            while (MatchTokenValue("|>"))
+            {
+                Expr right = Call();
+                if (right is CallExpr call)
+                {
+                    call.Args.Insert(0, expr);
+                    expr = call;
+                }
+                else
+                {
+                    throw new Exception("Pipe operator '|>' sonrasinda bir fonksiyon cagrisi gelmelidir.");
+                }
+            }
+            return expr;
+        }
+
+        private Expr LogicalOr()
+        {
+            Expr expr = LogicalAnd();
+            while (MatchTokenValue("||"))
+            {
+                Token oper = Previous();
+                Expr right = LogicalAnd();
+                expr = new LogicalExpr(expr, oper, right);
+            }
+            return expr;
+        }
+
+        private Expr LogicalAnd()
+        {
+            Expr expr = Equality();
+            while (MatchTokenValue("&&"))
+            {
+                Token oper = Previous();
+                Expr right = Equality();
+                expr = new LogicalExpr(expr, oper, right);
             }
             return expr;
         }
@@ -171,7 +331,7 @@ namespace WSharp
         private Expr Factor()
         {
             Expr expr = Unary();
-            while (MatchTokenValue("*") || MatchTokenValue("/"))
+            while (MatchTokenValue("*") || MatchTokenValue("/") || MatchTokenValue("%"))
                 expr = new BinaryExpr(expr, Previous(), Unary());
             return expr;
         }
@@ -179,7 +339,15 @@ namespace WSharp
         private Expr Unary()
         {
             if (MatchTokenValue("-") || MatchTokenValue("!"))
-                return new BinaryExpr(new LiteralExpr(new WNumber(0)), Previous(), Unary());
+            {
+                Token oper = Previous();
+                Expr right = Unary();
+
+                if (oper.Value == "-")
+                    return new BinaryExpr(new LiteralExpr(new WValue(0.0)), oper, right);
+
+                return new UnaryExpr(oper, right);
+            }
             return Call();
         }
 
@@ -188,8 +356,32 @@ namespace WSharp
             Expr expr = Primary();
             while (true)
             {
-                if (MatchTokenValue("(")) expr = FinishCall(expr);
-                else break;
+                if (MatchTokenValue("("))
+                {
+                    expr = FinishCall(expr);
+                }
+                else if (MatchTokenValue("."))
+                {
+                    Token name = Consume(TokenType.wea_sign_name, "Ozellik adi bekleniyor.");
+                    expr = new GetExpr(expr, name);
+                }
+                else if (MatchTokenValue("["))
+                {
+                    Expr start = Expression();
+                    Expr end = null;
+
+                    if (MatchTokenValue(":"))
+                    {
+                        end = Expression();
+                    }
+
+                    ConsumeTokenValue("]", "Indeks kapama ']' eksik.");
+                    expr = new IndexExpr(expr, start, end);
+                }
+                else
+                {
+                    break;
+                }
             }
             return expr;
         }
@@ -207,8 +399,25 @@ namespace WSharp
 
         private Expr Primary()
         {
-            if (Match(TokenType.wea_sign_val)) return new LiteralExpr(new WNumber(double.Parse(Previous().Value, CultureInfo.InvariantCulture)));
-            if (Match(TokenType.wea_sign_text)) return new LiteralExpr(new WString(Previous().Value));
+            if (Match(TokenType.wea_sign_val)) return new LiteralExpr(new WValue(double.Parse(Previous().Value, CultureInfo.InvariantCulture)));
+            if (Match(TokenType.wea_sign_text)) return new LiteralExpr(new WValue(Previous().Value));
+
+            
+            if (MatchKeyword("dogru")) return new LiteralExpr(new WValue(true));
+            if (MatchKeyword("yanlis")) return new LiteralExpr(new WValue(false));
+            if (MatchKeyword("bos")) return new LiteralExpr(new WValue(null));
+
+            
+            if (MatchKeyword("is_key"))
+            {
+                ConsumeTokenValue("(", "is_key sonrasi '(' bekleniyor.");
+                Expr obj = Expression();
+                ConsumeTokenValue(",", "is_key icinde ',' bekleniyor.");
+                Expr key = Expression();
+                ConsumeTokenValue(")", "is_key ')' ile kapanmadi.");
+                return new IsKeyExpr(obj, key);
+            }
+
             if (Match(TokenType.wea_sign_name)) return new VariableExpr(Previous());
 
             if (MatchTokenValue("("))
@@ -218,14 +427,48 @@ namespace WSharp
                 return new GroupingExpr(expr);
             }
 
+            if (MatchTokenValue("[")) return ListLiteral();
+            if (MatchTokenValue("{")) return DictLiteral();
+
             throw new Exception($"Beklenmeyen sembol veya ifade: {Peek().Value}");
+        }
+
+        private Expr ListLiteral()
+        {
+            List<Expr> elements = new List<Expr>();
+            if (!CheckTokenValue("]"))
+            {
+                do
+                {
+                    elements.Add(Expression());
+                } while (MatchTokenValue(","));
+            }
+            ConsumeTokenValue("]", "Liste kapama parantezi eksik ']'");
+            return new ListExpr(elements);
+        }
+
+        private Expr DictLiteral()
+        {
+            List<Expr> keys = new List<Expr>();
+            List<Expr> values = new List<Expr>();
+            if (!CheckTokenValue("}"))
+            {
+                do
+                {
+                    keys.Add(Expression());
+                    ConsumeTokenValue(":", "Anahtar-değer ayırıcı ':' bekleniyor.");
+                    values.Add(Expression());
+                } while (MatchTokenValue(","));
+            }
+            ConsumeTokenValue("}", "Sözlük kapama parantezi eksik '}'");
+            return new DictExpr(keys, values);
         }
 
         private bool Match(TokenType type) { if (Check(type)) { Advance(); return true; } return false; }
         private bool MatchTokenValue(string val) { if (CheckTokenValue(val)) { Advance(); return true; } return false; }
         private bool MatchKeyword(string key) { if (Check(TokenType.wea_sign_keyword) && Peek().Value == key) { Advance(); return true; } return false; }
         private bool Check(TokenType type) => !IsAtEnd() && Peek().Type == type;
-        private bool CheckTokenValue(string val) => !IsAtEnd() && Peek().Value == val;
+        private bool CheckTokenValue(string val) => !IsAtEnd() && Peek().Value == val && Peek().Type != TokenType.wea_sign_text && Peek().Type != TokenType.wea_sign_val;
         private Token Advance() { if (!IsAtEnd()) _current++; return Previous(); }
         private bool IsAtEnd() => Peek().Type == TokenType.wea_sign_halt;
         private Token Peek() => _tokens[_current];
@@ -238,7 +481,15 @@ namespace WSharp
             Advance();
             while (!IsAtEnd())
             {
-                if (Previous().Value == ";") return;
+                if (Peek().Type == TokenType.wea_sign_keyword)
+                {
+                    string val = Peek().Value;
+                    if (val == "wea_unit" || val == "wea_flow" || val == "wea_verify" ||
+                        val == "wea_emit" || val == "wea_read" || val == "wea_cycle" ||
+                        val == "wea_eman" || val == "foreach" || val == "wea_return")
+                        return;
+                }
+                if (Previous().Value == "}") return;
                 Advance();
             }
         }
