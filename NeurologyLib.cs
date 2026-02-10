@@ -1,215 +1,257 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Threading.Tasks;
 
 namespace WSharp
 {
-    public class NeurologyLib : ILibrary
+    /// <summary>
+    /// WSharp Nöroloji Motoru (CPU Optimized)
+    /// Izhikevich nöron modeli ile yüksek performanslı simülasyon
+    /// </summary>
+    public class NeuroKernel
     {
-       
-        private const double FARADAY = 96485.3321;   
-        private const double GAS_CONST = 8.314462;    
-        private const double TEMP_BODY = 310.15;     
-        private const double E_CHARGE = 1.602e-19;   
+        // --- Yapılandırma ---
+        public int NeuronCount { get; private set; }
+        public float Dt { get; set; } = 0.05f;
 
-        public Dictionary<string, Func<List<WValue>, WValue>> GetFunctions()
+        // --- State Arrays (Cache-friendly memory layout) ---
+        public float[] V;      // Membrane Potential
+        public float[] U;      // Recovery Variable (Izhikevich)
+        public float[] I_ext;  // External Input
+        
+        // --- Parameters (Heterojen nöron tipleri için) ---
+        public float[] A;
+        public float[] B;
+        public float[] C;
+        public float[] D;
+
+        // --- Spike Events ---
+        public bool[] Spikes;
+        public List<int> SpikeIndices;
+
+        // --- Synaptic Connections (CSR Format) ---
+        private int[] _synapseTargets;
+        private float[] _synapseWeights;
+        private int[] _synapseIndptr;
+
+        public NeuroKernel(int neuronCount)
         {
-            return new Dictionary<string, Func<List<WValue>, WValue>>
-            {
-               
-                { "wea_wneura_run", args => {
-                    string script = args[0].AsString();
-                    string parametre = args.Count > 1 ? args[1].AsString() : "";
-                    
-                    
-                    string sonuc = PythonBridge.Run(script, parametre);
-                    return new WString(sonuc);
-                }},
-
-                
-                { "wea_neura_create", args => {
-                    string netName = args[0].AsString();
-                    string layers = args[1].AsString();
-                    string result = PythonBridge.Run("create_network.py", $"--name {netName} --layers {layers}");
-                    return new WString(result);
-                }},
-
-                
-                { "wea_neura_train", args => {
-                    string netName = args[0].AsString();
-                    string dataSet = args[1].AsString();
-                    double epochs = args[2].AsNumber();
-                    string result = PythonBridge.Run("train_network.py", $"--name {netName} --data {dataSet} --epochs {epochs}");
-                    return new WString(result);
-                }},
-
-                
-                { "wea_neuro_nernst", args => {
-                    double co = args[0].AsNumber(); 
-                    double ci = args[1].AsNumber();
-                    double z = args[2].AsNumber();  
-                    double T = args.Count > 3 ? args[3].AsNumber() : TEMP_BODY;
-
-                    if (ci <= 0 || co <= 0) return new WNumber(0);
-
-                    double val = ((GAS_CONST * T) / (z * FARADAY)) * Math.Log(co / ci);
-                    return new WNumber(val * 1000);
-                }},
-
-                
-                { "wea_neuro_ghk_voltage", args => {
-                    double Pk = args[0].AsNumber(); double Pna = args[1].AsNumber(); double Pcl = args[2].AsNumber();
-                    double Ko = args[3].AsNumber(); double Ki = args[4].AsNumber();
-                    double Nao = args[5].AsNumber(); double Nai = args[6].AsNumber();
-                    double Clo = args[7].AsNumber(); double Cli = args[8].AsNumber();
-                    double T = TEMP_BODY;
-
-                    double num = (Pk * Ko) + (Pna * Nao) + (Pcl * Cli);
-                    double den = (Pk * Ki) + (Pna * Nai) + (Pcl * Clo);
-
-                    double val = ((GAS_CONST * T) / FARADAY) * Math.Log(num / den);
-                    return new WNumber(val * 1000);
-                }},
-
-              
-                { "wea_neuro_ghk_current", args => {
-                    double Vm = args[0].AsNumber() / 1000.0; 
-                    double P = args[1].AsNumber();          
-                    double Xo = args[2].AsNumber();          
-                    double Xi = args[3].AsNumber();          
-                    double z = args[4].AsNumber();           
-                    double T = TEMP_BODY;
-
-                    double xi = (z * Vm * FARADAY) / (GAS_CONST * T);
-                    
-                   
-                    if (Math.Abs(1 - Math.Exp(-xi)) < 1e-9) return new WNumber(0);
-
-                    double I = P * z * FARADAY * xi * ((Xi - (Xo * Math.Exp(-xi))) / (1 - Math.Exp(-xi)));
-                    return new WNumber(I);
-                }},
-
-                
-                { "wea_neuro_hh_alpha_n", args => {
-                    double V = args[0].AsNumber();
-                    double num = 0.01 * (V + 55);
-                    double den = 1 - Math.Exp(-(V + 55) / 10.0);
-                    return new WNumber(Math.Abs(den) < 1e-9 ? 0.1 : num / den);
-                }},
-
-               
-                { "wea_neuro_hh_beta_n", args => new WNumber(0.125 * Math.Exp(-(args[0].AsNumber() + 65) / 80.0)) },
-
-              
-                { "wea_neuro_hh_alpha_m", args => {
-                    double V = args[0].AsNumber();
-                    double num = 0.1 * (V + 40);
-                    double den = 1 - Math.Exp(-(V + 40) / 10.0);
-                    return new WNumber(Math.Abs(den) < 1e-9 ? 1.0 : num / den);
-                }},
-
-                
-                { "wea_neuro_hh_beta_m", args => new WNumber(4.0 * Math.Exp(-(args[0].AsNumber() + 65) / 18.0)) },
-
-               
-                { "wea_neuro_hh_alpha_h", args => new WNumber(0.07 * Math.Exp(-(args[0].AsNumber() + 65) / 20.0)) },
-
-                
-                { "wea_neuro_hh_beta_h", args => new WNumber(1.0 / (1.0 + Math.Exp(-(args[0].AsNumber() + 35) / 10.0))) },
-
-                
-                { "wea_neuro_syn_ampa", args => {
-                    double g = args[0].AsNumber();
-                    double V = args[1].AsNumber(); 
-                    double E = 0;                 
-                    return new WNumber(g * (V - E));
-                }},
-
-               
-                { "wea_neuro_syn_nmda", args => {
-                    double g = args[0].AsNumber();
-                    double V = args[1].AsNumber();
-                    double Mg = args[2].AsNumber(); 
-                    
-                    double block = 1.0 / (1.0 + (Mg * Math.Exp(-0.062 * V) / 3.57));
-                    return new WNumber(g * block * (V - 0));
-                }},
-
-               
-                { "wea_neuro_syn_gaba", args => {
-                    double g = args[0].AsNumber();
-                    double V = args[1].AsNumber();
-                    double E_cl = -70.0; 
-                    return new WNumber(g * (V - E_cl));
-                }},
-
-              
-                
-                { "wea_neuro_cable_lambda", args => {
-                    double Rm = args[0].AsNumber(); 
-                    double Ri = args[1].AsNumber(); 
-                    double d = args[2].AsNumber();
-                    return new WNumber(Math.Sqrt((Rm / Ri) * (d / 4.0)));
-                }},
-
-                
-                { "wea_neuro_cable_tau", args => {
-                    double Rm = args[0].AsNumber();
-                    double Cm = args[1].AsNumber(); 
-                    return new WNumber(Rm * Cm);
-                }},
-
-                
-                { "wea_neuro_cable_decay", args => {
-                    double V0 = args[0].AsNumber(); 
-                    double x = args[1].AsNumber();  
-                    double lambda = args[2].AsNumber();
-                    return new WNumber(V0 * Math.Exp(-x / lambda));
-                }},
-
-               
-                { "wea_neuro_bcm", args => {
-                    double pre = args[0].AsNumber();  
-                    double post = args[1].AsNumber(); 
-                    double theta = args[2].AsNumber(); 
-                    double rate = 0.01;
-
-                    return new WNumber(rate * pre * post * (post - theta));
-                }},
-
-             
-                { "wea_neuro_oja", args => {
-                    double w = args[0].AsNumber();
-                    double x = args[1].AsNumber(); 
-                    double y = args[2].AsNumber(); 
-                    double rate = 0.01;
-
-                    return new WNumber(w + rate * (y * (x - y * w)));
-                }},
-
-              
-                { "wea_neuro_rate_sigmoid", args => {
-                    double I = args[0].AsNumber();
-                    double gain = args[1].AsNumber();
-                    double bias = args[2].AsNumber();
-                    return new WNumber(1.0 / (1.0 + Math.Exp(-gain * (I - bias))));
-                }},
-
-               
-                { "wea_neuro_cv_isi", args => {
-                    double stdDev = args[0].AsNumber();
-                    double mean = args[1].AsNumber();
-                    if (mean == 0) return new WNumber(0);
-                    return new WNumber(stdDev / mean);
-                }},
-
-               
-                { "wea_neuro_mutual_info", args => {
-                    double hX = args[0].AsNumber();
-                    double hY = args[1].AsNumber();
-                    double hXY = args[2].AsNumber();
-                    return new WNumber(hX + hY - hXY);
-                }}
-            };
+            NeuronCount = neuronCount;
+            InitializeMemory();
         }
+
+        private void InitializeMemory()
+        {
+            V = new float[NeuronCount];
+            U = new float[NeuronCount];
+            I_ext = new float[NeuronCount];
+            
+            A = new float[NeuronCount];
+            B = new float[NeuronCount];
+            C = new float[NeuronCount];
+            D = new float[NeuronCount];
+            
+            Spikes = new bool[NeuronCount];
+            SpikeIndices = new List<int>(NeuronCount / 10);
+
+            // Default: Regular Spiking neurons
+            Array.Fill(V, -65.0f);
+            Array.Fill(A, 0.02f);
+            Array.Fill(B, 0.2f);
+            Array.Fill(C, -65.0f);
+            Array.Fill(D, 8.0f);
+        }
+
+        /// <summary>
+        /// Rastgele ağ oluşturur (test için)
+        /// </summary>
+        public void BuildRandomNetwork(int connectionsPerNeuron)
+        {
+            int totalSynapses = NeuronCount * connectionsPerNeuron;
+            _synapseTargets = new int[totalSynapses];
+            _synapseWeights = new float[totalSynapses];
+            _synapseIndptr = new int[NeuronCount + 1];
+
+            var rand = new Random();
+            int cursor = 0;
+
+            for (int i = 0; i < NeuronCount; i++)
+            {
+                _synapseIndptr[i] = cursor;
+                for (int j = 0; j < connectionsPerNeuron; j++)
+                {
+                    _synapseTargets[cursor] = rand.Next(0, NeuronCount);
+                    _synapseWeights[cursor] = (float)rand.NextDouble() * 10.0f;
+                    cursor++;
+                }
+            }
+            _synapseIndptr[NeuronCount] = cursor;
+        }
+
+        /// <summary>
+        /// [PHYSICS KERNEL] Multi-threaded Izhikevich integration
+        /// </summary>
+        public void Step()
+        {
+            SpikeIndices.Clear();
+
+            // 1. Physics computation (parallel)
+            Parallel.For(0, NeuronCount, i =>
+            {
+                float v = V[i];
+                float u = U[i];
+                float i_in = I_ext[i];
+
+                // Izhikevich model derivatives
+                float dv = (0.04f * v * v + 5.0f * v + 140.0f - u + i_in);
+                float du = (A[i] * (B[i] * v - u));
+
+                V[i] += dv * Dt;
+                U[i] += du * Dt;
+
+                // Spike detection
+                Spikes[i] = V[i] >= 30.0f;
+            });
+
+            // 2. Spike processing and synaptic transmission
+            for (int i = 0; i < NeuronCount; i++)
+            {
+                if (Spikes[i])
+                {
+                    SpikeIndices.Add(i);
+                    
+                    // Reset mechanism
+                    V[i] = C[i];
+                    U[i] += D[i];
+
+                    // Synaptic transmission
+                    if (_synapseTargets != null)
+                    {
+                        int start = _synapseIndptr[i];
+                        int end = _synapseIndptr[i + 1];
+
+                        for (int k = start; k < end; k++)
+                        {
+                            int target = _synapseTargets[k];
+                            float weight = _synapseWeights[k];
+                            I_ext[target] += weight;
+                        }
+                    }
+                }
+                else
+                {
+                    // Current decay
+                    I_ext[i] *= 0.9f;
+                }
+            }
+        }
+
+        /// <summary>
+        /// WSharp API: Nörona akım enjekte et
+        /// </summary>
+        public void SetInput(int neuronIndex, float current)
+        {
+            if (neuronIndex >= 0 && neuronIndex < NeuronCount)
+                I_ext[neuronIndex] = current;
+        }
+
+        public float GetVoltage(int neuronIndex)
+        {
+            return (neuronIndex >= 0 && neuronIndex < NeuronCount) ? V[neuronIndex] : 0f;
+        }
+
+        public int GetSpikeCount()
+        {
+            return SpikeIndices.Count;
+        }
+
+        /// <summary>
+        /// Nöron tipini ayarla (RS, FS, IB, CH)
+        /// </summary>
+        public void SetNeuronType(int index, string type)
+        {
+            if (index < 0 || index >= NeuronCount) return;
+
+            switch (type.ToUpper())
+            {
+                case "RS": // Regular Spiking
+                    A[index] = 0.02f; B[index] = 0.2f; C[index] = -65f; D[index] = 8f;
+                    break;
+                case "FS": // Fast Spiking
+                    A[index] = 0.1f; B[index] = 0.2f; C[index] = -65f; D[index] = 2f;
+                    break;
+                case "IB": // Intrinsically Bursting
+                    A[index] = 0.02f; B[index] = 0.2f; C[index] = -55f; D[index] = 4f;
+                    break;
+                case "CH": // Chattering
+                    A[index] = 0.02f; B[index] = 0.2f; C[index] = -50f; D[index] = 2f;
+                    break;
+            }
+        }
+    }
+
+    // --- WSharp Wrapper Functions ---
+    public class NeuroCreateFunc : IWCallable
+    {
+        public int Arity() => 1;
+        public WValue Call(Interpreter interpreter, List<WValue> arguments)
+        {
+            int neuronCount = (int)arguments[0].AsNumber();
+            var kernel = new NeuroKernel(neuronCount);
+            return new WValue(kernel);
+        }
+        public override string ToString() => "<native fn neuro_create>";
+    }
+
+    public class NeuroBuildNetworkFunc : IWCallable
+    {
+        public int Arity() => 2;
+        public WValue Call(Interpreter interpreter, List<WValue> arguments)
+        {
+            var kernel = arguments[0].Value as NeuroKernel;
+            int connections = (int)arguments[1].AsNumber();
+            kernel?.BuildRandomNetwork(connections);
+            return new WValue(true);
+        }
+        public override string ToString() => "<native fn neuro_build_network>";
+    }
+
+    public class NeuroStepFunc : IWCallable
+    {
+        public int Arity() => 1;
+        public WValue Call(Interpreter interpreter, List<WValue> arguments)
+        {
+            var kernel = arguments[0].Value as NeuroKernel;
+            kernel?.Step();
+            return new WValue(kernel?.GetSpikeCount() ?? 0);
+        }
+        public override string ToString() => "<native fn neuro_step>";
+    }
+
+    public class NeuroSetInputFunc : IWCallable
+    {
+        public int Arity() => 3;
+        public WValue Call(Interpreter interpreter, List<WValue> arguments)
+        {
+            var kernel = arguments[0].Value as NeuroKernel;
+            int index = (int)arguments[1].AsNumber();
+            float current = (float)arguments[2].AsNumber();
+            kernel?.SetInput(index, current);
+            return new WValue(true);
+        }
+        public override string ToString() => "<native fn neuro_set_input>";
+    }
+
+    public class NeuroGetVoltageFunc : IWCallable
+    {
+        public int Arity() => 2;
+        public WValue Call(Interpreter interpreter, List<WValue> arguments)
+        {
+            var kernel = arguments[0].Value as NeuroKernel;
+            int index = (int)arguments[1].AsNumber();
+            return new WValue(kernel?.GetVoltage(index) ?? 0f);
+        }
+        public override string ToString() => "<native fn neuro_get_voltage>";
     }
 }
