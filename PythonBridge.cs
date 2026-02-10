@@ -6,67 +6,55 @@ namespace WSharp
 {
     public static class PythonBridge
     {
-        // -----------------------------------------------------------------------------------------
-        // DEVELOPER NOTE:
-        // To link Python manually:
-        // 1. Install Python.
-        // 2. Open CMD and type 'where python'.
-        // 3. Paste the resulting path below (inside the quotes). 
-        // 4. If you leave this as default, the system will try to use the global 'python' command.
-        // @weagw-developer-have a nice day
-        // -----------------------------------------------------------------------------------------
-
-       
-        private static string PythonPath = @"PASTE_YOUR_PYTHON_PATH_HERE";
-
-        public static string Run(string scriptPathRaw, string args)
+        public static string Run(string scriptPath, string args)
         {
-            try
+            if (!File.Exists(scriptPath))
+                return $"[ERROR] File Not Found!\nPath: {scriptPath}";
+
+            
+            string[] pythonCommands = { "py", "python", "python3" };
+            string lastError = "";
+
+            foreach (var cmd in pythonCommands)
             {
-              
-                string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, scriptPathRaw);
-
-             
-                if (!File.Exists(fullPath))
+                try
                 {
-                    return $"[ERROR] File Not Found!\nPath: {fullPath}";
+                    ProcessStartInfo start = new ProcessStartInfo();
+                    start.FileName = cmd;
+                    start.Arguments = $"\"{scriptPath}\" {args}";
+                    start.UseShellExecute = false;
+                    start.RedirectStandardOutput = true;
+                    start.RedirectStandardError = true;
+                    start.CreateNoWindow = true;
+
+                    using (Process process = Process.Start(start))
+                    {
+                        using (StreamReader reader = process.StandardOutput)
+                        {
+                            string result = reader.ReadToEnd();
+                            string error = process.StandardError.ReadToEnd();
+                            process.WaitForExit();
+
+                            
+                            if (!string.IsNullOrEmpty(error) && string.IsNullOrEmpty(result))
+                            {
+                                lastError = $"({cmd}): {error}"; 
+                                continue; 
+
+                            
+                            return result.Trim();
+                        }
+                    }
                 }
-
-                
-                string exeToUse = PythonPath;
-
-              
-                if (exeToUse.Contains("PASTE_YOUR_PYTHON_PATH_HERE") || string.IsNullOrEmpty(exeToUse))
+                catch (Exception)
                 {
-                    exeToUse = "python"; 
-                }
-
-                ProcessStartInfo start = new ProcessStartInfo();
-                start.FileName = exeToUse;
-                
-                start.Arguments = $"\"{fullPath}\" {args}";
-                start.UseShellExecute = false;
-                start.RedirectStandardOutput = true;
-                start.RedirectStandardError = true;
-                start.CreateNoWindow = true;
-
-                using (Process process = Process.Start(start))
-                {
-                    string result = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-
-                    process.WaitForExit();
-
-                    if (!string.IsNullOrEmpty(error))
-                        return $"[PYTHON ERROR]: {error}";
-
-                    return result.Trim();
+                    
+                    continue; 
                 }
             }
-            catch (Exception ex)
-            {
-                return $"[SYSTEM ERROR]: Python could not be started.\nReason: {ex.Message}\nFix: Check 'PythonPath' in PythonBridge.cs or add Python to your System PATH.";
-            }
+
+            
+            return $"[PYTHON ERROR]: Hiçbir Python komutu çalışmadı.\nSon Hata: {lastError}\nLütfen Python'un kurulu olduğundan emin olun.";
         }
     }
 }
