@@ -1,4 +1,4 @@
-#nullable disable
+    #nullable disable
 using System;
 using System.Collections.Generic;
 
@@ -58,10 +58,23 @@ namespace WSharp
                 case '-': AddToken(TokenType.wea_sign_mark); break;
                 case '+': AddToken(TokenType.wea_sign_mark); break;
                 case '*': AddToken(TokenType.wea_sign_mark); break;
+                case '%': AddToken(TokenType.wea_sign_mark); break;
+                case '[': AddToken(TokenType.wea_sign_mark); break;
+                case ']': AddToken(TokenType.wea_sign_mark); break;
+                case ':': AddToken(TokenType.wea_sign_mark); break;
+                case '.': AddToken(TokenType.wea_sign_mark); break;
+
+                
+                case '&': if (Match('&')) AddToken(TokenType.wea_sign_mark, "&&"); break;
+
+
+                
+                case '|': AddToken(TokenType.wea_sign_mark, Match('>') ? "|>" : Match('|') ? "||" : "|"); break;
+
                 case ';': break;
                 case '/': if (Match('/')) while (Peek() != '\n' && !IsAtEnd()) Advance(); else AddToken(TokenType.wea_sign_mark); break;
                 case '!': AddToken(TokenType.wea_sign_mark, Match('=') ? "!=" : "!"); break;
-                case '=': AddToken(TokenType.wea_sign_mark, Match('=') ? "==" : "="); break;
+                case '=': AddToken(TokenType.wea_sign_mark, Match('=') ? "==" : Match('>') ? "=>" : "="); break;
                 case '<': AddToken(TokenType.wea_sign_mark, Match('=') ? "<=" : "<"); break;
                 case '>': AddToken(TokenType.wea_sign_mark, Match('=') ? ">=" : ">"); break;
                 case ' ': case '\r': case '\t': break;
@@ -100,11 +113,20 @@ namespace WSharp
                 case "wea_unit":
                 case "wea_flow":
                 case "wea_verify":
+                case "wea_else":
                 case "wea_cycle":
                 case "wea_eman":
                 case "wea_fail":
                 case "wea_read":
-                case "is_key": type = TokenType.wea_sign_keyword; break;
+                case "wea_return":
+                case "is_key": 
+                case "foreach":
+                case "in":
+                case "break":
+                case "continue":
+                case "dogru":
+                case "yanlis":
+                case "bos": type = TokenType.wea_sign_keyword; break;
             }
             _tokens.Add(new Token(type, text, _line));
         }
