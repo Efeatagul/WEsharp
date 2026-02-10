@@ -1,0 +1,10 @@
+  Geri y??klenecek projeler belirleniyor...
+  Geri y??kleme i??in t??m projeler g??ncel.
+  we# 00.1 beta -> C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\bin\Debug\net8.0-windows\we# 00.1 beta.dll
+  wneuraa -> C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\wneuraa\bin\Debug\net10.0-windows\wneuraa.dll
+
+Olu??turma ba??ar??l?? oldu.
+    0 Uyar??
+    0 Hata
+
+Ge??en S??re 00:00:02.11

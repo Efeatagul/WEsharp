@@ -1,0 +1,30 @@
+  Geri y??klenecek projeler belirleniyor...
+  Geri y??kleme i??in t??m projeler g??ncel.
+  wneuraa -> C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\wneuraa\bin\Debug\net10.0-windows\wneuraa.dll
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,13): error CS1519: Invalid token 'if' in a member declaration [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,32): error CS8124: Demet en az iki ????e i??ermelidir. [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,32): error CS1026: ) bekleniyor [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,33): error CS1031: T??r bekleniyor [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,33): error CS8124: Demet en az iki ????e i??ermelidir. [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,33): error CS1026: ) bekleniyor [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,33): error CS1519: Invalid token '"["' in a member declaration [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(252,13): error CS1519: Invalid token 'throw' in a member declaration [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(252,33): error CS1001: Tan??mlay??c?? bekleniyor [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(253,9): error CS1519: Invalid token '}' in a member declaration [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+
+Olu??turma BA??ARISIZ OLDU.
+
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,13): error CS1519: Invalid token 'if' in a member declaration [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,32): error CS8124: Demet en az iki ????e i??ermelidir. [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,32): error CS1026: ) bekleniyor [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,33): error CS1031: T??r bekleniyor [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,33): error CS8124: Demet en az iki ????e i??ermelidir. [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,33): error CS1026: ) bekleniyor [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(250,33): error CS1519: Invalid token '"["' in a member declaration [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(252,13): error CS1519: Invalid token 'throw' in a member declaration [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(252,33): error CS1001: Tan??mlay??c?? bekleniyor [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\parsel.cs(253,9): error CS1519: Invalid token '}' in a member declaration [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta_fpdcqvhx_wpftmp.csproj]
+    0 Uyar??
+    10 Hata
+
+Ge??en S??re 00:00:03.24

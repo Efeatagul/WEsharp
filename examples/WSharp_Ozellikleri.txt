@@ -1,0 +1,168 @@
+========================================================================
+WSharp - Bilimsel ve Analitik Programlama Dili Referans Kılavuzu (v1.0 Beta)
+========================================================================
+
+WSharp (Scientific Pipe Language), bilimsel hesaplamalar, veri analizi ve simülasyonlar 
+için tasarlanmış, okunabilirliği yüksek, boru hattı (pipeline) operatörü (|>) odaklı 
+modern bir programlama dilidir.
+
+Temel Özellikler:
+1.  **Boru Hattı (Pipeline) Mimarisi:** Veriyi fonksiyonlar arasında `|>` ile akıtarak zincirleme işlemler yapabilme.
+2.  **Yerleşik Bilimsel Kütüphaneler:** Biyoloji, Kimya, Fizik, Nükleer Fizik ve Nöroloji modülleri dahildir.
+3.  **Hibrit Sözdizimi:** İngilizce ve Türkçe anahtar kelimelerin karışımıyla oluşturulmuş özgün yapı.
+4.  **Dinamik Tipler:** Sayı, Metin, Liste, Sözlük ve Fonksiyon tipleri otomatik algılanır.
+
+========================================================================
+1. TEMEL SÖZDİZİMİ (SYNTAX)
+========================================================================
+
+### Değişken Tanımlama (wea_unit)
+Değişkenler `wea_unit` anahtar kelimesi ile tanımlanır. Tip belirtmeye gerek yoktur.
+Örnek:
+    wea_unit x = 10
+    wea_unit isim = "WSharp"
+    wea_unit aktif = dogru  // (true yerine 'dogru')
+    wea_unit pasif = yanlis // (false yerine 'yanlis')
+    wea_unit bos_deger = bos // (null yerine 'bos')
+
+### Fonksiyon Tanımlama (wea_flow)
+Fonksiyonlar `wea_flow` ile başlar.
+Örnek:
+    wea_flow topla(a, b) {
+        wea_return a + b
+    }
+
+### Ekrana Yazdırma (wea_emit)
+Çıktı üretmek için `wea_emit` veya `print` kullanılır.
+Örnek:
+    wea_emit "Merhaba Dünya"
+    "Merhaba" |> print()  // Pipe kullanımı
+
+### Kullanıcı Girişi (wea_read)
+Örnek:
+    wea_unit ad = wea_read("Adınız nedir?")
+
+========================================================================
+2. KONTROL YAPILARI (CONTROL FLOW)
+========================================================================
+
+### Koşul İfadeleri (wea_verify / wea_else)
+IF-ELSE yapısının karşılığıdır.
+Örnek:
+    wea_verify x > 10 {
+        wea_emit "Büyük"
+    } wea_else wea_verify x == 10 {
+        wea_emit "Eşit"
+    } wea_else {
+        wea_emit "Küçük"
+    }
+
+### Döngüler (wea_cycle / foreach)
+WHILE döngüsü:
+    wea_cycle x < 5 {
+        wea_emit x
+        x = x + 1
+    }
+
+FOREACH döngüsü (Liste veya String üzerinde):
+    foreach(item in [1, 2, 3]) {
+        wea_emit item * 2
+    }
+
+========================================================================
+3. VERİ YAPILARI
+========================================================================
+
+### Listeler (Lists)
+Köşeli parantez ile tanımlanır. İndeksleme ve dilimleme (slicing) destekler.
+    wea_unit liste = [10, 20, 30]
+    wea_emit liste[0]      // 10
+    wea_emit liste[0:2]    // [10, 20]
+    wea_push(liste, 40)    // Eleman ekleme
+    wea_pop(liste)         // Eleman çıkarma
+
+### Sözlükler (Dictionaries)
+Anahtar-Değer çiftleri.
+    wea_unit sozluk = {"ad": "Ali", "yas": 25}
+    wea_emit sozluk["ad"]
+    wea_verify is_key(sozluk, "yas") { ... } // Anahtar kontrolü
+
+========================================================================
+4. OPERATÖRLER
+========================================================================
+
+### Boru Hattı (Pipeline |>)
+Soldaki ifadenin sonucunu sağdaki fonksiyonun İLK argümanı olarak geçirir.
+Örnek:
+    wea_unit x = 5
+    x |> abs() |> pow(2) |> print() 
+    // Eşdeğeri: print(pow(abs(x), 2))
+
+### Lambda (Ok Fonksiyonları =>)
+İsimsiz, tek satırlık fonksiyonlar. `map` ve `filter` ile güçlüdür.
+    wea_unit kareler = wea_map([1, 2, 3], (x) => x * x)
+
+### Mantıksal Operatörler
+    && (VE), || (VEYA), ! (DEĞİL)
+
+### Aritmetik
+    +, -, *, /, % (Mod)
+    Vector İşlemleri: İki liste arasında +, -, * (Dot Product) yapılabilir.
+
+========================================================================
+5. YERLEŞİK BİLİMSEL KÜTÜPHANELER
+========================================================================
+
+### Biyoloji (BiologyLib)
+    bio_classify(isim)      : Organizma sınıflandırması yapar.
+    bio_transport(c1, c2, active) : Hücre taşıma mekanizmasını simüle eder.
+    bio_photosynthesis(...) : Fotosentez hızını hesaplar.
+    bio_respire(glikoz, tur): Solunum reaksiyonu çıktısı verir.
+    bio_crispr(gen, rna)    : CRISPR kesim simülasyonu.
+    bio_cancer(hasar, p53)  : Kanser riski analizi.
+    gen_transcribe(dna)     : DNA -> mRNA çevirimi.
+    gen_translate(mrna)     : mRNA -> Protein çevirimi.
+
+### Kimya (ChemistryLib)
+    chem_element(sembol)    : Element özelliklerini getirir (Periyodik Tablo).
+    chem_mass(formul)       : Molekül kütlesini hesaplar (Örn: "H2O").
+    chem_bond(e1, e2)       : İki element arasındaki bağ türünü (İyonik/Kovalent) bulur.
+    chem_gibbs(dH, dS, T)   : Gibbs Serbest Enerjisi (Tepkime istemliliği).
+
+### Fizik (PhysicsLib)
+    phys_mech("force", m, a): F=ma hesaplar.
+    phys_mech("motion", v, t): Hareket denklemleri.
+    phys_em("ohm", v, r)    : Ohm yasası.
+    phys_modern("relativity", v): Rölativistik etkileri hesaplar.
+
+### Nükleer (NuclearLib)
+    nuc_decay(miktar, yari_omur): Radyoaktif bozunma kalan miktar hesabı.
+    nuc_energy(kutle)       : E=mc^2 enerji hesabı.
+    nuc_reactor(tip)        : Reaktör tipleri hakkında bilgi.
+
+### Nöroloji (NeuroLib & Python Bridge)
+    wea_neuro_create(n)     : N sayıda nöron içeren yapay beyin oluşturur.
+    wea_neuro_step(beyin)   : Simülasyonu bir adım ilerletir.
+    wea_neura(json)         : Python tabanlı gelişmiş motor ile iletişim kurar.
+
+========================================================================
+6. SİSTEM VE MATEMATİK
+========================================================================
+
+### Matematik (MathLib & StdLib)
+    math_basic("sin", aci)
+    sqrt(x), abs(x), pow(b, e), floor(x), ceil(x), round(x)
+    range(start, end), sort(list), reverse(list)
+
+### Dosya ve Sistem (CoreLib)
+    wea_file_write(yol, icerik)
+    wea_file_read(yol)
+    wea_export_csv(yol, liste) : Veriyi CSV formatında dışa aktarır.
+    clock() : Geçen süreyi ölçmek için.
+
+========================================================================
+ÖZET
+========================================================================
+WSharp, karmaşık bilimsel formülleri ve mantıksal yapıları, okunabilir ve zincirlenebilir 
+bir sözdizimi ile birleştiren, araştırmacılar ve öğrenciler için optimize edilmiş 
+bir dildir. Hem IDE hem de Konsol (CLI) ortamında çalışabilir.

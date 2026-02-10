@@ -1,0 +1,7 @@
+C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\Interpreter.cs(122,23): error CS0161: 'Interpreter.Visit(ForeachStmt)': t??m kod yollar?? bir de??er d??nd??rmez [C:\Users\weagw\OneDrive\Desktop\we# 00.1 beta\we# 00.1 beta.csproj]
+
+Olu??turma BA??ARISIZ OLDU.
+    0 Uyar??
+    1 Hata
+
+Ge??en S??re 00:00:01.48

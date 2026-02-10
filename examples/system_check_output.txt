@@ -1,0 +1,66 @@
+dotnet : You must inst
+all or update .NET to 
+run this application.
+At line:1 char:1
++ dotnet run system_ch
+eck.wea 2>&1 | Out-Fil
+e -Encoding ASCII syst
+em_ch ...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo    
+          : NotSpecifi
+ed    : (You must inst
+al.    ..is applicatio
+n.:S    tring) [], Rem
+oteEx    ception
+    + FullyQualifiedEr
+r    orId : NativeComm
+an    dError
+ 
+
+App: C:\Users\weagw\On
+eDrive\Desktop\we# 00.
+1 beta\bin\Debug\net8.
+0-windows\we# 00.1 bet
+a.exe
+Architecture: x64
+Framework: 'Microsoft.
+NETCore.App', version 
+'8.0.0' (x64)
+.NET location: C:\Prog
+ram Files\dotnet
+
+The following framewor
+ks were found:
+  3.1.32 at [C:\Progra
+m Files\dotnet\shared\
+Microsoft.NETCore.App]
+  10.0.1 at [C:\Progra
+m Files\dotnet\shared\
+Microsoft.NETCore.App]
+  10.0.2 at [C:\Progra
+m Files\dotnet\shared\
+Microsoft.NETCore.App]
+
+The following framewor
+ks for other architect
+ures were found:
+  x86
+    10.0.2 at [C:\Prog
+ram Files (x86)\dotnet
+\shared\Microsoft.NETC
+ore.App]
+
+Learn more:
+https://aka.ms/dotnet/
+app-launch-failed
+
+To install missing fra
+mework, download:
+https://aka.ms/dotnet-
+core-applaunch?framewo
+rk=Microsoft.NETCore.A
+pp&framework_version=8
+.0.0&arch=x64&rid=win-
+x64&os=win10
