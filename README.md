@@ -1,107 +1,134 @@
-<div align="center">
+# WSharp (we#) Scientific Simulation Platform
 
-# 🧬 WSharp (we#)
-### Scientific Neurology & AI Simulation Platform
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen) ![Version](https://img.shields.io/badge/version-v1.0_RC-blue) ![License](https://img.shields.io/badge/license-MIT-grey) ![Platform](https://img.shields.io/badge/platform-.NET_10.0-lightgrey)
 
-![Version](https://img.shields.io/badge/version-00.1_Beta-blue?style=for-the-badge)
-![Platform](https://img.shields.io/badge/platform-.NET_10-purple?style=for-the-badge)
-![Architecture](https://img.shields.io/badge/architecture-Headless_Hybrid-success?style=for-the-badge)
-![License](https://img.shields.io/badge/license-MIT-orange?style=for-the-badge)
+**WSharp** is a high-performance, domain-specific language (DSL) designed to bridge the gap between **biological computation (C#)** and **artificial intelligence agents (Python/Wneura)**.
 
-**"Simulating the complexity of biological brain development and decision-making processes."**
-
-**WSharp**, biyolojik hesaplama (C#) ile yapay zeka ajanları (Python/Wneura) arasındaki boşluğu dolduran, **Headless Architecture** yapısına sahip yüksek performanslı bir bilimsel simülasyon dilidir.
-
-[Mimari](#-system-architecture) • [Özellikler](#-key-features) • [Kurulum](#-installation) • [Kullanım](#-usage-examples)
-
-</div>
+> **Designed for:** Computational Neuroscience, Quantum Simulation, and Hybrid AI Modeling.
 
 ---
 
-## 🧠 System Architecture (The Hybrid Core)
+## 📑 Table of Contents (Hızlı Erişim)
+1. [System Architecture](#1-system-architecture)
+2. [Core Capabilities](#2-core-capabilities--modules)
+3. [Installation](#3-installation--configuration)
+4. [Usage Examples](#4-usage-examples)
 
-WSharp, C#'ın hızını Python ekosisteminin esnekliğiyle birleştiren hibrit bir yapı kullanır. Aşağıdaki şema sistemin nasıl konuştuğunu gösterir:
+---
+
+## 1. System Architecture
+
+<details>
+<summary>🔻 <b>Click to view Architecture Diagram & Details</b></summary>
+<br>
+
+WSharp utilizes a dual-engine architecture. The core runtime is built on **.NET 10.0 (C#)** for memory management, while neural network training is offloaded to a **Python** subprocess via a custom Interop Layer.
+
+### Data Flow & Marshaling
+Data exchange uses high-speed JSON serialization.
 
 ```mermaid
-graph LR
-    A[WSharp IDE] -->|wea_wneura_run| B(PythonBridge.cs)
-    B -->|Spawns Process| C{Wneura Agents}
-    C -->|PyTorch/CUDA| D[Brain Training]
-    D -->|JSON Response| B
-    B -->|Returns Data| A
-    style A fill:#6a0dad,stroke:#333,stroke-width:2px,color:#fff
-    style C fill:#3572A5,stroke:#333,stroke-width:2px,color:#fff
+graph TD
+    subgraph WSharp Runtime [C# Host Environment]
+        Core[Interpreter & Logic Engine]
+        Parser[Lexer & AST Generator]
+        Bridge[Wneura Interop Bridge]
+    end
+
+    subgraph External Environment [Python Runtime]
+        Agent[Wneura AI Agent]
+        Libs[NumPy / Pandas]
+    end
+
+    Core -->|Execution Command| Parser
+    Core -->|Simulation Data| Bridge
+    Bridge -->|JSON Payload via StdIn| Agent
+    Agent -->|Computed Tensor Data via StdOut| Bridge
+    Bridge -->|WValue Object| Core
 ```
-## 🚀 Key Features
+</details>
+2. Core Capabilities & Modules
 
-| Özellik | Açıklama | Durum |
-| :--- | :--- | :--- |
-| **NeurologyLib** | Nernst, GHK ve Hodgkin-Huxley denklemleri için yerleşik fonksiyonlar | ✅ Aktif |
-| **PythonBridge** | WSharp içinden harici Python (Wneura) scriptlerini "Headless" çalıştırma | 🚀 Yeni |
-| **AIFixer** | Otomatik sözdizimi hatası tespiti ve kendi kendini onaran kod önerileri | ⚡ Beta |
-| **QuantumLib** | Temel kuantum süperpozisyon ve dolanıklık simülasyonları | 🧪 Deneysel |
-| **Bio/Chem Libs** | Kimyasal reaksiyonlar ve biyolojik bozunma simülasyonları | ✅ Aktif |
-
----
-
-## 💻 Installation & Setup
-
-### Gereksinimler (Prerequisites)
-* **OS:** Windows 10/11
-* **Runtime:** .NET 10.0 (Preview/RC)
-* **Python:** Python 3.9+ (Wneura entegrasyonu için şart)
-
-### Yapılandırma (Python Bağlantısı)
-`wea_wneura_run` komutlarını kullanmak için köprüyü yapılandırmalısınız:
-
-1. `WSharp/PythonBridge.cs` dosyasını açın.
-2. `PythonPath` değişkenini bulun.
-3. Python yolunuzu yapıştırın (veya otomatik algılama için dokunmayın).
-
-```csharp
-private static string PythonPath = @"PASTE_YOUR_PYTHON_PATH_HERE";
 ```
-Usage Examples
-1. Wneura Ajanı Çalıştırma (Python Entegrasyonu)
-WSharp, bir Python AI ajanını tetikler, eğitilmesini bekler ve veriyi geri alır.
+Module        |  Description                                                                                       | Status                                                                                                                     |
+NeurologyLib  |  Implements biophysically accurate equations (Nernst, GHK, Hodgkin-Huxley) for                     | Stable
+membrane potential simulation.                                                                                     |
+              |                                                                                                    |
+PythonBridge  |  A headless interop layer managing external Python processes and IPC (Inter-Process Communication).| Stable
+              |                                                                                                    |
+AIFixer       |  Compile-time heuristic analysis tool that detects syntax errors and suggests self-healing code.   | Active
+              |                                                                                                    |
+QuantumLib    |  Abstract mathematical structures for quantum superposition and entanglement simulations.          | Active
+              |                                                                                                    |
+Bio/Chem Libs |  Stoichiometric balancing and radioactive decay simulations.                                       |Active
+```
 
-// Simülasyonu Başlatmak için 
-wea_emit("Initializing Neural Link...")
+3. Installation & Configuration
+<details> <summary>🔻 <b>Click for Setup Instructions</b></summary>
 
-// Wneura klasöründeki ajanı çalıştır
+System Prerequisites
 
-// Argümanlar: script_yolu, parametreler
-wea_unit brain_data = wea_wneura_run("Wneura/agent.py", "--epochs 100")
+OS: Windows 10/11 (x64).
 
-// Python beyninden gelen JSON sonucunu ekrana bas
-wea_emit("Training Complete. Results:")
-wea_emit(brain_data)
+Runtime: .NET 10.0 (Preview/RC).
 
-Biyolojik Hesaplama (NeurologyLib)
-Goldman-Hodgkin-Katz (GHK) denklemi ile membran potansiyeli hesaplama.
+Python: Python 3.9+ (Packages: numpy, pandas).
 
-// Parametreler: Geçirgenlik ve Konsantrasyonlar (K, Na, Cl)
+Bridge Configuration
+
+To run wea_wneura_run commands, update the PythonPath in src/WSharp/PythonBridge.cs:
+```
+// Configuration: Absolute path to the Python interpreter
+private static string PythonPath = @"C:\Users\Admin\AppData\Local\Programs\Python\Python311\python.exe";
+```
+</details>
+4. Usage Examples
+<details> <summary>🔻 <b>Example A: Running a Hybrid AI Simulation</b></summary>
+
+In this scenario, WSharp initializes a neural link and dispatches training tasks to a Python-based agent (Wneura).
+```
+// 1. Initialize
+wea_emit("System Status: Online. Initializing Neural Link...");
+
+// 2. Trigger Wneura Agent (Headless)
+// --epochs: Training duration.
+wea_unit brain_data = wea_wneura_run("Wneura/agent.py", "--epochs 100 --learning_rate 0.01");
+
+// 3. Process Results
+wea_emit("Training Sequence Complete. Final Accuracy Metrics:");
+wea_emit(brain_data);
+```
+</details>
+
+<details> <summary>🔻 <b>Example B: Membrane Potential Calculation</b></summary>
+Calculating voltage using the Goldman-Hodgkin-Katz equation.
+
+```
+// Parameters: Ion Permeability and Concentrations (mM)
 wea_unit vm = wea_neuro_ghk_voltage(
-    1.0, 0.04, 0.45,  // Permeability (Pk, Pna, Pcl)
-    4.0, 140.0,       // K (out, in)
-    145.0, 15.0,      // Na (out, in)
-    110.0, 5.0        // Cl (out, in)
-)
+    1.0, 0.04, 0.45,    // Permeability (K, Na, Cl)
+    4.0, 140.0,         // Potassium (K)
+    145.0, 15.0,        // Sodium (Na)
+    110.0, 5.0          // Chloride (Cl)
+);
 
-wea_emit("Membrane Potential (mV):")
-wea_emit(vm)
+wea_emit("Calculated Membrane Potential (mV):");
+wea_emit(vm);
+```
+</details>
 
-Roadmap & Development Routine
-Geliştirme süreci katı bir disiplinle ilerler.
+5. Maintenance Cycle
 
-Rutin: Her Pazar, haftalık hata düzeltmeleri, optimizasyon ve kod incelemeleri yapılır.
+The WSharp project follows a "Continuous Stability" development philosophy.
 
-Sonraki Adımlar:
+Code Audits: Weekly reviews for memory leak detection and Big O complexity reduction.
 
-[ ] Scientific Plotter ile Python verilerinin canlı çizimi.
-[ ] ML tabanlı hata tahmini sunan gelişmiş AIFixer.
-[ ] Bozunma simülasyonları için NuclearLib genişletmesi.
+Version Target: Currently in Release Candidate (RC) status.
 
-| IDE Shortcuts | Ctrl + N (New File), Ctrl + S (Save), F5 (Run & Plot) | ✅ Active |
+6. License
 
-<div align="center"> MIT License by <b>Efeatagul/weagw</b> </div>
+This project is licensed under the MIT License.
+
+Lead Developer: Efeatagul/weagw Copyright: © 2026 weagw
+
+
