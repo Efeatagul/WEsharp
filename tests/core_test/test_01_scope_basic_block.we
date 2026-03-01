@@ -1,0 +1,27 @@
+﻿// ============================================
+// TEST 01: Basinner Block Scope Test
+// PURPOSE: A variable defined inside an if block 
+//          should be inaccessible outside the block.
+//          If there is a scope leak, it can be accessed outside (error).
+// ============================================
+
+print "=== TEST 01: Basinner Block Scope ==="
+
+let x = 10
+
+if true {
+    let y = 42
+    print "Inside block y = " + y
+}
+
+// y should NOT be defined here
+// If access is denied, scope is working correctly
+try {
+    print "Outside block y = " + y
+    print "FAIL: y is accessible outside the block (scope leak!)"
+} catch {
+    print "PASS: y is inaccessible outside block (scope preserved)"
+}
+
+print "x still outside = " + x
+print "=== TEST 01 COMPLETED ==="
