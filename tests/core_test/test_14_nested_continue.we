@@ -1,0 +1,34 @@
+﻿// ============================================
+// TEST 14: Continue Test with Nested Loop
+// PURPOSE: Tests that using continue inside an inner loop 
+//          only skips that specific iteration, without 
+[cite_start]//          affecting the outer loop[cite: 49].
+// ============================================
+
+print "=== TEST 14: Nested Loop Continue ==="
+
+let outer = 0
+let processed = 0
+
+while outer < 3 {
+    let inner = 0
+    while inner < 5 {
+        inner = inner + 1
+        if inner == 3 {
+            [cite_start]continue; [cite: 51]
+        }
+        processed = processed + 1
+    }
+    outer = outer + 1
+}
+
+// 5 inner steps per outer, 1 skipped = 4 processed. 3 outer * 4 = 12 total.
+print "Total processed = " + processed
+
+if processed == 12 {
+    print "PASS: Continue skipped only the inner iteration"
+} else {
+    print "FAIL: Expected 12, actual " + processed
+}
+
+print "=== TEST 14 COMPLETED ==="

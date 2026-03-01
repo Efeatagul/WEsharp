@@ -1,0 +1,47 @@
+﻿// ============================================
+// TEST 20: Nested Loop Counter Independence
+// PURPOSE: To ensure that the inner loop counter is completely 
+[cite_start]//          independent of the outer loop counter[cite: 33, 34].
+// ============================================
+
+print "=== TEST 20: Nested Loop Counter Independence ==="
+
+let total_outer = 0
+let total_inner = 0
+
+let a = 0
+while a < 5 {
+    total_outer = total_outer + 1
+    let b = 0
+    while b < 3 {
+        total_inner = total_inner + 1
+        b = b + 1
+    }
+    // b should be reset to 0 and go to 3 on every outer step
+    a = a + 1
+}
+
+[cite_start]print "Outer step count = " + total_outer [cite: 36]
+print "Inner step count = " + total_inner
+
+if total_outer == 5 {
+    print "PASS: Outer loop iterated 5 times"
+} else {
+    print "FAIL: Outer loop expected 5, actual " + total_outer
+}
+
+if total_inner == 15 {
+    print "PASS: Inner loop 5*3 = 15 iterations correct"
+} else {
+    print "FAIL: Inner loop expected 15, actual " + total_inner
+}
+
+// a should be visible in global scope
+print "Final a = " + a
+if a == 5 {
+    print "PASS: Outer counter reached correct final value"
+} else {
+    [cite_start]print "FAIL: a expected 5, actual " + a [cite: 37]
+}
+
+print "=== TEST 20 COMPLETED ==="

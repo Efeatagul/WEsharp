@@ -1,0 +1,35 @@
+﻿// ============================================
+// TEST 15: Mathematical Accumulation with Nested Loop
+// PURPOSE: Tests mathematical accumulation (multiplication table style) 
+//          using nested loops. Inner loop must correctly update 
+[cite_start]//          outer variables[cite: 52, 53].
+// ============================================
+
+print "=== TEST 15: Nested Loop Accumulation ==="
+
+let total_product = 0
+let row = 1
+
+while row <= 4 {
+    let column = 1
+    let row_total = 0
+    while column <= 4 {
+        let product = row * column
+        row_total = row_total + product
+        column = column + 1
+    }
+    print "Row " + row + " total = " + row_total
+    
+    [cite_start]total_product = total_product + row_total [cite: 55]
+    row = row + 1
+}
+
+print "Overall total = " + total_product
+
+if total_product == 100 {
+    print "PASS: Multiplication table total is correct"
+} else {
+    print "FAIL: Expected 100, actual " + total_product
+}
+
+print "=== TEST 15 COMPLETED ==="

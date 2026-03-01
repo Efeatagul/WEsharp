@@ -1,0 +1,35 @@
+﻿// ============================================
+// TEST 12: Triple Layer Nested Loop
+// PURPOSE: Tests the calculation of the total iteration count 
+//          in a 3-layer nested loop and ensures counter 
+//          variables do not overwrite each other.
+// ============================================
+
+print "=== TEST 12: Triple Layer Nested Loop ==="
+
+let i = 0
+let total = 0
+
+while i < 3 {
+    let j = 0
+    while j < 3 {
+        let k = 0
+        while k < 3 {
+            total = total + 1
+            k = k + 1
+        }
+        j = j + 1
+    }
+    i = i + 1
+}
+
+print "Total iterations = " + total
+
+if total == 27 {
+    print "PASS: 3x3x3 = 27 iterations correct"
+} else {
+    print "FAIL: Expected 27, actual " + total
+}
+
+print "=== TEST 12 COMPLETED ==="
+
