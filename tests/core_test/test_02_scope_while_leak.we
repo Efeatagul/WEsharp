@@ -1,0 +1,25 @@
+﻿// ============================================
+// TEST 02: While Loop Scope Leak Test
+// PURPOSE: To verify that a variable defined inside
+//          a while loop does not leak outside the loop.
+// ============================================
+
+print "=== TEST 02: While Loop Scope ==="
+
+let counter = 0
+while counter < 3 {
+    let temp = counter * 10
+    print "Inside loop temp = " + temp
+    counter = counter + 1
+}
+
+print "Loop finished, counter = " + counter
+
+try {
+    print "temp outside = " + temp
+    print "FAIL: temp leaked outside the loop!"
+} catch {
+    print "PASS: temp remained in loop, inaccessible outside"
+}
+
+print "=== TEST 02 COMPLETED ==="

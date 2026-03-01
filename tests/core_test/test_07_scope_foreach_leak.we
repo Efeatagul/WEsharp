@@ -1,0 +1,41 @@
+﻿// ============================================
+// TEST 07: Foreach Loop Variable Leakage
+// PURPOSE: Tests that the foreach loop iterator and variables 
+//          inside the loop are inaccessible after the loop[cite: 29].
+// ============================================
+
+print "=== TEST 07: Foreach Scope Test ==="
+
+let list_var = [10, 20, 30, 40, 50]
+let total = 0
+
+foreach (element in list_var) {
+    let temp = element * 2
+    total = total + element
+    print "element = " + element + ", temp = " + temp [cite: 30]
+}
+
+print "Total = " + total
+
+// element and temp should be inaccessible outside
+try {
+    print "element = " + element
+    print "FAIL: foreach variable leaked outside!" [cite: 30, 31]
+} catch {
+    print "PASS: foreach variable 'element' is inaccessible outside" [cite: 31]
+}
+
+try {
+    print "temp = " + temp
+    print "FAIL: variable 'temp' inside the loop leaked outside!" [cite: 32]
+} catch {
+    print "PASS: variable 'temp' inside the loop is inaccessible outside" [cite: 32]
+}
+
+if total == 150 {
+    print "PASS: total calculated correctly" [cite: 32]
+} else {
+    print "FAIL: total is incorrect, expected 150 actual " + total [cite: 32]
+}
+
+print "=== TEST 07 COMPLETED ==="

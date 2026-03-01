@@ -1,0 +1,35 @@
+﻿// ============================================
+// TEST 03: Function Scope Isolation
+// PURPOSE: Variables defined inside a function 
+//          must be invisible outside the function.
+//          Function parameters must also not leak outside.
+// ============================================
+
+print "=== TEST 03: Function Scope Isolation ==="
+
+func calculate(a, b) {
+    let result = a + b
+    print "Inside function result = " + result
+    return result
+}
+
+let r = calculate(5, 7)
+print "Return value r = " + r
+
+try {
+    print "result = " + result
+    print "FAIL: Variable inside the function leaked outside!"
+} catch {
+    print "PASS: 'result' inside the function is inaccessible outside"
+}
+
+try {
+    print "a = " + a
+    print "FAIL: Function parameter 'a' leaked outside!"
+} catch {
+    print "PASS: Parameter 'a' is inaccessible outside"
+}
+
+print "=== TEST 03 COMPLETED ==="
+
+

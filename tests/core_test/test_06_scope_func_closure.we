@@ -1,0 +1,39 @@
+﻿// ============================================
+// TEST 06: Function Closure Scope Test
+// PURPOSE: Tests whether a function can access variables 
+//          in the scope where it was defined (Closure behavior)[cite: 25, 26].
+// ============================================
+
+print "=== TEST 06: Function Closure Scope ==="
+
+let message = "Hello"
+let factor = 10
+
+func multiplier(n) {
+    // factor comes from the outer scope
+    return n * factor [cite: 27]
+}
+
+let result = multiplier(5)
+print "multiplier(5) = " + result
+
+if result == 50 {
+    print "PASS: Function accessed outer scope variable" [cite: 27]
+} else {
+    print "FAIL: Closure failed, expected 50 but result = " + result [cite: 27]
+}
+
+// Changing the factor, does the function use the new value?
+factor = 20 [cite: 28]
+let result2 = multiplier(5)
+print "factor changed, multiplier(5) = " + result2
+
+if result2 == 100 {
+    print "PASS: Closure uses the dynamically updated value" [cite: 28]
+} else if result2 == 50 {
+    print "INFO: Closure uses the value at definition time (static closure)" [cite: 28]
+} else {
+    print "FAIL: Unexpected result = " + result2 [cite: 28]
+}
+
+print "=== TEST 06 COMPLETED ==="

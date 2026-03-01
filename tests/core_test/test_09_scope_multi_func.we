@@ -1,0 +1,42 @@
+﻿// ============================================
+// TEST 09: Scope Isolation Between Multiple Functions
+// PURPOSE: Tests that local variables with the same name in 
+//          different functions do not affect each other[cite: 5].
+// ============================================
+
+print "=== TEST 09: Multi-Function Scope Isolation ==="
+
+func funcA() {
+    let data = "funcA_data"
+    let code = 111
+    print "funcA: data = " + data + ", code = " + code [cite: 6]
+    return code
+}
+
+func funcB() {
+    let data = "funcB_data"
+    let code = 222
+    print "funcB: data = " + data + ", code = " + code [cite: 6]
+    return code
+}
+
+func funcC() {
+    let data = "funcC_data"
+    let code = 333 [cite: 7]
+    print "funcC: data = " + data + ", code = " + code [cite: 7]
+    return code
+}
+
+let a = funcA()
+let b = funcB()
+let c = funcC()
+
+print "results: a=" + a + " b=" + b + " c=" + c
+
+if a == 111 && b == 222 && c == 333 {
+    print "PASS: Each function operated in its own isolated scope" [cite: 8]
+} else {
+    print "FAIL: Scope crossover between functions detected!" [cite: 8]
+}
+
+print "=== TEST 09 COMPLETED ==="

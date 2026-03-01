@@ -1,0 +1,58 @@
+﻿// ============================================
+// TEST 04: Nested Block Scope Chain
+// PURPOSE: To test that variables in three-layered nested blocks 
+//          are only accessible at their own level and below.
+// ============================================
+
+print "=== TEST 04: Nested Block Scope Chain ==="
+
+let level0 = "global"
+
+if true {
+    let level1 = "layer1"
+    print "Layer1: level0 = " + level0
+    print "Layer1: level1 = " + level1
+    
+    if true {
+        let level2 = "layer2"
+        print "Layer2: level0 = " + level0
+        print "Layer2: level1 = " + level1
+        print "Layer2: level2 = " + level2
+        
+        if true {
+            let level3 = "layer3"
+            print "Layer3: All levels accessible"
+            print "  level0 = " + level0
+            print "  level1 = " + level1
+            print "  level2 = " + level2
+            print "  level3 = " + level3
+        }
+        
+        // level3 should be inaccessible here
+        try {
+            print "level3 = " + level3
+            print "FAIL: level3 leaked!"
+        } catch {
+            print "PASS: level3 is inaccessible in layer2"
+        }
+    }
+    
+    // level2 should be inaccessible here
+    try {
+        print "level2 = " + level2
+        print "FAIL: level2 leaked!"
+    } catch {
+        print "PASS: level2 is inaccessible in layer1"
+    }
+}
+
+// level1 should be inaccessible here
+try {
+    print "level1 = " + level1
+    print "FAIL: level1 leaked to global scope!"
+} catch {
+    print "PASS: level1 is inaccessible in global scope"
+}
+
+print "level0 is still accessible = " + level0
+print "=== TEST 04 COMPLETED ==="

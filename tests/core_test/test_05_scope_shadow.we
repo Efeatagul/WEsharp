@@ -1,0 +1,43 @@
+﻿// ============================================
+// TEST 05: Variable Shadowing Test
+// PURPOSE: Tests whether variables with the same name in upper scopes 
+//          are shadowed in inner blocks. Changes in the inner block 
+//          MUST NOT affect the upper scope[cite: 20, 21].
+// ============================================
+
+print "=== TEST 05: Variable Shadowing ==="
+
+let x = 100
+print "Initial x = " + x
+
+if true {
+    let x = 999
+    print "Inner block x = " + x [cite: 22]
+}
+
+print "Outer block x = " + x
+
+if x == 100 {
+    print "PASS: x maintained its original value after shadowing" [cite: 22]
+} else {
+    print "FAIL: x was affected by the inner block (scope leak or shadow error!)" [cite: 22]
+}
+
+// Shadowing inside a function
+func test_shadow() {
+    let x = -1
+    print "Inside function x = " + x
+    return x [cite: 23]
+}
+
+let r = test_shadow()
+print "Function return = " + r
+print "Global x is still = " + x
+
+if x == 100 {
+    print "PASS: Function shadowing did not affect global" [cite: 23, 24]
+} else {
+    print "FAIL: Function modified x!" [cite: 24]
+}
+
+print "=== TEST 05 COMPLETED ==="
