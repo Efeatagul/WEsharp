@@ -659,3 +659,18 @@ specific requirements.
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <https://www.gnu.org/licenses/>.
+
+
+ License & Copyright
+
+WSharp (We#) and the WEAGW Ecosystem are dual-licensed to maximize open scientific research while protecting intellectual property.
+
+**1. Open-Source License (GNU AGPL v3.0)**
+WSharp is free to use, modify, and distribute for open-source projects, academic research, and personal use under the terms of the **GNU AGPL v3.0**.
+* **Condition:** You MUST clearly attribute/cite "WSharp by Efe Ata Gül (WEAGW)" in your project, research paper, or application. Any project built with this open-source license must also be open-sourced.
+
+**2. WEAGW Commercial License (Proprietary Use)**
+If you are a corporation, laboratory, or entity wishing to use WSharp for closed-source, proprietary, or commercial projects (without releasing your own source code), you CANNOT use the AGPL v3.0 license.
+* You must obtain a **WEAGW Commercial License**. Please contact the creator for enterprise pricing and non-disclosure agreements (NDA).
+
+*Copyright © 2026 Efe Ata Gül. All rights reserved. "WEAGW", "WSharp", "WNEURA" are trademarks of Efe Ata Gül.*
