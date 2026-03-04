@@ -1,0 +1,80 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<AssemblyName>WSharp</AssemblyName>
+		<RootNamespace>we__00._1_beta</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<UseWPF>true</UseWPF>
+		<DefaultItemExcludes>$(DefaultItemExcludes);wneuraa\**</DefaultItemExcludes>
+		<EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+	</PropertyGroup>
+
+	
+	<ItemGroup>
+		<ApplicationDefinition Remove="App.xaml" />
+		<Page Remove="App.xaml" />
+		<Page Include="App.xaml" />
+	</ItemGroup>
+
+	
+	<ItemGroup>
+		<None Update="Wneura\agent.py">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Wneura\brain.py">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Wneura\config.py">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	
+	<ItemGroup>
+		<Content Include="Engine\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	
+	<ItemGroup>
+		<Folder Include="Code Snippets\JavaScript\My Code Snippets\" />
+		<Folder Include="Code Snippets\Python\My Code Snippets\" />
+		<Folder Include="Code Snippets\SQL_SSDT\My Code Snippets\" />
+		<Folder Include="Code Snippets\TypeScript\My Code Snippets\" />
+		<Folder Include="Code Snippets\Visual Basic\My Code Snippets\" />
+		<Folder Include="Code Snippets\Visual C#\My Code Snippets\" />
+		<Folder Include="Code Snippets\Visual Web Developer\My CSS Snippets\" />
+		<Folder Include="Code Snippets\Visual Web Developer\My HTML Snippets\" />
+		<Folder Include="Code Snippets\XAML\My XAML Snippets\" />
+		<Folder Include="Code Snippets\XML\My Xml Snippets\" />
+		<Folder Include="Templates\ItemTemplates\C#\" />
+		<Folder Include="Templates\ItemTemplates\Genişletilebilirlik\" />
+		<Folder Include="Templates\ItemTemplates\JavaScript\" />
+		<Folder Include="Templates\ItemTemplates\TypeScript\" />
+		<Folder Include="Templates\ItemTemplates\Visual Basic\" />
+		<Folder Include="Templates\ItemTemplates\Visual Web Developer\" />
+		<Folder Include="Templates\ProjectTemplates\C#\" />
+		<Folder Include="Templates\ProjectTemplates\Genişletilebilirlik\" />
+		<Folder Include="Templates\ProjectTemplates\JavaScript\" />
+		<Folder Include="Templates\ProjectTemplates\TypeScript\" />
+		<Folder Include="Templates\ProjectTemplates\Visual Basic\" />
+		<Folder Include="Templates\ProjectTemplates\Visual Web Developer\" />
+	</ItemGroup>
+
+	
+	<ItemGroup>
+	  <Compile Update="we#pythonbrige\NeurologyLib.cs">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Compile>
+	</ItemGroup>
+
+	
+	<ItemGroup>
+	  <PackageReference Include="ILGPU" Version="1.5.3" />
+	  <PackageReference Include="ScottPlot.WPF" Version="5.0.39" />
+	  <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+	</ItemGroup>
+</Project>
