@@ -1,5 +1,7 @@
 # WSharp (we#) Scientific Simulation Platform
+[ README ](./README.md) | [ LICENSE ](./LICENSE) | [ ROADMAP ](./ROADMAP.md) | [ CODE OF CONDUCT ](./CODE_OF_CONDUCT.md) | [ CONTRIBUTING ](./CONTRIBUTING.md)
 
+---
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen) ![Version](https://img.shields.io/badge/version-v1.0_RC-blue) ![License](https://img.shields.io/badge/license-MIT-grey) ![Platform](https://img.shields.io/badge/platform-.NET_10.0-lightgrey)
 
 **WSharp** is a high-performance, domain-specific language (DSL) designed to bridge the gap between **biological computation (C#)** and **artificial intelligence agents (Python/Wneura)**.
