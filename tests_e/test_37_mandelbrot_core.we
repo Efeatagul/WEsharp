@@ -1,0 +1,31 @@
+print "File: test_37_mandelbrot_core.we"
+func in_mandelbrot(cr, ci, max_iter) {
+    let zr = 0
+    let zi = 0
+    let iter = 0
+    while iter < max_iter {
+        let zr2 = zr * zr
+        let zi2 = zi * zi
+        if zr2 + zi2 > 4.0 { return iter }
+        let next_zi = 2.0 * zr * zi + ci
+        zr = zr2 - zi2 + cr
+        zi = next_zi
+        iter = iter + 1
+    }
+    return max_iter
+}
+
+let it1 = in_mandelbrot(0, 0, 100)
+if it1 == 100 { print "PASS: origin is in set" } else { print "FAIL: origin is in set" }
+
+let it2 = in_mandelbrot(-2, 0, 100)
+if it2 == 100 { print "PASS: -2 is in set" } else { print "FAIL: -2 is in set" }
+
+let it3 = in_mandelbrot(1, 1, 100)
+if it3 < 100 { print "PASS: 1+1i is NOT in set" } else { print "FAIL: 1+1i is NOT in set" }
+if it3 == 1 { print "PASS: 1+1i escapes fast" } else { print "FAIL: 1+1i escapes fast" }
+
+let it4 = in_mandelbrot(-1, 0, 100)
+if it4 == 100 { print "PASS: -1 is in set" } else { print "FAIL: -1 is in set" }
+
+print "test_37 done"

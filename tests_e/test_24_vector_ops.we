@@ -1,0 +1,20 @@
+print "File: test_24_vector_ops.we"
+let v1 = [1, 2, 3]
+let v2 = [4, 5, 6]
+let add = v1 + v2
+if add[0] == 5 { print "PASS: vector add [0]" } else { print "FAIL: vector add [0]" }
+if add[1] == 7 { print "PASS: vector add [1]" } else { print "FAIL: vector add [1]" }
+if add[2] == 9 { print "PASS: vector add [2]" } else { print "FAIL: vector add [2]" }
+let sub = v2 - v1
+if sub[0] == 3 { print "PASS: vector sub [0]" } else { print "FAIL: vector sub [0]" }
+if sub[2] == 3 { print "PASS: vector sub [2]" } else { print "FAIL: vector sub [2]" }
+let scaled = 2 * v1
+if scaled[0] == 2 { print "PASS: scalar * vec [0]" } else { print "FAIL: scalar * vec [0]" }
+if scaled[2] == 6 { print "PASS: scalar * vec [2]" } else { print "FAIL: scalar * vec [2]" }
+let dot = v1 * v2
+if dot == 32 { print "PASS: dot product" } else { print "FAIL: dot product" }
+let norm_sq = v1 * v1
+if norm_sq == 14 { print "PASS: norm squared" } else { print "FAIL: norm squared" }
+let norm = sqrt(norm_sq)
+if norm > 3.74 && norm < 3.75 { print "PASS: l2 norm" } else { print "FAIL: l2 norm" }
+print "test_24 done"

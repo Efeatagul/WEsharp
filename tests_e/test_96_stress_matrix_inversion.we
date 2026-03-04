@@ -1,0 +1,28 @@
+print "File: test_96_stress_matrix_inversion.we"
+func invert_2x2(mat) {
+    let a = mat[0][0]
+    let b = mat[0][1]
+    let c = mat[1][0]
+    let d = mat[1][1]
+    let det = a * d - b * c
+    if det == 0 { return [] }
+    let inv = []
+    push(inv, [d / det, -b / det])
+    push(inv, [-c / det, a / det])
+    return inv
+}
+
+let m = [[4, 7], [2, 6]]
+let i = 0
+
+// Invert the matrix back and forth 1000 times
+while i < 1000 {
+    m = invert_2x2(m)
+    i = i + 1
+}
+
+// Even number of inversions -> original matrix
+if m[0][0] > 3.99 && m[0][0] < 4.01 { print "PASS: 1000x matrix inversions [0][0]" } else { print "FAIL: 1000x matrix inversions [0][0]" }
+if m[1][1] > 5.99 && m[1][1] < 6.01 { print "PASS: 1000x matrix inversions [1][1]" } else { print "FAIL: 1000x matrix inversions [1][1]" }
+
+print "test_96 done"

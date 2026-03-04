@@ -1,0 +1,42 @@
+print "File: test_56_neural_avalanches.we"
+func check_power_law(sizes, counts) {
+    let n = len(sizes)
+    let log_sizes = []
+    let log_counts = []
+    let i = 0
+    while i < n {
+        if sizes[i] > 0 && counts[i] > 0 {
+            push(log_sizes, math_basic("ln", sizes[i]))
+            push(log_counts, math_basic("ln", counts[i]))
+        }
+        i = i + 1
+    }
+    let params = []
+    if len(log_sizes) > 1 {
+        let sum_x = 0
+        let sum_y = 0
+        let sum_xx = 0
+        let sum_xy = 0
+        let k = len(log_sizes)
+        let j = 0
+        while j < k {
+            sum_x = sum_x + log_sizes[j]
+            sum_y = sum_y + log_counts[j]
+            sum_xx = sum_xx + log_sizes[j] * log_sizes[j]
+            sum_xy = sum_xy + log_sizes[j] * log_counts[j]
+            j = j + 1
+        }
+        let denom = k * sum_xx - sum_x * sum_x
+        let slope = (k * sum_xy - sum_x * sum_y) / denom
+        push(params, slope)
+    }
+    return params[0]
+}
+
+let avalanche_size = [1, 2, 4, 8, 16, 32]
+let avalanche_freq = [1000, 250, 62, 15, 4, 1] 
+let exponent = check_power_law(avalanche_size, avalanche_freq)
+
+if exponent < -1.4 && exponent > -2.1 { print "PASS: Avalanche size exponent ~ -1.5" } else { print "FAIL: Avalanche size exponent ~ -1.5" }
+
+print "test_56 done"

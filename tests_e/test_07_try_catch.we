@@ -1,0 +1,39 @@
+print "File: test_07_try_catch.we"
+let caught = false
+try {
+    let x = 1 / 0
+} catch {
+    caught = true
+}
+if caught == true { print "PASS: division by zero caught" } else { print "FAIL: division by zero caught" }
+let msg = "ok"
+try {
+    let arr = [1, 2, 3]
+    let bad = arr[99]
+} catch {
+    msg = "index error caught"
+}
+if msg == "index error caught" { print "PASS: index error caught" } else { print "FAIL: index error caught" }
+let nested_ok = false
+try {
+    try {
+        let y = 0 / 0
+    } catch {
+        nested_ok = true
+    }
+} catch {
+    nested_ok = false
+}
+if nested_ok == true { print "PASS: nested try/catch" } else { print "FAIL: nested try/catch" }
+func safe_div(a, b) {
+    try {
+        return a / b
+    } catch {
+        return -1
+    }
+}
+let r1 = safe_div(10, 2)
+if r1 == 5 { print "PASS: safe_div normal" } else { print "FAIL: safe_div normal" }
+let r2 = safe_div(10, 0)
+if r2 == -1 { print "PASS: safe_div zero" } else { print "FAIL: safe_div zero" }
+print "test_07 done"

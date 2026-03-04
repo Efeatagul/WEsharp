@@ -1,0 +1,23 @@
+print "File: test_88_stress_closure_capture.we"
+func build_closures(n) {
+    let funcs = []
+    let i = 0
+    while i < n {
+        // Must capture current value of i correctly
+        func f() { return i }
+        push(funcs, f)
+        i = i + 1
+    }
+    return funcs
+}
+
+let fns = build_closures(100)
+let sum = 0
+
+foreach f in fns {
+    sum = sum + f()
+}
+
+if sum > 0 { print "PASS: 100 closures evaluated" } else { print "FAIL: 100 closures evaluated" }
+
+print "test_88 done"

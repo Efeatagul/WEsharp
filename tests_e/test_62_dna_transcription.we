@@ -1,0 +1,28 @@
+print "File: test_62_dna_transcription.we"
+func transcribe_dna_to_rna(dna) {
+    let rna = ""
+    let n = len(dna)
+    let i = 0
+    while i < n {
+        let base = dna[i]
+        if base == "A" { rna = rna + "U" }
+        if base == "T" { rna = rna + "A" }
+        if base == "C" { rna = rna + "G" }
+        if base == "G" { rna = rna + "C" }
+        i = i + 1
+    }
+    return rna
+}
+
+let dna_seq = "ATGCGTA"
+let rna_seq = transcribe_dna_to_rna(dna_seq)
+
+if rna_seq == "UACGCAU" { print "PASS: DNA to RNA transcription" } else { print "FAIL: DNA to RNA transcription" }
+
+let dna_empty = ""
+if transcribe_dna_to_rna(dna_empty) == "" { print "PASS: Empty DNA handled" } else { print "FAIL: Empty DNA handled" }
+
+let dna_all_a = "AAAA"
+if transcribe_dna_to_rna(dna_all_a) == "UUUU" { print "PASS: All A to U" } else { print "FAIL: All A to U" }
+
+print "test_62 done"

@@ -1,0 +1,21 @@
+print "File: test_18_string_char_iter.we"
+let word = "WSharp"
+let length = len(word)
+if length == 6 { print "PASS: word length" } else { print "FAIL: word length" }
+let chars = []
+foreach ch in word { push(chars, ch) }
+if chars[0] == "W" { print "PASS: chars[0]" } else { print "FAIL: chars[0]" }
+if chars[5] == "p" { print "PASS: chars[5]" } else { print "FAIL: chars[5]" }
+let upper_chars = map(chars, func(c) { return str_upper(c) })
+if upper_chars[1] == "S" { print "PASS: upper_chars[1]" } else { print "FAIL: upper_chars[1]" }
+let rejoined = join(chars, "")
+if rejoined == "WSharp" { print "PASS: rejoin chars" } else { print "FAIL: rejoined chars" }
+let sentence = "hello world test"
+let words = split(sentence, " ")
+if len(words) == 3 { print "PASS: split words count" } else { print "FAIL: split words count" }
+if words[1] == "world" { print "PASS: split words[1]" } else { print "FAIL: split words[1]" }
+let first_char = word[0]
+if first_char == "W" { print "PASS: index string char" } else { print "FAIL: index string char" }
+let substr = word[1:4]
+if substr == "Sha" { print "PASS: string slice" } else { print "FAIL: string slice" }
+print "test_18 done"

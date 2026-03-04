@@ -1,0 +1,23 @@
+print "File: test_87_stress_try_catch_depth.we"
+func nested_try(depth, max_depth) {
+    if depth == max_depth {
+        let err = 1 / 0
+        return
+    }
+    
+    try {
+        nested_try(depth + 1, max_depth)
+    } catch {
+        if depth == 1 { print "PASS: Exception bubbled up 50 levels" }
+        // re-throw conceptually by dividing by zero again if not at top
+        if depth > 1 { let err2 = 1 / 0 }
+    }
+}
+
+try {
+    nested_try(1, 50)
+} catch {
+    print "PASS: Caught at root"
+}
+
+print "test_87 done"

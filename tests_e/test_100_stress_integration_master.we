@@ -1,0 +1,46 @@
+print "File: test_100_stress_integration_master.we"
+// Final integration test bringing together Math, Arrays, Scoping, and Error Handling
+
+let data = []
+
+func generate_data(size) {
+    let d = []
+    let i = 0
+    while i < size {
+        push(d, i * 2)
+        i = i + 1
+    }
+    return d
+}
+
+try {
+    data = generate_data(1000)
+    let sum = 0
+    foreach v in data {
+        sum = sum + v
+    }
+    
+    // (0 + 2 + 4 + ... + 1998) = 1000 * 999 = 999000
+    if sum == 999000 { print "PASS: 1k items generated and summed" } else { print "FAIL: 1k items generated and summed" }
+    
+    let caught_err = false
+    try {
+        let undef = data[1005] // Out of bounds
+    } catch {
+        caught_err = true
+    }
+    if caught_err { print "PASS: OOB error successfully caught" } else { print "FAIL: OOB error successfully caught" }
+    
+    let reversed = []
+    let j = len(data) - 1
+    while j >= 0 {
+        push(reversed, data[j])
+        j = j - 1
+    }
+    if reversed[0] == 1998 { print "PASS: Reversal array verified" } else { print "FAIL: Reversal array verified" }
+    
+} catch {
+    print "FAIL: Master integration test threw unexpected outer exception"
+}
+
+print "test_100 done"

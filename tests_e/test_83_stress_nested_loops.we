@@ -1,0 +1,21 @@
+print "File: test_83_stress_nested_loops.we"
+let i = 0
+let sum = 0
+
+// O(N^3) nested loop
+while i < 100 {
+    let j = 0
+    while j < 100 {
+        let k = 0
+        while k < 10 {
+            sum = sum + 1
+            k = k + 1
+        }
+        j = j + 1
+    }
+    i = i + 1
+}
+
+if sum == 100000 { print "PASS: 100x100x10 nested loops" } else { print "FAIL: 100x100x10 nested loops" }
+
+print "test_83 done"

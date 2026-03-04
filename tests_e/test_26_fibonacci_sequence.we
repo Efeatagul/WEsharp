@@ -1,0 +1,23 @@
+print "File: test_26_fibonacci_sequence.we"
+func fib_seq(n) {
+    let seq = [0, 1]
+    let i = 2
+    while i < n {
+        let prev2 = seq[i - 2]
+        let prev1 = seq[i - 1]
+        push(seq, prev2 + prev1)
+        i = i + 1
+    }
+    return seq
+}
+let fib20 = fib_seq(20)
+if fib20[0] == 0 { print "PASS: fib seq[0]" } else { print "FAIL: fib seq[0]" }
+if fib20[1] == 1 { print "PASS: fib seq[1]" } else { print "FAIL: fib seq[1]" }
+if fib20[9] == 34 { print "PASS: fib seq[9]=34" } else { print "FAIL: fib seq[9]=34" }
+if fib20[19] == 4181 { print "PASS: fib seq[19]=4181" } else { print "FAIL: fib seq[19]=4181" }
+let golden = fib20[19] / fib20[18]
+if golden > 1.618 && golden < 1.619 { print "PASS: golden ratio approx" } else { print "FAIL: golden ratio approx" }
+let sum_fib = 0
+foreach v in fib20 { sum_fib = sum_fib + v }
+if sum_fib == 10945 { print "PASS: sum of fib(0..19)" } else { print "FAIL: sum of fib(0..19)" }
+print "test_26 done"

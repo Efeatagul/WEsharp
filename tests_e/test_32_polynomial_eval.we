@@ -1,0 +1,27 @@
+print "File: test_32_polynomial_eval.we"
+func poly_eval(coeffs, x) {
+    let result = 0
+    let n = len(coeffs)
+    let i = 0
+    while i < n {
+        result = result + coeffs[i] * pow(x, n - 1 - i)
+        i = i + 1
+    }
+    return result
+}
+let p1 = [1, 0, -4]
+let r1 = poly_eval(p1, 2)
+if r1 == 0 { print "PASS: x^2-4 at x=2 is 0" } else { print "FAIL: x^2-4 at x=2 is 0" }
+let r1b = poly_eval(p1, 3)
+if r1b == 5 { print "PASS: x^2-4 at x=3 is 5" } else { print "FAIL: x^2-4 at x=3 is 5" }
+let p2 = [2, -3, 1]
+let r2 = poly_eval(p2, 1)
+if r2 == 0 { print "PASS: 2x^2-3x+1 at x=1 is 0" } else { print "FAIL: 2x^2-3x+1 at x=1 is 0" }
+let r2b = poly_eval(p2, 0.5)
+if r2b == 0 { print "PASS: 2x^2-3x+1 at x=0.5 is 0" } else { print "FAIL: 2x^2-3x+1 at x=0.5 is 0" }
+let p3 = [1, 0, 0, 0, -1]
+let r3 = poly_eval(p3, 1)
+if r3 == 0 { print "PASS: x^4-1 at x=1 is 0" } else { print "FAIL: x^4-1 at x=1 is 0" }
+let r3b = poly_eval(p3, 2)
+if r3b == 15 { print "PASS: x^4-1 at x=2 is 15" } else { print "FAIL: x^4-1 at x=2 is 15" }
+print "test_32 done"

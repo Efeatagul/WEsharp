@@ -1,0 +1,29 @@
+print "File: test_74_enzyme_inhibition.we"
+func mm_with_inhibitor(vmax, km, s, i, ki, comp) {
+    if comp == "competitive" {
+        let app_km = km * (1.0 + i / ki)
+        return (vmax * s) / (app_km + s)
+    } else if comp == "uncompetitive" {
+        let app_vmax = vmax / (1.0 + i / ki)
+        let app_km = km / (1.0 + i / ki)
+        return (app_vmax * s) / (app_km + s)
+    } else if comp == "noncompetitive" {
+        let app_vmax = vmax / (1.0 + i / ki)
+        return (app_vmax * s) / (km + s)
+    }
+    return 0.0
+}
+
+let v_base = mm_with_inhibitor(100.0, 10.0, 10.0, 0.0, 1.0, "competitive")
+if v_base == 50.0 { print "PASS: Base V at Km = Vmax/2" } else { print "FAIL: Base V at Km = Vmax/2" }
+
+let v_comp = mm_with_inhibitor(100.0, 10.0, 10.0, 1.0, 1.0, "competitive")
+if v_comp < 50.0 && v_comp > 30.0 { print "PASS: Competitive inhibition lowers V" } else { print "FAIL: Competitive inhibition lowers V" }
+
+let v_n_comp = mm_with_inhibitor(100.0, 10.0, 10.0, 1.0, 1.0, "noncompetitive")
+if v_n_comp == 25.0 { print "PASS: Noncompetitive halves Vmax -> V=25" } else { print "FAIL: Noncompetitive halves Vmax -> V=25" }
+
+let v_u_comp = mm_with_inhibitor(100.0, 10.0, 10.0, 1.0, 1.0, "uncompetitive")
+if v_u_comp == 33.333333333333336 { print "PASS: Uncompetitive inhibition exact" } else { print "FAIL: Uncompetitive inhibition exact" }
+
+print "test_74 done"

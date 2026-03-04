@@ -1,0 +1,17 @@
+print "File: test_45_ghk_equation.we"
+func ghk_current(v, p, z, cin, cout, t) {
+    let R = 8.314
+    let F = 96485.0
+    let T = t + 273.15
+    let factor = (z * z * F * F) / (R * T)
+    let expt = math_basic("pow", 2.718, -(z * F * v) / (R * T))
+    return p * v * factor * (cin - cout * expt) / (1.0 - expt)
+}
+
+let i_na = ghk_current(-65e-3, 1e-7, 1, 15e-3, 145e-3, 37)
+if i_na < 0.0 { print "PASS: Na current negative (inward) at rest" } else { print "FAIL: Na current negative (inward) at rest" }
+
+let i_k = ghk_current(10e-3, 1e-7, 1, 140e-3, 5e-3, 37)
+if i_k > 0.0 { print "PASS: K current positive (outward) at +10mV" } else { print "FAIL: K current positive (outward) at +10mV" }
+
+print "test_45 done"

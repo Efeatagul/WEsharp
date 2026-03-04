@@ -1,0 +1,25 @@
+print "File: test_84_stress_deep_dict.we"
+let d = {}
+let curr = d
+let i = 0
+
+// Nest dictionaries 50 levels deep
+while i < 50 {
+    curr["next"] = {}
+    curr = curr["next"]
+    i = i + 1
+}
+
+curr["value"] = "DEEP"
+
+// Traverse back
+let check = d
+let j = 0
+while j < 50 {
+    check = check["next"]
+    j = j + 1
+}
+
+if check["value"] == "DEEP" { print "PASS: 50-deep nested dictionary" } else { print "FAIL: 50-deep nested dictionary" }
+
+print "test_84 done"

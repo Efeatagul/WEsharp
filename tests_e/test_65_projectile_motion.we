@@ -1,0 +1,20 @@
+print "File: test_65_projectile_motion.we"
+func projectile_range(v0, theta) {
+    let g = 9.81
+    let pi = 3.14159
+    let rad = theta * pi / 180.0
+    return (v0 * v0 * math_basic("sin", 2.0 * theta)) / g
+}
+
+let r45 = projectile_range(10.0, 45.0)
+if r45 > 10.19 && r45 < 10.20 { print "PASS: Range at 45 deg (10m/s)" } else { print "FAIL: Range at 45 deg (10m/s)" }
+
+let r30 = projectile_range(10.0, 30.0)
+let r60 = projectile_range(10.0, 60.0)
+let diff = abs(r30 - r60)
+if diff < 0.01 { print "PASS: Complementary angles give same range" } else { print "FAIL: Complementary angles give same range" }
+
+let r90 = projectile_range(10.0, 90.0)
+if abs(r90) < 0.01 { print "PASS: Range at 90 deg is 0" } else { print "FAIL: Range at 90 deg is 0" }
+
+print "test_65 done"

@@ -1,0 +1,34 @@
+print "File: test_59_calcium_dynamics.we"
+let ca_in = 0.05 
+let ca_rest = 0.05
+let tau_ca = 20.0
+let alpha = 0.1 
+
+let spikes = [10.0, 15.0, 20.0, 50.0]
+let last_spike = 0.0
+let dt = 1.0
+let t = 0.0
+
+let max_ca = 0.0
+
+while t < 100.0 {
+    let dca = -(ca_in - ca_rest) / tau_ca
+    ca_in = ca_in + dca * dt
+    
+    let is_spike = false
+    foreach s in spikes {
+        if abs(t - s) < 0.01 { is_spike = true }
+    }
+    
+    if is_spike {
+        ca_in = ca_in + alpha
+    }
+    
+    if ca_in > max_ca { max_ca = ca_in }
+    t = t + dt
+}
+
+if max_ca > 0.2 && max_ca < 0.3 { print "PASS: Ca accumulated correctly" } else { print "FAIL: Ca accumulated correctly" }
+if ca_in > 0.05 && ca_in < 0.1 { print "PASS: Ca decayed correctly" } else { print "FAIL: Ca decayed correctly" }
+
+print "test_59 done"

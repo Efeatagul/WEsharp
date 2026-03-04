@@ -1,0 +1,30 @@
+print "File: test_58_spike_timing_reliability.we"
+func jitter(val, amt, seed) {
+    let next = (seed * 1103515245 + 12345) % 32768
+    let r = (next / 32768.0) * 2.0 - 1.0
+    return val + r * amt
+}
+
+let reliable_train = [10.0, 25.0, 40.0, 60.0]
+let trials = 5
+let all_trials = []
+
+let s = 42
+let i = 0
+while i < trials {
+    let tr = []
+    foreach sp in reliable_train {
+        let j = jitter(sp, 2.0, s)
+        s = (s * 13 + 7) % 10000
+        push(tr, j)
+    }
+    push(all_trials, tr)
+    i = i + 1
+}
+
+if len(all_trials) == 5 { print "PASS: 5 trials generated" } else { print "FAIL: 5 trials generated" }
+
+let diff_1 = all_trials[0][0] - reliable_train[0]
+if abs(diff_1) <= 2.0 { print "PASS: Jitter within bounds" } else { print "FAIL: Jitter within bounds" }
+
+print "test_58 done"

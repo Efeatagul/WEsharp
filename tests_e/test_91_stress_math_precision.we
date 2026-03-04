@@ -1,0 +1,17 @@
+print "File: test_91_stress_math_precision.we"
+let pi_approx = 0.0
+let sign = 1.0
+let denom = 1.0
+let i = 0
+
+// Gregory-Leibniz series for pi
+while i < 50000 {
+    pi_approx = pi_approx + sign * (4.0 / denom)
+    sign = -sign
+    denom = denom + 2.0
+    i = i + 1
+}
+
+if pi_approx > 3.141 && pi_approx < 3.142 { print "PASS: 50k iterations Gregory-Leibniz pi" } else { print "FAIL: 50k iterations Gregory-Leibniz pi" }
+
+print "test_91 done"

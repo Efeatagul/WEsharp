@@ -1,0 +1,28 @@
+print "File: test_43_hodgkin_huxley_gates.we"
+func alpha_m(v) { return 0.1 * (v + 40.0) / (1.0 - math_basic("pow", 2.718, -(v + 40.0)/10.0) + 0.0001) }
+func beta_m(v)  { return 4.0 * math_basic("pow", 2.718, -(v + 65.0)/18.0) }
+func alpha_h(v) { return 0.07 * math_basic("pow", 2.718, -(v + 65.0)/20.0) }
+func beta_h(v)  { return 1.0 / (1.0 + math_basic("pow", 2.718, -(v + 35.0)/10.0)) }
+func alpha_n(v) { return 0.01 * (v + 55.0) / (1.0 - math_basic("pow", 2.718, -(v + 55.0)/10.0) + 0.0001) }
+func beta_n(v)  { return 0.125 * math_basic("pow", 2.718, -(v + 65.0)/80.0) }
+
+let v_rest = -65.0
+let am = alpha_m(v_rest)
+let bm = beta_m(v_rest)
+let m_inf = am / (am + bm)
+
+if m_inf > 0.04 && m_inf < 0.06 { print "PASS: HH m_inf at rest ~0.05" } else { print "FAIL: HH m_inf at rest ~0.05" }
+
+let ah = alpha_h(v_rest)
+let bh = beta_h(v_rest)
+let h_inf = ah / (ah + bh)
+
+if h_inf > 0.58 && h_inf < 0.62 { print "PASS: HH h_inf at rest ~0.60" } else { print "FAIL: HH h_inf at rest ~0.60" }
+
+let an = alpha_n(v_rest)
+let bn = beta_n(v_rest)
+let n_inf = an / (an + bn)
+
+if n_inf > 0.30 && n_inf < 0.33 { print "PASS: HH n_inf at rest ~0.31" } else { print "FAIL: HH n_inf at rest ~0.31" }
+
+print "test_43 done"

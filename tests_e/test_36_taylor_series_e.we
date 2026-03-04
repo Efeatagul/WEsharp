@@ -1,0 +1,26 @@
+print "File: test_36_taylor_series_e.we"
+func factorial(n) {
+    if n <= 1 { return 1 }
+    return n * factorial(n - 1)
+}
+
+func taylor_e(x, terms) {
+    let sum = 0
+    let i = 0
+    while i < terms {
+        sum = sum + pow(x, i) / factorial(i)
+        i = i + 1
+    }
+    return sum
+}
+
+let e1 = taylor_e(1, 15)
+if e1 > 2.7182 && e1 < 2.7183 { print "PASS: e^1" } else { print "FAIL: e^1" }
+
+let e2 = taylor_e(2, 20)
+if e2 > 7.388 && e2 < 7.390 { print "PASS: e^2" } else { print "FAIL: e^2" }
+
+let e0 = taylor_e(0, 5)
+if e0 == 1 { print "PASS: e^0" } else { print "FAIL: e^0" }
+
+print "test_36 done"

@@ -1,0 +1,38 @@
+print "File: test_75_molecular_weight.we"
+let aw = {"H": 1.0, "C": 12.0, "N": 14.0, "O": 16.0}
+
+func calc_mol_weight(formula) {
+    let mw = 0.0
+    let n = len(formula)
+    let i = 0
+    while i < n {
+        let elem = formula[i]
+        if i + 1 < n {
+            let next = formula[i+1]
+            if next == "2" { mw = mw + aw[elem] * 2.0; i = i + 1 }
+            else if next == "3" { mw = mw + aw[elem] * 3.0; i = i + 1 }
+            else if next == "4" { mw = mw + aw[elem] * 4.0; i = i + 1 }
+            else if next == "5" { mw = mw + aw[elem] * 5.0; i = i + 1 }
+            else if next == "6" { mw = mw + aw[elem] * 6.0; i = i + 1 }
+            else { mw = mw + aw[elem] }
+        } else {
+            mw = mw + aw[elem]
+        }
+        i = i + 1
+    }
+    return mw
+}
+
+let w_o2 = calc_mol_weight("O2")
+if w_o2 == 32.0 { print "PASS: MW O2 = 32" } else { print "FAIL: MW O2 = 32" }
+
+let w_ch4 = calc_mol_weight("C1H4")
+if w_ch4 == 16.0 { print "PASS: MW CH4 = 16" } else { print "FAIL: MW CH4 = 16" }
+
+let w_n2 = calc_mol_weight("N2")
+if w_n2 == 28.0 { print "PASS: MW N2 = 28" } else { print "FAIL: MW N2 = 28" }
+
+let w_h2o = calc_mol_weight("H2O1") 
+if w_h2o == 18.0 { print "PASS: MW H2O = 18" } else { print "FAIL: MW H2O = 18" }
+
+print "test_75 done"

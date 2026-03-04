@@ -1,0 +1,18 @@
+print "File: test_12_range_iter.we"
+let r = range(5)
+if len(r) == 5 { print "PASS: range(5) len" } else { print "FAIL: range(5) len" }
+if r[0] == 0 { print "PASS: range(5)[0]" } else { print "FAIL: range(5)[0]" }
+if r[4] == 4 { print "PASS: range(5)[4]" } else { print "FAIL: range(5)[4]" }
+let r2 = range(3, 8)
+if len(r2) == 5 { print "PASS: range(3,8) len" } else { print "FAIL: range(3,8) len" }
+if r2[0] == 3 { print "PASS: range(3,8)[0]" } else { print "FAIL: range(3,8)[0]" }
+if r2[4] == 7 { print "PASS: range(3,8)[4]" } else { print "FAIL: range(3,8)[4]" }
+let acc = 0
+foreach v in range(1, 11) { acc = acc + v }
+if acc == 55 { print "PASS: sum range 1..10" } else { print "FAIL: sum range 1..10" }
+let squares = map(range(1, 6), func(x) { return x * x })
+if squares[4] == 25 { print "PASS: squares via range" } else { print "FAIL: squares via range" }
+let desc = range(10, 1)
+if desc[0] == 10 { print "PASS: descending range first" } else { print "FAIL: descending range first" }
+if desc[8] == 2 { print "PASS: descending range last" } else { print "FAIL: descending range last" }
+print "test_12 done"

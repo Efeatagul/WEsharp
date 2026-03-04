@@ -1,0 +1,17 @@
+print "File: test_80_atomic_symbols.we"
+let atoms = {"1": "H", "2": "He", "6": "C", "7": "N", "8": "O", "15": "P", "16": "S"}
+let wts = {"H": 1.0, "He": 4.0, "C": 12.0, "N": 14.0, "O": 16.0, "P": 31.0, "S": 32.0}
+
+func get_combined_weight(z1, z2) {
+    let s1 = atoms[to_string(z1)]
+    let s2 = atoms[to_string(z2)]
+    return wts[s1] + wts[s2]
+}
+
+let w_ch = get_combined_weight(6, 1)
+if w_ch == 13.0 { print "PASS: Weight of C+H = 13" } else { print "FAIL: Weight of C+H = 13" }
+
+let w_o2_fake = get_combined_weight(8, 8)
+if w_o2_fake == 32.0 { print "PASS: Weight of O+O = 32" } else { print "FAIL: Weight of O+O = 32" }
+
+print "test_80 done"

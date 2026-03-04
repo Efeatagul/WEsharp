@@ -1,0 +1,27 @@
+print "File: test_95_stress_combinatorics.we"
+func choose(n, k) {
+    if k == 0 || k == n { return 1 }
+    let num = 1
+    let den = 1
+    let i = 1
+    while i <= k {
+        num = num * (n - i + 1)
+        den = den * i
+        i = i + 1
+    }
+    return num / den
+}
+
+let sum = 0
+let i = 0
+
+// Calculate 50 choose i for all i 0..50
+while i <= 50 {
+    sum = sum + choose(50, i)
+    i = i + 1
+}
+
+// 2^50 = 1125899906842624
+if sum > 1125899906842620 && sum < 1125899906842630 { print "PASS: Pascal's triangle sum 2^50" } else { print "FAIL: Pascal's triangle sum 2^50" }
+
+print "test_95 done"

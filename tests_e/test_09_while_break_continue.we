@@ -1,0 +1,36 @@
+print "File: test_09_while_break_continue.we"
+let i = 0
+let sum = 0
+while i < 10 {
+    i = i + 1
+    sum = sum + i
+}
+if sum == 55 { print "PASS: while 1..10" } else { print "FAIL: while 1..10" }
+let j = 0
+let evens = []
+while j < 20 {
+    j = j + 1
+    if j % 2 != 0 { continue }
+    push(evens, j)
+}
+if len(evens) == 10 { print "PASS: continue evens count" } else { print "FAIL: continue evens count" }
+if evens[0] == 2 { print "PASS: evens[0]" } else { print "FAIL: evens[0]" }
+let k = 0
+while k < 1000 {
+    k = k + 1
+    if k == 42 { break }
+}
+if k == 42 { print "PASS: break at 42" } else { print "FAIL: break at 42" }
+let outer_done = false
+let a = 0
+while a < 5 {
+    a = a + 1
+    let b = 0
+    while b < 5 {
+        b = b + 1
+        if b == 3 { break }
+    }
+    if b == 3 { outer_done = true }
+}
+if outer_done == true { print "PASS: inner break" } else { print "FAIL: inner break" }
+print "test_09 done"

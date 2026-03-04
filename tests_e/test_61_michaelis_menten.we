@@ -1,0 +1,15 @@
+print "File: test_61_michaelis_menten.we"
+func enzyme_velocity(vmax, km, s) {
+    return (vmax * s) / (km + s)
+}
+
+let v1 = enzyme_velocity(100.0, 5.0, 5.0)
+if v1 == 50.0 { print "PASS: V at Km = Vmax/2" } else { print "FAIL: V at Km = Vmax/2" }
+
+let v2 = enzyme_velocity(100.0, 5.0, 5000.0)
+if v2 > 99.0 { print "PASS: V approaches Vmax at high [S]" } else { print "FAIL: V approaches Vmax at high [S]" }
+
+let v3 = enzyme_velocity(100.0, 5.0, 0.0)
+if v3 == 0.0 { print "PASS: V is 0 at [S]=0" } else { print "FAIL: V is 0 at [S]=0" }
+
+print "test_61 done"

@@ -1,0 +1,20 @@
+print "File: test_86_stress_gc_churn.we"
+let keep = []
+let i = 0
+
+// Create lots of temporary objects to trigger garbage collection stress
+while i < 10000 {
+    let temp_dict = {"a": i, "b": "junk", "c": [1, 2, 3]}
+    let temp_string = "string" + to_string(i)
+    
+    // Only keep every 100th object
+    if i % 100 == 0 {
+        push(keep, temp_dict)
+    }
+    i = i + 1
+}
+
+if len(keep) == 100 { print "PASS: Survived object churn" } else { print "FAIL: Survived object churn" }
+if keep[99]["a"] == 9900 { print "PASS: Kept object intact" } else { print "FAIL: Kept object intact" }
+
+print "test_86 done"

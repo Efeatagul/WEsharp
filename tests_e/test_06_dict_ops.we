@@ -1,0 +1,22 @@
+print "File: test_06_dict_ops.we"
+let d = {"name": "neuron", "voltage": -70, "active": true}
+let nm = d["name"]
+if nm == "neuron" { print "PASS: dict string get" } else { print "FAIL: dict string get" }
+let v = d["voltage"]
+if v == -70 { print "PASS: dict number get" } else { print "FAIL: dict number get" }
+d["threshold"] = -55
+let thr = d["threshold"]
+if thr == -55 { print "PASS: dict set new key" } else { print "FAIL: dict set new key" }
+d["voltage"] = -65
+if d["voltage"] == -65 { print "PASS: dict update" } else { print "FAIL: dict update" }
+let has_name = is_key d "name"
+if has_name == true { print "PASS: is_key existing" } else { print "FAIL: is_key existing" }
+let has_xyz = is_key d "xyz"
+if has_xyz == false { print "PASS: is_key missing" } else { print "FAIL: is_key missing" }
+let keys_count = len(d)
+if keys_count == 4 { print "PASS: dict len" } else { print "FAIL: dict len" }
+let nested = {"layer1": {"layer2": 42}}
+let deep = nested["layer1"]["layer2"]
+if deep == 42 { print "PASS: nested dict" } else { print "FAIL: nested dict" }
+foreach k in d { print k }
+print "test_06 done"

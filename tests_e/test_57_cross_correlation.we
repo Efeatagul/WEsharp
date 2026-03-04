@@ -1,0 +1,36 @@
+print "File: test_57_cross_correlation.we"
+func cross_correlate(bin1, bin2, max_lag) {
+    let n1 = len(bin1)
+    let n2 = len(bin2)
+    let lags = []
+    let corrs = []
+    
+    let lag = -max_lag
+    while lag <= max_lag {
+        let sum_prod = 0.0
+        let i = 0
+        while i < n1 {
+            let j = i + lag
+            if j >= 0 && j < n2 {
+                sum_prod = sum_prod + bin1[i] * bin2[j]
+            }
+            i = i + 1
+        }
+        push(lags, lag)
+        push(corrs, sum_prod)
+        lag = lag + 1
+    }
+    return [lags, corrs]
+}
+
+let spike_train_A = [1, 0, 0, 1, 0, 1, 0, 0]
+let spike_train_B = [0, 1, 0, 0, 1, 0, 1, 0] 
+
+let res = cross_correlate(spike_train_A, spike_train_B, 3)
+let cc = res[1]
+
+if cc[2] == 0 { print "PASS: Corr at lag -1 is 0" } else { print "FAIL: Corr at lag -1 is 0" }
+if cc[3] == 0 { print "PASS: Corr at lag 0 is 0" } else { print "FAIL: Corr at lag 0 is 0" }
+if cc[4] == 3 { print "PASS: Corr at lag +1 is 3 (B follows A)" } else { print "FAIL: Corr at lag +1 is 3 (B follows A)" }
+
+print "test_57 done"

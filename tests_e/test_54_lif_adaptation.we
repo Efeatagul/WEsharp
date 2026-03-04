@@ -1,0 +1,36 @@
+print "File: test_54_lif_adaptation.we"
+let v_rest = -70.0
+let v_th = -50.0
+let v_reset = -75.0
+let tau_m = 20.0
+let tau_w = 100.0
+let a = 0.5 
+let b = 10.0 
+let R = 1.0
+let I_ext = 30.0
+
+let v = v_rest
+let w = 0.0
+let dt = 1.0
+let t = 0
+let spikes = 0
+
+while t < 200 {
+    let dv = (-(v - v_rest) - R * w + R * I_ext) / tau_m
+    let dw = (a * (v - v_rest) - w) / tau_w
+    
+    v = v + dv * dt
+    w = w + dw * dt
+    
+    if v >= v_th {
+        spikes = spikes + 1
+        v = v_reset
+        w = w + b
+    }
+    t = t + dt
+}
+
+if spikes > 2 && spikes < 8 { print "PASS: Adapting LIF fired reasonably" } else { print "FAIL: Adapting LIF fired reasonably" }
+if w > 0.0 { print "PASS: Adaptation variable built up" } else { print "FAIL: Adaptation variable built up" }
+
+print "test_54 done"

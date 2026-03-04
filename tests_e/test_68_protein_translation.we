@@ -1,0 +1,29 @@
+print "File: test_68_protein_translation.we"
+func translate_rna_to_protein(rna) {
+    let protein = []
+    let n = len(rna)
+    let i = 0
+    while i < n - 2 {
+        let codon = rna[i:i+3]
+        if codon == "AUG" { push(protein, "Met") }
+        else if codon == "UUU" || codon == "UUC" { push(protein, "Phe") }
+        else if codon == "UAA" || codon == "UAG" || codon == "UGA" { push(protein, "STOP"); break }
+        else { push(protein, "Xaa") } 
+        i = i + 3
+    }
+    return protein
+}
+
+let rna_seq = "AUGUUUUAA"
+let p1 = translate_rna_to_protein(rna_seq)
+
+if len(p1) == 3 { print "PASS: 3 codons translated" } else { print "FAIL: 3 codons translated" }
+if p1[0] == "Met" { print "PASS: AUG -> Met" } else { print "FAIL: AUG -> Met" }
+if p1[1] == "Phe" { print "PASS: UUU -> Phe" } else { print "FAIL: UUU -> Phe" }
+if p1[2] == "STOP" { print "PASS: UAA -> STOP" } else { print "FAIL: UAA -> STOP" }
+
+let rna_seq2 = "AUGCGAUAG"
+let p2 = translate_rna_to_protein(rna_seq2)
+if len(p2) == 3 && p2[1] == "Xaa" && p2[2] == "STOP" { print "PASS: Unknown codon -> Xaa then STOP" } else { print "FAIL: Unknown codon -> Xaa then STOP" }
+
+print "test_68 done"

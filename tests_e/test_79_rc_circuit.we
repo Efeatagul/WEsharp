@@ -1,0 +1,23 @@
+print "File: test_79_rc_circuit.we"
+func rc_charge(v0, r, c, t) {
+    let tau = r * c
+    return v0 * (1.0 - math_basic("pow", 2.718, -t / tau))
+}
+func rc_discharge(v0, r, c, t) {
+    let tau = r * c
+    return v0 * math_basic("pow", 2.718, -t / tau)
+}
+
+let v_c1 = rc_charge(10.0, 1000.0, 0.001, 1.0)
+if v_c1 > 6.3 && v_c1 < 6.4 { print "PASS: RC charge @ 1 tau ~63%" } else { print "FAIL: RC charge @ 1 tau ~63%" }
+
+let v_c2 = rc_charge(10.0, 1000.0, 0.001, 5.0)
+if v_c2 > 9.9 { print "PASS: RC charge @ 5 tau ~99%" } else { print "FAIL: RC charge @ 5 tau ~99%" }
+
+let v_d1 = rc_discharge(10.0, 1000.0, 0.001, 1.0)
+if v_d1 > 3.6 && v_d1 < 3.7 { print "PASS: RC discharge @ 1 tau ~37%" } else { print "FAIL: RC discharge @ 1 tau ~37%" }
+
+let v_d2 = rc_discharge(10.0, 1000.0, 0.001, 5.0)
+if v_d2 < 0.1 { print "PASS: RC discharge @ 5 tau < 1%" } else { print "FAIL: RC discharge @ 5 tau < 1%" }
+
+print "test_79 done"

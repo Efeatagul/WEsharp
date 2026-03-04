@@ -1,0 +1,30 @@
+print "File: test_42_izhikevich_neuron.we"
+let a = 0.02
+let b = 0.2
+let c = -65.0
+let d = 8.0
+let v = -65.0
+let u = b * v
+let dt = 0.5
+let t = 0
+
+let I = 10.0
+let spikes = 0
+
+while t < 50 {
+    let dv = (0.04 * v * v + 5.0 * v + 140.0 - u + I) * dt
+    let du = (a * (b * v - u)) * dt
+    v = v + dv
+    u = u + du
+    if v >= 30.0 {
+        spikes = spikes + 1
+        v = c
+        u = u + d
+    }
+    t = t + dt
+}
+
+if spikes > 2 && spikes < 10 { print "PASS: Izhikevich model spiked" } else { print "FAIL: Izhikevich model spiked" }
+if v <= 30.0 { print "PASS: v bounded within threshold" } else { print "FAIL: v bounded within threshold" }
+
+print "test_42 done"

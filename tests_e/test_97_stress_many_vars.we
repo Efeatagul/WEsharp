@@ -1,0 +1,27 @@
+print "File: test_97_stress_many_vars.we"
+let v1 = 1
+let v2 = 2
+let v3 = 3
+let v4 = 4
+let v5 = 5
+let v6 = 6
+let v7 = 7
+let v8 = 8
+let v9 = 9
+let v10 = 10
+let v11 = 11
+let v12 = 12
+let v13 = 13
+let v14 = 14
+let v15 = 15
+let v16 = 16
+let v17 = 17
+let v18 = 18
+let v19 = 19
+let v20 = 20
+
+let sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 + v9 + v10 + v11 + v12 + v13 + v14 + v15 + v16 + v17 + v18 + v19 + v20
+
+if sum == 210 { print "PASS: 20 raw local variables assigned and summed" } else { print "FAIL: 20 raw local variables assigned and summed" }
+
+print "test_97 done"

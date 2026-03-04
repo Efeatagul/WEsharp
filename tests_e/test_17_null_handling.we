@@ -1,0 +1,23 @@
+print "File: test_17_null_handling.we"
+let x = null
+if x == null { print "PASS: null equality" } else { print "FAIL: null equality" }
+let t = typeof(x)
+if t == "nihil" { print "PASS: typeof null" } else { print "FAIL: typeof null" }
+func maybe_return(flag) {
+    if flag { return 42 }
+    return null
+}
+let r1 = maybe_return(true)
+if r1 == 42 { print "PASS: maybe_return true" } else { print "FAIL: maybe_return true" }
+let r2 = maybe_return(false)
+if r2 == null { print "PASS: maybe_return false" } else { print "FAIL: maybe_return false" }
+let safe = 0
+if r2 == null { safe = -1 } else { safe = r2 }
+if safe == -1 { print "PASS: null guard" } else { print "FAIL: null guard" }
+let lst = [null, 1, null, 2, null]
+let count_null = 0
+foreach item in lst {
+    if item == null { count_null = count_null + 1 }
+}
+if count_null == 3 { print "PASS: null count in list" } else { print "FAIL: null count in list" }
+print "test_17 done"

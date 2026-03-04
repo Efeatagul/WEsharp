@@ -1,0 +1,29 @@
+print "File: test_72_radioactive_decay_chain.we"
+let n_a = 1000.0
+let n_b = 0.0
+let n_c = 0.0
+
+let lambda_a = 0.1 
+let lambda_b = 0.05 
+let dt = 0.1
+let t = 0.0
+
+while t < 20.0 {
+    let decays_a = lambda_a * n_a * dt
+    let decays_b = lambda_b * n_b * dt
+    
+    n_a = n_a - decays_a
+    n_b = n_b + decays_a - decays_b
+    n_c = n_c + decays_b
+    
+    t = t + dt
+}
+
+if n_a < 150.0 && n_a > 120.0 { print "PASS: Isotope A decayed properly" } else { print "FAIL: Isotope A decayed properly" }
+if n_b > 250.0 && n_b < 400.0 { print "PASS: Isotope B generated and decayed" } else { print "FAIL: Isotope B generated and decayed" }
+if n_c > 450.0 && n_c < 600.0 { print "PASS: Isotope C accumulated" } else { print "FAIL: Isotope C accumulated" }
+
+let total_n = n_a + n_b + n_c
+if total_n > 999.9 && total_n < 1000.1 { print "PASS: Total mass conserved" } else { print "FAIL: Total mass conserved" }
+
+print "test_72 done"

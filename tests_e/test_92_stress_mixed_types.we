@@ -1,0 +1,25 @@
+print "File: test_92_stress_mixed_types.we"
+let container = []
+let d = {"key": "val"}
+
+// Create a very heterogeneous array
+let i = 0
+while i < 1000 {
+    push(container, i)
+    push(container, "str" + to_string(i))
+    push(container, true)
+    push(container, d)
+    push(container, [1, 2, 3])
+    i = i + 1
+}
+
+if len(container) == 5000 { print "PASS: 5k heterogeneous items" } else { print "FAIL: 5k heterogeneous items" }
+
+let str_count = 0
+foreach item in container {
+    if typeof(item) == "string" { str_count = str_count + 1 }
+}
+
+if str_count == 1000 { print "PASS: 1k strings in mixed array" } else { print "FAIL: 1k strings in mixed array" }
+
+print "test_92 done"

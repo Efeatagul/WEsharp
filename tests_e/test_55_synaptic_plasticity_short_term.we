@@ -1,0 +1,41 @@
+print "File: test_55_synaptic_plasticity_short_term.we"
+let u = 0.2  
+let x = 1.0  
+let tau_f = 50.0 
+let tau_d = 200.0 
+let U = 0.2
+let dt = 1.0
+
+let spikes = [10.0, 30.0, 50.0, 70.0, 90.0]
+let last_spike = 0.0
+let t = 0.0
+
+let amplitudes = []
+
+while t < 100.0 {
+    let delta = t - last_spike
+    let evt_f = math_basic("pow", 2.718, -dt / tau_f)
+    let evt_d = math_basic("pow", 2.718, -dt / tau_d)
+    
+    u = u * evt_f
+    x = 1.0 - (1.0 - x) * evt_d
+    
+    let is_spike = false
+    foreach s in spikes {
+        if abs(t - s) < 0.01 { is_spike = true }
+    }
+    
+    if is_spike {
+        u = u + U * (1.0 - u)
+        let amp = u * x 
+        push(amplitudes, amp)
+        x = x - u * x
+        last_spike = t
+    }
+    t = t + dt
+}
+
+if len(amplitudes) == 5 { print "PASS: Extracted 5 EPSP amplitudes" } else { print "FAIL: Extracted 5 EPSP amplitudes" }
+if amplitudes[4] < amplitudes[0] { print "PASS: Short term depression observed" } else { print "FAIL: Short term depression observed" }
+
+print "test_55 done"

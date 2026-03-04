@@ -1,0 +1,27 @@
+print "File: test_05_string_ops.we"
+let s = "Hello, WSharp!"
+let n = len(s)
+if n == 14 { print "PASS: string length" } else { print "FAIL: string length" }
+let upper = str_upper(s)
+if upper == "HELLO, WSHARP!" { print "PASS: to upper" } else { print "FAIL: to upper" }
+let lower = str_lower(s)
+if lower == "hello, wsharp!" { print "PASS: to lower" } else { print "FAIL: to lower" }
+let has = str_contains(s, "WSharp")
+if has == true { print "PASS: contains" } else { print "FAIL: contains" }
+let replaced = str_replace(s, "WSharp", "World")
+if replaced == "Hello, World!" { print "PASS: replace" } else { print "FAIL: replace" }
+let trimmed = str_trim("  spaces  ")
+if trimmed == "spaces" { print "PASS: trim" } else { print "FAIL: trim" }
+let starts = str_starts_with(s, "Hello")
+if starts == true { print "PASS: starts_with" } else { print "FAIL: starts_with" }
+let ends = str_ends_with(s, "WSharp!")
+if ends == true { print "PASS: ends_with" } else { print "FAIL: ends_with" }
+let idx = str_index_of(s, "WSharp")
+if idx == 7 { print "PASS: index_of" } else { print "FAIL: index_of" }
+let sub = str_sub(s, 7, 6)
+if sub == "WSharp" { print "PASS: str_sub" } else { print "FAIL: str_sub" }
+let parts = split(s, ", ")
+if len(parts) == 2 { print "PASS: split" } else { print "FAIL: split" }
+let joined = join(["a", "b", "c"], "-")
+if joined == "a-b-c" { print "PASS: join" } else { print "FAIL: join" }
+print "test_05 done"

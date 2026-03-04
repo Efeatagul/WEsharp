@@ -1,0 +1,26 @@
+print "File: test_02_type_casting.we"
+let x = 42
+let s = to_string(x)
+if s == "42" { print "PASS: number to string" } else { print "FAIL: number to string" }
+let n = to_number("3.14")
+if n > 3.1 { print "PASS: string to number" } else { print "FAIL: string to number" }
+let t = typeof(x)
+if t == "number" { print "PASS: typeof number" } else { print "FAIL: typeof number" }
+let t2 = typeof(s)
+if t2 == "string" { print "PASS: typeof string" } else { print "FAIL: typeof string" }
+let b = true
+let t3 = typeof(b)
+if t3 == "bool" { print "PASS: typeof bool" } else { print "FAIL: typeof bool" }
+let lst = [1, 2, 3]
+let t4 = typeof(lst)
+if t4 == "list" { print "PASS: typeof list" } else { print "FAIL: typeof list" }
+let d = {"a": 1}
+let t5 = typeof(d)
+if t5 == "dict" { print "PASS: typeof dict" } else { print "FAIL: typeof dict" }
+let i = floor(9.9)
+if i == 9 { print "PASS: floor" } else { print "FAIL: floor" }
+let c = ceil(9.1)
+if c == 10 { print "PASS: ceil" } else { print "FAIL: ceil" }
+let r = round(4.5)
+if r == 5 { print "PASS: round" } else { print "FAIL: round" }
+print "test_02 done"

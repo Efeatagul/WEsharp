@@ -1,0 +1,21 @@
+print "File: test_67_kinematics_1d.we"
+func kinematics_position(x0, v0, a, t) {
+    return x0 + v0 * t + 0.5 * a * t * t
+}
+func kinematics_velocity(v0, a, t) {
+    return v0 + a * t
+}
+
+let x1 = kinematics_position(0.0, 0.0, 9.8, 2.0)
+if x1 == 19.6 { print "PASS: Free fall distance t=2" } else { print "FAIL: Free fall distance t=2" }
+
+let v1 = kinematics_velocity(0.0, 9.8, 2.0)
+if v1 == 19.6 { print "PASS: Free fall velocity t=2" } else { print "FAIL: Free fall velocity t=2" }
+
+let x2 = kinematics_position(10.0, 5.0, -2.0, 3.0)
+if x2 == 16.0 { print "PASS: Position with initial v and a" } else { print "FAIL: Position with initial v and a" }
+
+let v2 = kinematics_velocity(5.0, -2.0, 3.0)
+if v2 == -1.0 { print "PASS: Velocity with initial v and a" } else { print "FAIL: Velocity with initial v and a" }
+
+print "test_67 done"

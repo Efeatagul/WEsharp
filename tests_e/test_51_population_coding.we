@@ -1,0 +1,20 @@
+print "File: test_51_population_coding.we"
+func dir_tuning(theta, pref_theta, max_rate) {
+    let diff = abs(theta - pref_theta)
+    if diff > 180 { diff = 360 - diff }
+    let rad = math_basic("sin", diff) 
+    return max_rate * (1.0 - diff / 180.0)
+}
+
+let rates = []
+let angles = [0, 45, 90, 135, 180, 225, 270, 315]
+let target = 90
+foreach a in angles {
+    push(rates, dir_tuning(target, a, 100))
+}
+
+if rates[2] == 100 { print "PASS: Max rate at preferred angle 90" } else { print "FAIL: Max rate at preferred angle 90" }
+if rates[6] == 0 { print "PASS: Min rate at opposite angle 270" } else { print "FAIL: Min rate at opposite angle 270" }
+if rates[1] == rates[3] { print "PASS: Symmetric coding" } else { print "FAIL: Symmetric coding" }
+
+print "test_51 done"

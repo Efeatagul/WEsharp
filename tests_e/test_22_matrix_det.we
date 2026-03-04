@@ -1,0 +1,12 @@
+print "File: test_22_matrix_det.we"
+let det1 = math_matrix("det", "1,0;0,1")
+if det1 == "1" { print "PASS: identity 2x2 det=1" } else { print "FAIL: identity 2x2 det=1" }
+let det2 = math_matrix("det", "2,3;1,4")
+if det2 == "5" { print "PASS: det 2x2 = 5" } else { print "FAIL: det 2x2 = 5" }
+let det3 = math_matrix("det", "0,1;1,0")
+if det3 == "-1" { print "PASS: swap rows det=-1" } else { print "FAIL: swap rows det=-1" }
+let det4 = math_matrix("det", "1,2,3;4,5,6;7,8,9")
+if det4 == "0" { print "PASS: singular 3x3 det=0" } else { print "FAIL: singular 3x3 det=0" }
+let det5 = math_matrix("det", "2,0,0;0,3,0;0,0,4")
+if det5 == "24" { print "PASS: diagonal 3x3 det=24" } else { print "FAIL: diagonal 3x3 det=24" }
+print "test_22 done"

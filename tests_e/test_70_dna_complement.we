@@ -1,0 +1,29 @@
+print "File: test_70_dna_complement.we"
+func reverse_complement_dna(seq) {
+    let rc = ""
+    let n = len(seq)
+    let i = n - 1
+    while i >= 0 {
+        let base = seq[i]
+        if base == "A" { rc = rc + "T" }
+        if base == "T" { rc = rc + "A" }
+        if base == "C" { rc = rc + "G" }
+        if base == "G" { rc = rc + "C" }
+        i = i - 1
+    }
+    return rc
+}
+
+let seq1 = "ATGC"
+let rc1 = reverse_complement_dna(seq1)
+if rc1 == "GCAT" { print "PASS: Reverse comp ATGC -> GCAT" } else { print "FAIL: Reverse comp ATGC -> GCAT" }
+
+let seq2 = "AAAA"
+let rc2 = reverse_complement_dna(seq2)
+if rc2 == "TTTT" { print "PASS: Reverse comp AAAA -> TTTT" } else { print "FAIL: Reverse comp AAAA -> TTTT" }
+
+let seq3 = "CCGG"
+let rc3 = reverse_complement_dna(seq3)
+if rc3 == "CCGG" { print "PASS: Palindromic reverse comp CCGG -> CCGG" } else { print "FAIL: Palindromic reverse comp CCGG -> CCGG" }
+
+print "test_70 done"

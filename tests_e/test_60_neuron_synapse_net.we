@@ -1,0 +1,39 @@
+print "File: test_60_neuron_synapse_net.we"
+let n1_v = -70.0
+let n2_v = -70.0
+let w_12 = 0.5
+let dt = 1.0
+let tau_m = 10.0
+let v_th = -55.0
+
+let t = 0
+let n1_spikes = 0
+let n2_spikes = 0
+
+while t < 50 {
+    let I1 = 20.0 
+    let dn1 = (-(n1_v + 70.0) + I1) / tau_m
+    n1_v = n1_v + dn1 * dt
+    
+    let I2 = 0.0
+    if n1_v >= v_th {
+        n1_spikes = n1_spikes + 1
+        n1_v = -70.0 
+        I2 = w_12 * 50.0 
+    }
+    
+    let dn2 = (-(n2_v + 70.0) + I2) / tau_m
+    n2_v = n2_v + dn2 * dt
+    
+    if n2_v >= v_th {
+        n2_spikes = n2_spikes + 1
+        n2_v = -70.0
+    }
+    
+    t = t + dt
+}
+
+if n1_spikes > 1 { print "PASS: N1 fired" } else { print "FAIL: N1 fired" }
+if n2_spikes > 0 { print "PASS: N2 fired cleanly due to N1" } else { print "FAIL: N2 fired cleanly due to N1" }
+
+print "test_60 done"

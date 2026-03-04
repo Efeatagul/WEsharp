@@ -1,0 +1,15 @@
+print "File: test_98_stress_deep_math_expr.we"
+let n = 10.0
+let res = (((n + 1) * 2 - 4) / 2 + 5 * 3 - 6) / 3 * 2 + 10 - n + ((n * n) / n) + (2 * (3 + (4 * (5 - 6))))
+
+// res should be: (((11)*2-4)/2 + 15 - 6)/3 * 2 + 10 - 10 + 10 + (2*(3+(4*-1)))
+// ((22-4)/2 + 9)/3 * 2 + 10 + 2*(3-4)
+// (9 + 9)/3 * 2 + 10 + 2*-1
+// 18/3 * 2 + 10 - 2
+// 6 * 2 + 8
+// 12 + 8
+// 20
+
+if res == 20.0 { print "PASS: Deep math expression evaluated correctly" } else { print "FAIL: Deep math expression evaluated correctly" }
+
+print "test_98 done"

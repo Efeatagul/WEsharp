@@ -1,0 +1,33 @@
+print "File: test_71_rna_codon_freq.we"
+func codon_frequencies(rna) {
+    let freqs = {}
+    let n = len(rna)
+    let i = 0
+    let total = 0
+    while i < n - 2 {
+        let codon = rna[i:i+3]
+        if is_key freqs codon {
+            freqs[codon] = freqs[codon] + 1
+        } else {
+            freqs[codon] = 1
+        }
+        total = total + 1
+        i = i + 3
+    }
+    
+    let rel_freqs = {}
+    foreach k in freqs {
+        rel_freqs[k] = freqs[k] / total
+    }
+    return rel_freqs
+}
+
+let rna = "AUGAUGUUUUUUUAA"
+let freqs = codon_frequencies(rna)
+
+if freqs["AUG"] == 0.4 { print "PASS: AUG freq 40%" } else { print "FAIL: AUG freq 40%" }
+if freqs["UUU"] == 0.4 { print "PASS: UUU freq 40%" } else { print "FAIL: UUU freq 40%" }
+if freqs["UAA"] == 0.2 { print "PASS: UAA freq 20%" } else { print "FAIL: UAA freq 20%" }
+if is_key freqs "CGA" == false { print "PASS: Missing codon CGA" } else { print "FAIL: Missing codon CGA" }
+
+print "test_71 done"

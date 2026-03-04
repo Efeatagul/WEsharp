@@ -1,0 +1,57 @@
+print "File: test_49_synfire_chain.we"
+let neurons = 5
+let v_rest = -70.0
+let v_th = -55.0
+let dt = 1.0
+let tau_m = 10.0
+let w = 20.0
+
+let voltages = []
+let i = 0
+while i < neurons {
+    push(voltages, v_rest)
+    i = i + 1
+}
+
+func simulate_step(v_array, input_pulse) {
+    let spikes = []
+    let out_v = []
+    let n = len(v_array)
+    let j = 0
+    while j < n {
+        let dv = -(v_array[j] - v_rest) / tau_m
+        let v_new = v_array[j] + dv * dt
+        
+        let I = 0.0
+        if j == 0 { I = input_pulse }
+        else { I = w * count_in(spikes, j - 1) } 
+        
+        v_new = v_new + I 
+        if v_new >= v_th {
+            push(spikes, j)
+            v_new = v_rest
+        }
+        push(out_v, v_new)
+        j = j + 1
+    }
+    return [out_v, spikes]
+}
+
+func count_in(arr, val) {
+    let c = 0
+    foreach item in arr { if item == val { c = c + 1 } }
+    return c
+}
+
+let step1 = simulate_step(voltages, 20.0)
+let v1 = step1[0]
+let s1 = step1[1]
+
+if len(s1) == 1 && s1[0] == 0 { print "PASS: Node 0 spikes" } else { print "FAIL: Node 0 spikes" }
+
+let step2 = simulate_step(v1, 0.0)
+let s2 = step2[1]
+
+if len(s2) == 1 && s2[0] == 1 { print "PASS: Node 1 spikes" } else { print "FAIL: Node 1 spikes" }
+
+print "test_49 done"

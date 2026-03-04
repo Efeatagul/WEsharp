@@ -1,0 +1,21 @@
+print "File: test_77_hardy_weinberg.we"
+func calc_hw_freqs(p) {
+    let q = 1.0 - p
+    let p2 = p * p
+    let pq2 = 2.0 * p * q
+    let q2 = q * q
+    return [p2, pq2, q2]
+}
+
+let freqs1 = calc_hw_freqs(0.6)
+if freqs1[0] > 0.35 && freqs1[0] < 0.37 { print "PASS: HW p^2" } else { print "FAIL: HW p^2" }
+if freqs1[1] > 0.47 && freqs1[1] < 0.49 { print "PASS: HW 2pq" } else { print "FAIL: HW 2pq" }
+if freqs1[2] > 0.15 && freqs1[2] < 0.17 { print "PASS: HW q^2" } else { print "FAIL: HW q^2" }
+
+let sum = freqs1[0] + freqs1[1] + freqs1[2]
+if sum == 1.0 || sum > 0.999 && sum < 1.001 { print "PASS: p^2 + 2pq + q^2 = 1.0" } else { print "FAIL: p^2 + 2pq + q^2 = 1.0" }
+
+let freqs2 = calc_hw_freqs(0.5)
+if freqs2[0] == 0.25 && freqs2[1] == 0.5 && freqs2[2] == 0.25 { print "PASS: p=0.5 -> 1:2:1" } else { print "FAIL: p=0.5 -> 1:2:1" }
+
+print "test_77 done"

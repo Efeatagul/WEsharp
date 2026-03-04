@@ -1,0 +1,24 @@
+print "File: test_85_stress_array_resize.we"
+let arr = []
+let i = 0
+
+// Force massive array resizing
+while i < 50000 {
+    push(arr, i)
+    i = i + 1
+}
+
+if len(arr) == 50000 { print "PASS: Array push 50,000 items" } else { print "FAIL: Array push 50,000 items" }
+if arr[25000] == 25000 { print "PASS: Array integrity at 25000" } else { print "FAIL: Array integrity at 25000" }
+if arr[49999] == 49999 { print "PASS: Array integrity at 49999" } else { print "FAIL: Array integrity at 49999" }
+
+// Pop half
+let j = 0
+while j < 25000 {
+    let p = pop(arr)
+    j = j + 1
+}
+
+if len(arr) == 25000 { print "PASS: Array pop 25,000 items" } else { print "FAIL: Array pop 25,000 items" }
+
+print "test_85 done"

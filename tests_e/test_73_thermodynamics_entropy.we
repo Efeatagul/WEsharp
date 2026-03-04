@@ -1,0 +1,24 @@
+print "File: test_73_thermodynamics_entropy.we"
+func shannon_entropy(probs) {
+    let h = 0.0
+    foreach p in probs {
+        if p > 0 {
+            h = h - p * math_basic("log", p) / math_basic("log", 2.0)
+        }
+    }
+    return h
+}
+
+let p1 = [0.5, 0.5]
+let h1 = shannon_entropy(p1)
+if h1 == 1.0 { print "PASS: Entropy of fair coin = 1 bit" } else { print "FAIL: Entropy of fair coin = 1 bit" }
+
+let p2 = [1.0, 0.0]
+let h2 = shannon_entropy(p2)
+if h2 == 0.0 { print "PASS: Entropy of certain outcome = 0" } else { print "FAIL: Entropy of certain outcome = 0" }
+
+let p3 = [0.25, 0.25, 0.25, 0.25]
+let h3 = shannon_entropy(p3)
+if h3 == 2.0 { print "PASS: Entropy of 4 equal outcomes = 2 bits" } else { print "FAIL: Entropy of 4 equal outcomes = 2 bits" }
+
+print "test_73 done"

@@ -1,0 +1,31 @@
+print "File: test_39_runge_kutta_4.we"
+func rk4_step(f, y, t, dt) {
+    let k1 = dt * f(t, y)
+    let k2 = dt * f(t + dt / 2.0, y + k1 / 2.0)
+    let k3 = dt * f(t + dt / 2.0, y + k2 / 2.0)
+    let k4 = dt * f(t + dt, y + k3)
+    return y + (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0
+}
+
+func exponential_decay(t, y) {
+    return -0.5 * y
+}
+
+let y0 = 100
+let dt = 0.1
+let steps = 10
+let y = y0
+let t = 0
+let i = 0
+while i < steps {
+    y = rk4_step(exponential_decay, y, t, dt)
+    t = t + dt
+    i = i + 1
+}
+
+let expected = 100 * math_basic("ln", 1) 
+let exact = 100 / math_basic("sin", 90) * 0.60653065971 
+
+if y > 60.6 && y < 60.7 { print "PASS: RK4 exponential decay 10 steps dt=0.1" } else { print "FAIL: RK4 exponential decay 10 steps dt=0.1" }
+
+print "test_39 done"

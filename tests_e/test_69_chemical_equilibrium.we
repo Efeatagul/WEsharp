@@ -1,0 +1,24 @@
+print "File: test_69_chemical_equilibrium.we"
+func calc_equilibrium_constant(prod_A, prod_B, react_C, react_D) {
+    return (prod_A * prod_B) / (react_C * react_D)
+}
+
+func calc_gibbs_free_energy(k_eq, temp) {
+    let R = 8.314 
+    return -R * temp * math_basic("ln", k_eq)
+}
+
+let keq = calc_equilibrium_constant(2.0, 3.0, 1.0, 1.5)
+if keq == 4.0 { print "PASS: Keq = 4" } else { print "FAIL: Keq = 4" }
+
+let dG = calc_gibbs_free_energy(keq, 298.0) 
+if dG < -3400.0 && dG > -3500.0 { print "PASS: dG < 0 (Spontaneous)" } else { print "FAIL: dG < 0 (Spontaneous)" }
+
+let keq2 = calc_equilibrium_constant(1.0, 1.0, 2.0, 2.0)
+let dG2 = calc_gibbs_free_energy(keq2, 298.0)
+if dG2 > 3400.0 && dG2 < 3500.0 { print "PASS: dG > 0 (Non-spontaneous)" } else { print "FAIL: dG > 0 (Non-spontaneous)" }
+
+let dG3 = calc_gibbs_free_energy(1.0, 298.0)
+if dG3 == 0.0 { print "PASS: dG = 0 at equilibrium" } else { print "FAIL: dG = 0 at equilibrium" }
+
+print "test_69 done"

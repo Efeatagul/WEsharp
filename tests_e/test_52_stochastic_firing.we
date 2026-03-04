@@ -1,0 +1,23 @@
+print "File: test_52_stochastic_firing.we"
+let rate_hz = 100.0
+let dt = 1.0 
+let prob_per_dt = rate_hz * (dt / 1000.0)
+
+func pseudo_random(seed) {
+    let next = (seed * 1103515245 + 12345) % 32768
+    return next / 32768.0
+}
+
+let seed = 42
+let spikes = 0
+let t = 0
+while t < 1000 {
+    let r = pseudo_random(seed)
+    seed = (seed * 13 + 7) % 10000 
+    if r < prob_per_dt { spikes = spikes + 1 }
+    t = t + dt
+}
+
+if spikes > 70 && spikes < 130 { print "PASS: Poisson spike count ~ 100" } else { print "FAIL: Poisson spike count ~ 100" }
+
+print "test_52 done"

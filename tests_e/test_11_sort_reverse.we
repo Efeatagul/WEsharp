@@ -1,0 +1,22 @@
+print "File: test_11_sort_reverse.we"
+let arr = [5, 3, 8, 1, 9, 2, 7, 4, 6]
+let sorted = sort(arr)
+if sorted[0] == 1 { print "PASS: sort min at 0" } else { print "FAIL: sort min at 0" }
+if sorted[8] == 9 { print "PASS: sort max at end" } else { print "FAIL: sort max at end" }
+let rev = reverse(sorted)
+if rev[0] == 9 { print "PASS: reverse first" } else { print "FAIL: reverse first" }
+if rev[8] == 1 { print "PASS: reverse last" } else { print "FAIL: reverse last" }
+let orig = [10, 20, 30]
+let revOrig = reverse(orig)
+if revOrig[0] == 30 { print "PASS: small reverse" } else { print "FAIL: small reverse" }
+let floats = [3.14, 2.71, 1.41, 1.73]
+let sfloats = sort(floats)
+if sfloats[0] == 1.41 { print "PASS: sort floats min" } else { print "FAIL: sort floats min" }
+if sfloats[3] == 3.14 { print "PASS: sort floats max" } else { print "FAIL: sort floats max" }
+let already = [1, 2, 3, 4, 5]
+let sa = sort(already)
+if sa[0] == 1 { print "PASS: already sorted" } else { print "FAIL: already sorted" }
+let single = [42]
+let ss = sort(single)
+if ss[0] == 42 { print "PASS: single element sort" } else { print "FAIL: single element sort" }
+print "test_11 done"

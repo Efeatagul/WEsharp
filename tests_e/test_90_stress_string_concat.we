@@ -1,0 +1,17 @@
+print "File: test_90_stress_string_concat.we"
+let s = ""
+let i = 0
+
+// Force heavy string concatenation and memory shifting
+while i < 5000 {
+    s = s + "WSharp"
+    i = i + 1
+}
+
+let n = len(s)
+if n == 30000 { print "PASS: 5k concatenations lengths match" } else { print "FAIL: 5k concatenations lengths match" }
+
+let sub = str_sub(s, 29994, 6)
+if sub == "WSharp" { print "PASS: Final bytes of gigantic string" } else { print "FAIL: Final bytes of gigantic string" }
+
+print "test_90 done"

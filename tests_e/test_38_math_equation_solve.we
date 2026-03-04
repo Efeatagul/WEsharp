@@ -1,0 +1,25 @@
+print "File: test_38_math_equation_solve.we"
+func solve_quadratic(a, b, c) {
+    let delta = b * b - 4 * a * c
+    if delta < 0 { return [] }
+    if delta == 0 { return [-b / (2 * a)] }
+    let sqrt_delta = sqrt(delta)
+    let x1 = (-b + sqrt_delta) / (2 * a)
+    let x2 = (-b - sqrt_delta) / (2 * a)
+    let sorted = sort([x1, x2])
+    return sorted
+}
+
+let res1 = solve_quadratic(1, -3, 2)
+if len(res1) == 2 { print "PASS: 2 roots" } else { print "FAIL: 2 roots" }
+if res1[0] == 1 { print "PASS: root 1" } else { print "FAIL: root 1" }
+if res1[1] == 2 { print "PASS: root 2" } else { print "FAIL: root 2" }
+
+let res2 = solve_quadratic(1, -2, 1)
+if len(res2) == 1 { print "PASS: 1 root" } else { print "FAIL: 1 root" }
+if res2[0] == 1 { print "PASS: single root 1" } else { print "FAIL: single root 1" }
+
+let res3 = solve_quadratic(1, 0, 1)
+if len(res3) == 0 { print "PASS: 0 real roots" } else { print "FAIL: 0 real roots" }
+
+print "test_38 done"

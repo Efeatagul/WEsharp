@@ -1,0 +1,49 @@
+print "File: test_76_rna_secondary_struct.we"
+func count_gc_content(seq) {
+    let gc = 0
+    let i = 0
+    let n = len(seq)
+    while i < n {
+        if seq[i] == "G" || seq[i] == "C" { gc = gc + 1 }
+        i = i + 1
+    }
+    return (gc * 100.0) / n
+}
+
+func find_hairpin_stem(seq) {
+    let n = len(seq)
+    let i = 0
+    while i < n - 8 {
+        let left = seq[i:i+3]
+        let right_raw = seq[i+5:i+8]
+        let reverse = ""
+        let j = 2
+        while j >= 0 {
+            reverse = reverse + right_raw[j]
+            j = j - 1
+        }
+        
+        let comp = ""
+        let k = 0
+        while k < 3 {
+             if reverse[k] == "A" { comp = comp + "U" }
+             if reverse[k] == "U" { comp = comp + "A" }
+             if reverse[k] == "C" { comp = comp + "G" }
+             if reverse[k] == "G" { comp = comp + "C" }
+             k = k + 1
+        }
+        if left == comp { return i }
+        i = i + 1
+    }
+    return -1
+}
+
+let seq1 = "ACGCAGCUGCGU"
+let gc1 = count_gc_content(seq1)
+if gc1 > 66.6 && gc1 < 66.7 { print "PASS: GC content ~66.6%" } else { print "FAIL: GC content ~66.6%" }
+
+let seq2 = "AAAAAAGCGUUUCGCUUUU"
+let hp = find_hairpin_stem(seq2)
+if hp == 5 { print "PASS: Hairpin found at index 5 (GCG...CGC)" } else { print "FAIL: Hairpin found at index 5 (GCG...CGC)" }
+
+print "test_76 done"

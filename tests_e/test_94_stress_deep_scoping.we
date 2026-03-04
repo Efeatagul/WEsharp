@@ -1,0 +1,35 @@
+print "File: test_94_stress_deep_scoping.we"
+let level = 1
+
+if level == 1 {
+    let level = 2
+    if level == 2 {
+        let level = 3
+        if level == 3 {
+            let level = 4
+            if level == 4 {
+                let level = 5
+                if level == 5 {
+                    let level = 6
+                    if level == 6 {
+                        let level = 7
+                        if level == 7 {
+                            let level = 8
+                            if level == 8 {
+                                let level = 9
+                                if level == 9 {
+                                    let level = 10
+                                    if level == 10 {
+                                        print "PASS: 10 levels deep nested scoping"
+                                    } else { print "FAIL: 10 levels deep nested scoping" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+print "test_94 done"

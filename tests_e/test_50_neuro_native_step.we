@@ -1,0 +1,17 @@
+print "File: test_50_neuro_native_step.we"
+creare_cortex(1.0, 10.0, 10.0, -70.0, 0.5)
+
+simulare_gradus(0.0)
+let v0 = legere_tensio(0)
+if v0 == -70.0 { print "PASS: init voltage" } else { print "FAIL: init voltage" }
+
+injicere_stimulus(0, 50.0)
+simulare_gradus(50.0)
+let v1 = legere_tensio(0)
+if v1 > -70.0 { print "PASS: voltage increased with stimulus" } else { print "FAIL: voltage increased with stimulus" }
+
+resettere_cortex()
+let v2 = legere_tensio(0)
+if v2 == -70.0 { print "PASS: voltage reset" } else { print "FAIL: voltage reset" }
+
+print "test_50 done"

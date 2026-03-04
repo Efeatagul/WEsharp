@@ -1,0 +1,29 @@
+print "File: test_35_matrix_transpose.we"
+func transpose(mat) {
+    let rows = len(mat)
+    let cols = len(mat[0])
+    let out = []
+    let c = 0
+    while c < cols {
+        let new_row = []
+        let r = 0
+        while r < rows {
+            push(new_row, mat[r][c])
+            r = r + 1
+        }
+        push(out, new_row)
+        c = c + 1
+    }
+    return out
+}
+
+let m = [[1, 2, 3], [4, 5, 6]]
+let mt = transpose(m)
+if len(mt) == 3 { print "PASS: transposed rows = 3" } else { print "FAIL: transposed rows = 3" }
+if len(mt[0]) == 2 { print "PASS: transposed cols = 2" } else { print "FAIL: transposed cols = 2" }
+if mt[0][0] == 1 { print "PASS: mt[0][0]" } else { print "FAIL: mt[0][0]" }
+if mt[0][1] == 4 { print "PASS: mt[0][1]" } else { print "FAIL: mt[0][1]" }
+if mt[1][0] == 2 { print "PASS: mt[1][0]" } else { print "FAIL: mt[1][0]" }
+if mt[2][1] == 6 { print "PASS: mt[2][1]" } else { print "FAIL: mt[2][1]" }
+
+print "test_35 done"

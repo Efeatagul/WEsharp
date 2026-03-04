@@ -1,0 +1,30 @@
+print "File: test_29_newtons_method.we"
+func newton_sqrt(n, iterations) {
+    let x = n / 2.0
+    let i = 0
+    while i < iterations {
+        x = (x + n / x) / 2.0
+        i = i + 1
+    }
+    return x
+}
+let r2 = newton_sqrt(2, 20)
+if r2 > 1.41421 && r2 < 1.41422 { print "PASS: newton sqrt(2)" } else { print "FAIL: newton sqrt(2)" }
+let r9 = newton_sqrt(9, 20)
+if r9 > 2.9999 && r9 < 3.0001 { print "PASS: newton sqrt(9)" } else { print "FAIL: newton sqrt(9)" }
+let r100 = newton_sqrt(100, 20)
+if r100 > 9.9999 && r100 < 10.0001 { print "PASS: newton sqrt(100)" } else { print "FAIL: newton sqrt(100)" }
+func newton_cbrt(n, iterations) {
+    let x = n / 3.0
+    let i = 0
+    while i < iterations {
+        x = (2.0 * x + n / (x * x)) / 3.0
+        i = i + 1
+    }
+    return x
+}
+let cbrt27 = newton_cbrt(27, 30)
+if cbrt27 > 2.999 && cbrt27 < 3.001 { print "PASS: cbrt(27)" } else { print "FAIL: cbrt(27)" }
+let cbrt8 = newton_cbrt(8, 30)
+if cbrt8 > 1.999 && cbrt8 < 2.001 { print "PASS: cbrt(8)" } else { print "FAIL: cbrt(8)" }
+print "test_29 done"

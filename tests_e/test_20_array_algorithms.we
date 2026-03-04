@@ -1,0 +1,38 @@
+print "File: test_20_array_algorithms.we"
+func bubble_sort(arr) {
+    let n = len(arr)
+    let i = 0
+    while i < n {
+        let j = 0
+        while j < n - i - 1 {
+            if arr[j] > arr[j + 1] {
+                let tmp = arr[j]
+                arr[j] = arr[j + 1]
+                arr[j + 1] = tmp
+            }
+            j = j + 1
+        }
+        i = i + 1
+    }
+    return arr
+}
+let unsorted = [64, 34, 25, 12, 22, 11, 90]
+let sorted = bubble_sort(unsorted)
+if sorted[0] == 11 { print "PASS: bubble_sort min" } else { print "FAIL: bubble_sort min" }
+if sorted[6] == 90 { print "PASS: bubble_sort max" } else { print "FAIL: bubble_sort max" }
+func binary_search(arr, target) {
+    let lo = 0
+    let hi = len(arr) - 1
+    while lo <= hi {
+        let mid = floor((lo + hi) / 2)
+        if arr[mid] == target { return mid }
+        if arr[mid] < target { lo = mid + 1 }
+        else { hi = mid - 1 }
+    }
+    return -1
+}
+let idx = binary_search(sorted, 25)
+if idx >= 0 { print "PASS: binary_search found" } else { print "FAIL: binary_search found" }
+let idx2 = binary_search(sorted, 999)
+if idx2 == -1 { print "PASS: binary_search not found" } else { print "FAIL: binary_search not found" }
+print "test_20 done"

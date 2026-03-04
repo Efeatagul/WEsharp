@@ -1,0 +1,25 @@
+print "File: test_31_complex_numbers.we"
+func complex_add(r1, i1, r2, i2) {
+    return [r1 + r2, i1 + i2]
+}
+func complex_mul(r1, i1, r2, i2) {
+    return [r1 * r2 - i1 * i2, r1 * i2 + i1 * r2]
+}
+func complex_mag(r, i) {
+    return sqrt(r * r + i * i)
+}
+let z1 = [3, 4]
+let z2 = [1, -2]
+let zsum = complex_add(z1[0], z1[1], z2[0], z2[1])
+if zsum[0] == 4 { print "PASS: complex add real" } else { print "FAIL: complex add real" }
+if zsum[1] == 2 { print "PASS: complex add imag" } else { print "FAIL: complex add imag" }
+let zmul = complex_mul(z1[0], z1[1], z2[0], z2[1])
+if zmul[0] == 11 { print "PASS: complex mul real" } else { print "FAIL: complex mul real" }
+if zmul[1] == -2 { print "PASS: complex mul imag" } else { print "FAIL: complex mul imag" }
+let mag1 = complex_mag(z1[0], z1[1])
+if mag1 == 5 { print "PASS: complex mag 3+4i=5" } else { print "FAIL: complex mag 3+4i=5" }
+let mag2 = complex_mag(0, 1)
+if mag2 == 1 { print "PASS: magnitude of i" } else { print "FAIL: magnitude of i" }
+let i_sq = complex_mul(0, 1, 0, 1)
+if i_sq[0] == -1 && i_sq[1] == 0 { print "PASS: i^2 = -1" } else { print "FAIL: i^2 = -1" }
+print "test_31 done"

@@ -1,0 +1,34 @@
+print "File: test_30_linear_regression.we"
+func linear_regression(xs, ys) {
+    let n = len(xs)
+    let sum_x = 0
+    let sum_y = 0
+    let sum_xx = 0
+    let sum_xy = 0
+    let i = 0
+    while i < n {
+        let x = xs[i]
+        let y = ys[i]
+        sum_x = sum_x + x
+        sum_y = sum_y + y
+        sum_xx = sum_xx + x * x
+        sum_xy = sum_xy + x * y
+        i = i + 1
+    }
+    let denom = n * sum_xx - sum_x * sum_x
+    let slope = (n * sum_xy - sum_x * sum_y) / denom
+    let intercept = (sum_y - slope * sum_x) / n
+    return [slope, intercept]
+}
+let xs = [1, 2, 3, 4, 5]
+let ys = [2, 4, 6, 8, 10]
+let params = linear_regression(xs, ys)
+let slope = params[0]
+let intercept = params[1]
+if slope > 1.99 && slope < 2.01 { print "PASS: slope=2" } else { print "FAIL: slope=2" }
+if abs(intercept) < 0.01 { print "PASS: intercept=0" } else { print "FAIL: intercept=0" }
+let ys2 = [3, 5, 7, 9, 11]
+let params2 = linear_regression(xs, ys2)
+if params2[0] > 1.99 && params2[0] < 2.01 { print "PASS: slope2=2" } else { print "FAIL: slope2=2" }
+if params2[1] > 0.99 && params2[1] < 1.01 { print "PASS: intercept2=1" } else { print "FAIL: intercept2=1" }
+print "test_30 done"

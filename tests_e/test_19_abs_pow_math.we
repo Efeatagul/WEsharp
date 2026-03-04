@@ -1,0 +1,22 @@
+print "File: test_19_abs_pow_math.we"
+let a1 = abs(-7)
+if a1 == 7 { print "PASS: abs(-7)" } else { print "FAIL: abs(-7)" }
+let a2 = abs(7)
+if a2 == 7 { print "PASS: abs(7)" } else { print "FAIL: abs(7)" }
+let a3 = abs(0)
+if a3 == 0 { print "PASS: abs(0)" } else { print "FAIL: abs(0)" }
+let p1 = pow(2, 10)
+if p1 == 1024 { print "PASS: 2^10" } else { print "FAIL: 2^10" }
+let p2 = pow(3, 3)
+if p2 == 27 { print "PASS: 3^3" } else { print "FAIL: 3^3" }
+let p3 = pow(10, 0)
+if p3 == 1 { print "PASS: x^0" } else { print "FAIL: x^0" }
+let sq = sqrt(144)
+if sq == 12 { print "PASS: sqrt(144)" } else { print "FAIL: sqrt(144)" }
+let sq2 = sqrt(2)
+if sq2 > 1.41 && sq2 < 1.42 { print "PASS: sqrt(2)" } else { print "FAIL: sqrt(2)" }
+let neg_abs = abs(-1000)
+if neg_abs == 1000 { print "PASS: abs large" } else { print "FAIL: abs large" }
+let compound = abs(pow(-2, 3))
+if compound == 8 { print "PASS: abs(pow(-2,3))" } else { print "FAIL: abs(pow(-2,3))" }
+print "test_19 done"

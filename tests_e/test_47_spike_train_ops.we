@@ -1,0 +1,28 @@
+print "File: test_47_spike_train_ops.we"
+let train1 = [1.0, 15.0, 22.0, 35.0, 50.0]
+let train2 = [5.0, 20.0, 36.0, 48.0]
+
+func count_spikes_in_window(train, start, end) {
+    let count = 0
+    foreach t in train {
+        if t >= start && t <= end { count = count + 1 }
+    }
+    return count
+}
+
+let c1 = count_spikes_in_window(train1, 10, 40)
+if c1 == 3 { print "PASS: count within window" } else { print "FAIL: count within window" }
+
+func merge_spikes(t1, t2) {
+    let merged = []
+    foreach s in t1 { push(merged, s) }
+    foreach s in t2 { push(merged, s) }
+    return sort(merged)
+}
+
+let mt = merge_spikes(train1, train2)
+if mt[0] == 1.0 { print "PASS: merged min" } else { print "FAIL: merged min" }
+if mt[8] == 50.0 { print "PASS: merged max" } else { print "FAIL: merged max" }
+if len(mt) == 9 { print "PASS: merged count" } else { print "FAIL: merged count" }
+
+print "test_47 done"

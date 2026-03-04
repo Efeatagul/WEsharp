@@ -1,0 +1,22 @@
+print "File: test_10_map_filter_functional.we"
+let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+let doubled = map(nums, func(x) { return x * 2 })
+if doubled[0] == 2 { print "PASS: map first" } else { print "FAIL: map first" }
+if doubled[9] == 20 { print "PASS: map last" } else { print "FAIL: map last" }
+if len(doubled) == 10 { print "PASS: map length" } else { print "FAIL: map length" }
+let evens = filter(nums, func(x) { return x % 2 == 0 })
+if len(evens) == 5 { print "PASS: filter evens count" } else { print "FAIL: filter evens count" }
+if evens[0] == 2 { print "PASS: filter first even" } else { print "FAIL: filter first even" }
+let odds = filter(nums, func(x) { return x % 2 != 0 })
+if len(odds) == 5 { print "PASS: filter odds count" } else { print "FAIL: filter odds count" }
+let squares = map(nums, func(x) { return x * x })
+if squares[2] == 9 { print "PASS: map square" } else { print "FAIL: map square" }
+let big = filter(squares, func(x) { return x > 50 })
+if len(big) == 4 { print "PASS: filter big squares" } else { print "FAIL: filter big squares" }
+let total = avg(nums)
+if total == 5.5 { print "PASS: avg" } else { print "FAIL: avg" }
+let mx = max(nums)
+if mx == 10 { print "PASS: max" } else { print "FAIL: max" }
+let mn = min(nums)
+if mn == 1 { print "PASS: min" } else { print "FAIL: min" }
+print "test_10 done"

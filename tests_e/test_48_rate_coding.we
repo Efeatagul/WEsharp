@@ -1,0 +1,20 @@
+print "File: test_48_rate_coding.we"
+func calculate_firing_rate(spikes, window_ms) {
+    if len(spikes) < 2 { return 0.0 }
+    let first = spikes[0]
+    let last = spikes[len(spikes) - 1]
+    let duration = last - first
+    if duration <= 0 { return 0.0 }
+    return (len(spikes) - 1) / (duration / 1000.0) 
+}
+
+let spike_train = [10.0, 30.0, 50.0, 70.0, 90.0, 110.0]
+let rate = calculate_firing_rate(spike_train, 150)
+
+if rate > 49.9 && rate < 50.1 { print "PASS: Firing rate 50 Hz" } else { print "FAIL: Firing rate 50 Hz" }
+
+let single_spike = [5.0]
+let rate_single = calculate_firing_rate(single_spike, 100)
+if rate_single == 0.0 { print "PASS: Rate 0 for < 2 spikes" } else { print "FAIL: Rate 0 for < 2 spikes" }
+
+print "test_48 done"

@@ -1,0 +1,31 @@
+print "File: test_08_recursion_basic.we"
+func factorial(n) {
+    if n <= 1 { return 1 }
+    return n * factorial(n - 1)
+}
+let f5 = factorial(5)
+if f5 == 120 { print "PASS: factorial 5" } else { print "FAIL: factorial 5" }
+let f10 = factorial(10)
+if f10 == 3628800 { print "PASS: factorial 10" } else { print "FAIL: factorial 10" }
+func fib(n) {
+    if n <= 0 { return 0 }
+    if n == 1 { return 1 }
+    return fib(n - 1) + fib(n - 2)
+}
+let fib10 = fib(10)
+if fib10 == 55 { print "PASS: fib(10)" } else { print "FAIL: fib(10)" }
+let fib15 = fib(15)
+if fib15 == 610 { print "PASS: fib(15)" } else { print "FAIL: fib(15)" }
+func power_rec(base, exp) {
+    if exp == 0 { return 1 }
+    return base * power_rec(base, exp - 1)
+}
+let pw = power_rec(3, 4)
+if pw == 81 { print "PASS: power_rec(3,4)" } else { print "FAIL: power_rec(3,4)" }
+func sum_to(n) {
+    if n == 0 { return 0 }
+    return n + sum_to(n - 1)
+}
+let s100 = sum_to(100)
+if s100 == 5050 { print "PASS: sum_to(100)" } else { print "FAIL: sum_to(100)" }
+print "test_08 done"

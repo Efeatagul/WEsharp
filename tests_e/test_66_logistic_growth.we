@@ -1,0 +1,22 @@
+print "File: test_66_logistic_growth.we"
+func logistic_population(p0, k, r, t, dt) {
+    let p = p0
+    let curr_t = 0
+    while curr_t < t {
+        let dp = (r * p * (1.0 - p / k)) * dt
+        p = p + dp
+        curr_t = curr_t + dt
+    }
+    return p
+}
+
+let pop1 = logistic_population(10.0, 1000.0, 0.1, 100.0, 0.5)
+if pop1 > 900.0 && pop1 < 1000.0 { print "PASS: Population approached carrying capacity" } else { print "FAIL: Population approached carrying capacity" }
+
+let pop2 = logistic_population(1500.0, 1000.0, 0.1, 100.0, 0.5)
+if pop2 > 1000.0 && pop2 < 1050.0 { print "PASS: Overshot population decays to K" } else { print "FAIL: Overshot population decays to K" }
+
+let pop3 = logistic_population(10.0, 1000.0, 0.0, 100.0, 0.5)
+if pop3 == 10.0 { print "PASS: Rate 0 -> no growth" } else { print "FAIL: Rate 0 -> no growth" }
+
+print "test_66 done"

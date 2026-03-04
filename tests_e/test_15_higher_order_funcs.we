@@ -1,0 +1,30 @@
+print "File: test_15_higher_order_funcs.we"
+func apply(f, x) { return f(x) }
+func double(n) { return n * 2 }
+func square(n) { return n * n }
+let r1 = apply(double, 5)
+if r1 == 10 { print "PASS: apply double" } else { print "FAIL: apply double" }
+let r2 = apply(square, 4)
+if r2 == 16 { print "PASS: apply square" } else { print "FAIL: apply square" }
+func compose(f, g) {
+    func composed(x) { return f(g(x)) }
+    return composed
+}
+let double_then_square = compose(square, double)
+let r3 = double_then_square(3)
+if r3 == 36 { print "PASS: compose double then square" } else { print "FAIL: compose double then square" }
+let square_then_double = compose(double, square)
+let r4 = square_then_double(3)
+if r4 == 18 { print "PASS: compose square then double" } else { print "FAIL: compose square then double" }
+func repeat_apply(f, n, val) {
+    let result = val
+    let i = 0
+    while i < n {
+        result = f(result)
+        i = i + 1
+    }
+    return result
+}
+let r5 = repeat_apply(double, 4, 1)
+if r5 == 16 { print "PASS: repeat_apply double 4 times" } else { print "FAIL: repeat_apply double 4 times" }
+print "test_15 done"

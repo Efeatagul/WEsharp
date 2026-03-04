@@ -1,0 +1,21 @@
+print "File: test_40_integration_simpson.we"
+func integrate_simpson(f, a, b, n) {
+    if n % 2 != 0 { n = n + 1 } 
+    let h = (b - a) / n
+    let sum = f(a) + f(b)
+    let i = 1
+    while i < n {
+        let x = a + i * h
+        if i % 2 == 0 { sum = sum + 2 * f(x) }
+        else { sum = sum + 4 * f(x) }
+        i = i + 1
+    }
+    return sum * h / 3.0
+}
+
+func cube(x) { return x * x * x }
+
+let res = integrate_simpson(cube, 0, 2, 100)
+if res > 3.99 && res < 4.01 { print "PASS: Simpson integral x^3 dx [0,2] = 4" } else { print "FAIL: Simpson integral x^3 dx [0,2] = 4" }
+
+print "test_40 done"

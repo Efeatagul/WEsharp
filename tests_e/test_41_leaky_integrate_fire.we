@@ -1,0 +1,27 @@
+print "File: test_41_leaky_integrate_fire.we"
+let v_rest = -70.0
+let v_th = -55.0
+let v_reset = -75.0
+let dt = 1.0
+let tau_m = 10.0
+let R = 1.0
+let I_ext = 20.0 
+
+let v = v_rest
+let spikes = 0
+let t = 0
+
+while t < 100 {
+    let dv = (-(v - v_rest) + R * I_ext) / tau_m
+    v = v + dv * dt
+    if v >= v_th {
+        spikes = spikes + 1
+        v = v_reset
+    }
+    t = t + dt
+}
+
+if spikes > 5 && spikes < 15 { print "PASS: LIF neuron fired" } else { print "FAIL: LIF neuron fired" }
+if v <= v_th { print "PASS: v bound checked" } else { print "FAIL: v bound checked" }
+
+print "test_41 done"

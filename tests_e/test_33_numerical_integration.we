@@ -1,0 +1,22 @@
+print "File: test_33_numerical_integration.we"
+func integrate_rect(f, a, b, steps) {
+    let dx = (b - a) / steps
+    let sum = 0
+    let i = 0
+    while i < steps {
+        let x = a + i * dx
+        sum = sum + f(x) * dx
+        i = i + 1
+    }
+    return sum
+}
+func identity(x) { return x }
+func square(x) { return x * x }
+
+let int1 = integrate_rect(identity, 0, 10, 1000)
+if int1 > 49.9 && int1 < 50.1 { print "PASS: integral x dx [0,10]" } else { print "FAIL: integral x dx [0,10]" }
+
+let int2 = integrate_rect(square, 0, 3, 1000)
+if int2 > 8.9 && int2 < 9.1 { print "PASS: integral x^2 dx [0,3]" } else { print "FAIL: integral x^2 dx [0,3]" }
+
+print "test_33 done"

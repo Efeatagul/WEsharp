@@ -1,0 +1,21 @@
+print "File: test_16_array_2d_matrix.we"
+let m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+if m[0][0] == 1 { print "PASS: m[0][0]" } else { print "FAIL: m[0][0]" }
+if m[1][1] == 5 { print "PASS: m[1][1]" } else { print "FAIL: m[1][1]" }
+if m[2][2] == 9 { print "PASS: m[2][2]" } else { print "FAIL: m[2][2]" }
+let trace = m[0][0] + m[1][1] + m[2][2]
+if trace == 15 { print "PASS: trace" } else { print "FAIL: trace" }
+let row_sums = []
+foreach row in m {
+    let s = 0
+    foreach el in row { s = s + el }
+    push(row_sums, s)
+}
+if row_sums[0] == 6 { print "PASS: row 0 sum" } else { print "FAIL: row 0 sum" }
+if row_sums[1] == 15 { print "PASS: row 1 sum" } else { print "FAIL: row 1 sum" }
+if row_sums[2] == 24 { print "PASS: row 2 sum" } else { print "FAIL: row 2 sum" }
+let total = row_sums[0] + row_sums[1] + row_sums[2]
+if total == 45 { print "PASS: matrix total" } else { print "FAIL: matrix total" }
+m[1][1] = 99
+if m[1][1] == 99 { print "PASS: in-place modify" } else { print "FAIL: in-place modify" }
+print "test_16 done"

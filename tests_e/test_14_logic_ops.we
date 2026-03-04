@@ -1,0 +1,21 @@
+print "File: test_14_logic_ops.we"
+let t = true
+let f = false
+if t && t { print "PASS: true AND true" } else { print "FAIL: true AND true" }
+if t || f { print "PASS: true OR false" } else { print "FAIL: true OR false" }
+if !f { print "PASS: NOT false" } else { print "FAIL: NOT false" }
+if !(t && f) { print "PASS: NOT (t AND f)" } else { print "FAIL: NOT (t AND f)" }
+let x = 5
+if x > 3 && x < 10 { print "PASS: range check" } else { print "FAIL: range check" }
+if x < 0 || x > 4 { print "PASS: or range" } else { print "FAIL: or range" }
+func check_range(v, lo, hi) {
+    return v >= lo && v <= hi
+}
+if check_range(7, 1, 10) == true { print "PASS: check_range in" } else { print "FAIL: check_range in" }
+if check_range(15, 1, 10) == false { print "PASS: check_range out" } else { print "FAIL: check_range out" }
+let a = 10
+let b = 20
+let c = 30
+if a < b && b < c { print "PASS: chained cmp" } else { print "FAIL: chained cmp" }
+if a != b && b != c { print "PASS: inequality chain" } else { print "FAIL: inequality chain" }
+print "test_14 done"

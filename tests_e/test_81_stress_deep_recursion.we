@@ -1,0 +1,13 @@
+print "File: test_81_stress_deep_recursion.we"
+func deep_recurse(n, depth) {
+    if n == 0 { return depth }
+    return deep_recurse(n - 1, depth + 1)
+}
+
+let d1 = deep_recurse(100, 0)
+if d1 == 100 { print "PASS: recursion depth 100" } else { print "FAIL: recursion depth 100" }
+
+let d2 = deep_recurse(500, 0)
+if d2 == 500 { print "PASS: recursion depth 500" } else { print "FAIL: recursion depth 500" }
+
+print "test_81 done"

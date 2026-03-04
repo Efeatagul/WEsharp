@@ -1,0 +1,19 @@
+print "File: test_46_synapse_alpha.we"
+func alpha_synapse(t, t_spike, tau, g_max) {
+    if t < t_spike { return 0.0 }
+    let delta = t - t_spike
+    let evt = math_basic("pow", 2.718, -delta / tau)
+    return g_max * (delta / tau) * evt
+}
+
+let g1 = alpha_synapse(5.0, 10.0, 2.0, 1.0)
+if g1 == 0.0 { print "PASS: conductance zero before spike" } else { print "FAIL: conductance zero before spike" }
+
+let g2 = alpha_synapse(12.0, 10.0, 2.0, 1.0)
+let e_inv = 1.0 / 2.718
+if g2 > e_inv - 0.01 && g2 < e_inv + 0.01 { print "PASS: conductance peaked at t=t_spike+tau" } else { print "FAIL: conductance peaked at t=t_spike+tau" }
+
+let g3 = alpha_synapse(20.0, 10.0, 2.0, 1.0)
+if g3 > 0.0 && g3 < 0.05 { print "PASS: conductance decays" } else { print "FAIL: conductance decays" }
+
+print "test_46 done"

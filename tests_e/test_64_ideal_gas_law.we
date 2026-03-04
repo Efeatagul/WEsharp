@@ -1,0 +1,17 @@
+print "File: test_64_ideal_gas_law.we"
+func ideal_gas_pressure(n, t, v) {
+    let R = 0.0821 
+    return (n * R * t) / v
+}
+
+let p1 = ideal_gas_pressure(1.0, 273.15, 22.414)
+let diff1 = abs(p1 - 1.0)
+if diff1 < 0.01 { print "PASS: 1 mole at STP is ~1 atm" } else { print "FAIL: 1 mole at STP is ~1 atm" }
+
+let p2 = ideal_gas_pressure(2.0, 273.15, 22.414)
+if p2 > 1.99 && p2 < 2.01 { print "PASS: 2 moles at STP is ~2 atm" } else { print "FAIL: 2 moles at STP is ~2 atm" }
+
+let p3 = ideal_gas_pressure(1.0, 546.3, 22.414)
+if p3 > 1.99 && p3 < 2.01 { print "PASS: Double Temp -> Double Pressure" } else { print "FAIL: Double Temp -> Double Pressure" }
+
+print "test_64 done"

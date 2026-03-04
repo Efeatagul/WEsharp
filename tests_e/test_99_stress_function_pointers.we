@@ -1,0 +1,28 @@
+print "File: test_99_stress_function_pointers.we"
+func op_add(a, b) { return a + b }
+func op_sub(a, b) { return a - b }
+func op_mul(a, b) { return a * b }
+func op_div(a, b) { return a / b }
+
+let ops = [op_add, op_sub, op_mul, op_div]
+
+let val = 100
+let i = 0
+while i < 1000 {
+    let op_idx = i % 4
+    let f = ops[op_idx]
+    
+    if op_idx == 0 { val = f(val, 5) }
+    else if op_idx == 1 { val = f(val, 2) }
+    else if op_idx == 2 { val = f(val, 2) }
+    else if op_idx == 3 { val = f(val, 2) }
+    
+    i = i + 1
+}
+
+// Sequence: +5, -2, *2, /2 => Net +3 every 4 ops
+// 1000 ops / 4 = 250 cycles => 250 * 3 = 750
+// 100 + 750 = 850
+if val == 850 { print "PASS: 1000 indirect function calls via array" } else { print "FAIL: 1000 indirect function calls via array" }
+
+print "test_99 done"

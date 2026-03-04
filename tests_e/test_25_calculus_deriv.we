@@ -1,0 +1,16 @@
+print "File: test_25_calculus_deriv.we"
+let d1 = math_calc("deriv", "3x^2")
+if str_contains(d1, "6") { print "PASS: d/dx 3x^2 has 6" } else { print "FAIL: d/dx 3x^2 has 6" }
+let d2 = math_calc("deriv", "5x^3")
+if str_contains(d2, "15") { print "PASS: d/dx 5x^3 has 15" } else { print "FAIL: d/dx 5x^3 has 15" }
+let d3 = math_calc("deriv", "x")
+if str_contains(d3, "1") { print "PASS: d/dx x = 1" } else { print "FAIL: d/dx x = 1" }
+let d4 = math_calc("deriv", "4x^4")
+if str_contains(d4, "16") { print "PASS: d/dx 4x^4 has 16" } else { print "FAIL: d/dx 4x^4 has 16" }
+let d5 = math_calc("deriv", "2x^2+3x")
+if str_contains(d5, "4") { print "PASS: polynomial deriv has 4" } else { print "FAIL: polynomial deriv has 4" }
+let integral1 = math_calc("integral", "2,0,3")
+if integral1 > 8.9 && integral1 < 9.1 { print "PASS: integral x^2 from 0 to 3" } else { print "FAIL: integral x^2 from 0 to 3" }
+let integral2 = math_calc("integral", "1,0,4")
+if integral2 > 7.9 && integral2 < 8.1 { print "PASS: integral x from 0 to 4" } else { print "FAIL: integral x from 0 to 4" }
+print "test_25 done"

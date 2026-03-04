@@ -1,0 +1,19 @@
+print "File: test_63_radioactive_decay.we"
+func decay_remaining(n0, half_life, time) {
+    let hl = time / half_life
+    return n0 * math_basic("pow", 0.5, hl)
+}
+
+let remaining_1 = decay_remaining(100.0, 5.0, 5.0)
+if remaining_1 == 50.0 { print "PASS: 1 half life -> 50%" } else { print "FAIL: 1 half life -> 50%" }
+
+let remaining_2 = decay_remaining(100.0, 5.0, 10.0)
+if remaining_2 == 25.0 { print "PASS: 2 half lives -> 25%" } else { print "FAIL: 2 half lives -> 25%" }
+
+let remaining_3 = decay_remaining(100.0, 5.0, 0.0)
+if remaining_3 == 100.0 { print "PASS: 0 half lives -> 100%" } else { print "FAIL: 0 half lives -> 100%" }
+
+let remaining_4 = decay_remaining(100.0, 5.0, 15.0)
+if remaining_4 == 12.5 { print "PASS: 3 half lives -> 12.5%" } else { print "FAIL: 3 half lives -> 12.5%" }
+
+print "test_63 done"

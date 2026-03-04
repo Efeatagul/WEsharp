@@ -1,0 +1,21 @@
+print "File: test_21_trig_basic.we"
+let pi = 3.14159265359
+let sin30 = math_basic("sin", 30)
+if sin30 > 0.499 && sin30 < 0.501 { print "PASS: sin(30deg)" } else { print "FAIL: sin(30deg)" }
+let cos60 = math_basic("cos", 60)
+if cos60 > 0.499 && cos60 < 0.501 { print "PASS: cos(60deg)" } else { print "FAIL: cos(60deg)" }
+let sin0 = math_basic("sin", 0)
+if sin0 == 0 { print "PASS: sin(0)" } else { print "FAIL: sin(0)" }
+let cos0 = math_basic("cos", 0)
+if cos0 == 1 { print "PASS: cos(0)" } else { print "FAIL: cos(0)" }
+let sin90 = math_basic("sin", 90)
+if sin90 > 0.9999 { print "PASS: sin(90)" } else { print "FAIL: sin(90)" }
+let cos90 = math_basic("cos", 90)
+if abs(cos90) < 0.001 { print "PASS: cos(90) near 0" } else { print "FAIL: cos(90) near 0" }
+let log10 = math_basic("log", 100)
+if log10 > 1.99 && log10 < 2.01 { print "PASS: log(100)=2" } else { print "FAIL: log(100)=2" }
+let ln_e = math_basic("ln", 2.71828)
+if ln_e > 0.999 && ln_e < 1.001 { print "PASS: ln(e)=1" } else { print "FAIL: ln(e)=1" }
+let identity = pow(sin30, 2) + pow(cos60, 2)
+if identity < 0.6 { print "PASS: sin^2+cos^2 partial" } else { print "FAIL: sin^2+cos^2 partial" }
+print "test_21 done"

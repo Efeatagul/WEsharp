@@ -1,0 +1,24 @@
+print "File: test_03_bitwise_ops.we"
+let a = 12
+let b = 10
+let and_result = a - (a % b)
+if and_result == 10 { print "PASS: modulo based mask" } else { print "FAIL: modulo based mask" }
+let p2 = pow(2, 4)
+if p2 == 16 { print "PASS: pow 2^4" } else { print "FAIL: pow 2^4" }
+let p3 = pow(2, 8)
+if p3 == 256 { print "PASS: pow 2^8" } else { print "FAIL: pow 2^8" }
+let flags = [1, 2, 4, 8, 16]
+let combined = 0
+foreach f in flags { combined = combined + f }
+if combined == 31 { print "PASS: flag accumulation" } else { print "FAIL: flag accumulation" }
+let masked = combined % 8
+if masked == 7 { print "PASS: mod mask lower 3 bits" } else { print "FAIL: mod mask lower 3 bits" }
+let high = floor(combined / 16)
+if high == 1 { print "PASS: shift right 4" } else { print "FAIL: shift right 4" }
+let shifted = high * 16
+if shifted == 16 { print "PASS: shift left 4" } else { print "FAIL: shift left 4" }
+let nibble = floor(255 / 16)
+if nibble == 15 { print "PASS: high nibble 0xFF" } else { print "FAIL: high nibble 0xFF" }
+let low_nibble = 255 % 16
+if low_nibble == 15 { print "PASS: low nibble 0xFF" } else { print "FAIL: low nibble 0xFF" }
+print "test_03 done"

@@ -1,0 +1,30 @@
+print "File: test_93_stress_closure_mutations.we"
+func make_bank() {
+    let balance = 0
+    let transactions = 0
+    func deposit(amount) {
+        balance = balance + amount
+        transactions = transactions + 1
+        return balance
+    }
+    func get_tx() { return transactions }
+    return [deposit, get_tx]
+}
+
+let bank1 = make_bank()
+let d1 = bank1[0]
+let t1 = bank1[1]
+
+let i = 0
+while i < 10000 {
+    d1(5)
+    i = i + 1
+}
+
+let final_bal = d1(0)
+let final_tx = t1()
+
+if final_bal == 50000 { print "PASS: 10k closure mutations bal" } else { print "FAIL: 10k closure mutations bal" }
+if final_tx == 10001 { print "PASS: 10k closure mutations tx" } else { print "FAIL: 10k closure mutations tx" }
+
+print "test_93 done"

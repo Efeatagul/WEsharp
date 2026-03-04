@@ -1,0 +1,16 @@
+print "File: test_78_ph_buffer.we"
+func calc_ph(ka, acid, base) {
+    let pka = -math_basic("log", ka)
+    return pka + math_basic("log", base / acid)
+}
+
+let ph_buffer1 = calc_ph(1e-5, 0.1, 0.1)
+if ph_buffer1 == 5.0 { print "PASS: pH = pKa when [A-] = [HA]" } else { print "FAIL: pH = pKa when [A-] = [HA]" }
+
+let ph_buffer2 = calc_ph(1e-5, 0.1, 1.0)
+if ph_buffer2 == 6.0 { print "PASS: pH = pKa + 1" } else { print "FAIL: pH = pKa + 1" }
+
+let ph_buffer3 = calc_ph(1e-5, 1.0, 0.1)
+if ph_buffer3 == 4.0 { print "PASS: pH = pKa - 1" } else { print "FAIL: pH = pKa - 1" }
+
+print "test_78 done"
